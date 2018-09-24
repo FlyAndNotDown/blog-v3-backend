@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/FlyAndNotDown/blog-v3-backend/issues"
   },
-  "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme"
+  "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
 }
