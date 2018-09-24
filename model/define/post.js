@@ -1,7 +1,7 @@
 // 导出文章 model 定义
 module.exports = {
 
-    name: person,
+    name: 'post',
     description: {
         id: {
             type: 'serial',
