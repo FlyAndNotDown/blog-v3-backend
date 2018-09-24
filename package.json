@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
-    "mysql": "^2.16.0"
+    "express": "^4.16.3",
+    "mysql": "^2.16.0",
+    "orm": "^5.0.2"
   }
 }
