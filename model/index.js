@@ -8,7 +8,7 @@ const modelDefineArray = [];
 
     modelDefineArray.push(postModelDefine);
 
-});
+}());
 
 // 导出模型定义数组
 module.exports = modelDefineArray;

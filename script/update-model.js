@@ -4,6 +4,5 @@ const Connection = require('../database/connection');
 
     // 获取连接
     const connection = Connection.getInstance().getConnection();
-    
 
-});
+}());

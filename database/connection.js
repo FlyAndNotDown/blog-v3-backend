@@ -1,6 +1,6 @@
 const orm = require('orm');
 const config = require('../config');
-const dbConfig = config.database;
+const connectionConfig = config.database.connection;
 
 // 连接单例类
 class Connection {
@@ -26,7 +26,7 @@ class Connection {
 
         // 创建连接
         this.__connection = orm.connect(
-            `${dbConfig.driver}://${dbConfig.username}:${dbConfig.password}@${dbConfig.url}/${dbConfig.database}`
+            `${connectionConfig.driver}://${connectionConfig.username}:${connectionConfig.password}@${connectionConfig.url}/${connectionConfig.database}`
         );
         // 连接回调
         this.__connection.on('connect', (err) => {
@@ -36,7 +36,7 @@ class Connection {
                 // 删除实例
                 Connection.__instance = null;
                 // 控制台打印错误
-                console.log('[error] Fail to connect to database');
+                return console.log('[error] Fail to connect to database\n' + err);
             }
 
             console.log('[log] Connected to database');

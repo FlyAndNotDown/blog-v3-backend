@@ -1,10 +1,10 @@
 // 导出配置
 module.exports = {
     // 数据库配置
-    databse: {
+    database: {
         // 连接配置
         connection: {
-            driver: 'nysql',
+            driver: 'mysql',
             url: '134.175.59.165',
             port: '3306',
             database: 'blog',
