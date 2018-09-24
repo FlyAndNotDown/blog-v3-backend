@@ -1,7 +1,7 @@
 const modelDefineArray = require('./index');
 
 // 模型工厂
-class Factory {
+class ModelFactory {
 
     /**
      * 获取工厂单例
@@ -9,10 +9,10 @@ class Factory {
      */
     static getInstance(connection) {
 
-        if (!Factory.__instance) {
-            Factory.__instance = new Factory(connection);
+        if (!ModelFactory.__instance) {
+            ModelFactory.__instance = new ModelFactory(connection);
         }
-        return Factory.__instance;
+        return ModelFactory.__instance;
 
     }
 
@@ -48,3 +48,5 @@ class Factory {
     }
 
 }
+
+module.exports = ModelFactory;
