@@ -11,5 +11,10 @@ module.exports = {
             username: 'development',
             password: 'development'
         }
+    },
+    // url 配置
+    url: {
+        // 公共前缀
+        commonPrefix: '/request/blog'
     }
 };

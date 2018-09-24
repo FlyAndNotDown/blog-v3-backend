@@ -1,5 +1,7 @@
 const express = require('express');
 const ModelFactory = require('../model/factory');
+const ControllerFactory = require('../controller/factory');
+const urlArray = require('../controller/url');
 
 // 服务器类
 class Server {
@@ -46,7 +48,15 @@ class Server {
      */
     __loadContoller() {
 
-        
+        urlArray.forEach(url => {
+
+            // RESTful API
+            ControllerFactory.getInstance(this.__model).when(url, 'get');
+            ControllerFactory.getInstance(this.__model).when(url, 'post');
+            ControllerFactory.getInstance(this.__model).when(url, 'put');
+            ControllerFactory.getInstance(this.__model).when(url, 'delete');
+
+        });
 
     }
 
