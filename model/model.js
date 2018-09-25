@@ -27,7 +27,7 @@ class Model {
         modelDefineArray.forEach(modelDefine => {
             this.__model[modelDefine.name] = this.__connection.define(
                 modelDefine.name,
-                modeldefine.description,
+                modelDefine.description,
                 modelDefine.method || {}
             );
         });
