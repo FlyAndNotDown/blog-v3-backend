@@ -8,6 +8,7 @@ const serverConfig = require('../config/server');
 const Connector = require('../database/connector');
 const Model = require('../model/model');
 const Log = require('../tool/log');
+const ControllerLoader = require('../controller/loader');
 
 /**
  * 服务器类
@@ -37,6 +38,8 @@ class Server {
         this.__connection = Connector.getInstance().getConnection();
         // 创建模型
         this.__model = new Model(this.__connection).getModel();
+        // 加载 Controller
+        new ControllerLoader(this.__server, this.__connection, this.__server);
     }
 
     /**
