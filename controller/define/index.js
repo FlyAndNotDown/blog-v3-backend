@@ -4,11 +4,13 @@
  */
 
 const post = require('./post');
+const home = require('./home');
 
 let controllerDefineArray = [];
 
 (function() {
     controllerDefineArray.push(post);
+    controllerDefineArray.push(home);
 })();
 
 module.exports = controllerDefineArray;
