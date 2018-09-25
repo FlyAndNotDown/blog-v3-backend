@@ -28,6 +28,7 @@ class Server {
      */
     __start() {
 
+        // 开始监端口
         this.__server.listen(serverConfig.listenPort);
 
     }
