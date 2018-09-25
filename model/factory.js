@@ -1,4 +1,5 @@
 const modelDefineArray = require('./index');
+const Connection = require('../database/connection');
 
 // 模型工厂
 class ModelFactory {
@@ -7,10 +8,10 @@ class ModelFactory {
      * 获取工厂单例
      * @return 工厂单例
      */
-    static getInstance(connection) {
+    static getInstance() {
 
         if (!ModelFactory.__instance) {
-            ModelFactory.__instance = new ModelFactory(connection);
+            ModelFactory.__instance = new ModelFactory();
         }
         return ModelFactory.__instance;
 
@@ -19,7 +20,7 @@ class ModelFactory {
     /**
      * 构造
      */
-    constructor(connection) {
+    constructor() {
 
         // 保存下来的已经定义过的模型
         this.__model = {};
@@ -27,7 +28,7 @@ class ModelFactory {
         // 将所有模型定义先定义一遍
         modelDefineArray.forEach(modelDefine => {
 
-            this.__model[modelDefine.name] = connection.define(
+            this.__model[modelDefine.name] = Connection.getInstance().getConnection().define(
                 modelDefine.name,
                 modelDefine.description,
                 modelDefine.options || {}

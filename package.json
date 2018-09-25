@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
+    "multer": "^1.3.1",
     "mysql": "^2.16.0",
     "orm": "^5.0.2"
   }

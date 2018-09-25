@@ -1,4 +1,6 @@
 const post = require('./func/post');
+const config = require('../config');
+const urlConfig = config.url;
 
 // 控制器工厂单例类
 class ControllerFactory {
@@ -33,7 +35,7 @@ class ControllerFactory {
 
         switch (url) {
             case '/post':
-                post(this.__model, this.__server, url);
+                post(this.__model, this.__server, urlConfig.commonPrefix + url);
                 break;
             default:
                 break;
