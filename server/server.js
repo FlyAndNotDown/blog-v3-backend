@@ -6,6 +6,7 @@
 const express = require('express');
 const serverConfig = require('../config/server');
 const Connector = require('../database/connector');
+const Model = require('../model/model');
 
 /**
  * 服务器类
@@ -18,6 +19,7 @@ class Server {
     constructor() {
         this.__server = null;
         this.__connection = null;
+        this.__model = null;
 
         // 初始化
         this.__init();
@@ -32,6 +34,8 @@ class Server {
         this.__server = express();
         // 获取连接
         this.__connection = Connector.getInstance().getConnection();
+        // 创建模型
+        this.__model = new Model(this.__connection).getModel();
     }
 
     /**
@@ -40,6 +44,20 @@ class Server {
     __start() {
         // 开始监端口
         this.__server.listen(serverConfig.listenPort);
+    }
+
+    /**
+     * 同步模型
+     */
+    static asyncModel() {
+        let connection = Connector.getInstance().getConnection();
+        let model = new Model(connection);
+        connection.async((err) => {
+            if (err) {
+                return Log.error('同步模型失败', err);
+            }
+            return Log.log('同步模型成功');
+        });
     }
 
 }
