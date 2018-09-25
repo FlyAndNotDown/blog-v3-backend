@@ -7,10 +7,10 @@ class ControllerFactory {
      * 获取单例
      * @return 控制器工厂单例
      */
-    static getInstance(model) {
+    static getInstance(model, server) {
 
         if (!ControllerFactory.__instance) {
-            ControllerFactory.__instance = new ControllerFactory(model);
+            ControllerFactory.__instance = new ControllerFactory(model, server);
         }
         return ControllerFactory.__instance;
 
@@ -19,10 +19,10 @@ class ControllerFactory {
     /**
      * 构造
      */
-    constructor(model) {
+    constructor(model, server) {
 
-        this.__connection = connection;
         this.__model = model;
+        this.__server = server;
 
     }
 
@@ -33,7 +33,7 @@ class ControllerFactory {
 
         switch (url) {
             case '/post':
-                post(this.__model, url, method);
+                post(this.__model, this.__server, url, method);
                 break;
             default:
                 break;

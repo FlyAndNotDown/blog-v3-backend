@@ -51,10 +51,10 @@ class Server {
         urlArray.forEach(url => {
 
             // RESTful API
-            ControllerFactory.getInstance(this.__model).when(url, 'get');
-            ControllerFactory.getInstance(this.__model).when(url, 'post');
-            ControllerFactory.getInstance(this.__model).when(url, 'put');
-            ControllerFactory.getInstance(this.__model).when(url, 'delete');
+            ControllerFactory.getInstance(this.__model, this.__server).when(url, 'get');
+            ControllerFactory.getInstance(this.__model, this.__server).when(url, 'post');
+            ControllerFactory.getInstance(this.__model, this.__server).when(url, 'put');
+            ControllerFactory.getInstance(this.__model, this.__server).when(url, 'delete');
 
         });
 
