@@ -1,10 +1,8 @@
 const Connection = require('../database/connection');
 
-function post(model, server, method) {
+function post(model, server) {
 
-    // 获取连接
-    let connection = Connection.getInstance().getConnection();
-    // TODO
+
 
 }
 
