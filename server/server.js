@@ -7,6 +7,7 @@ const express = require('express');
 const serverConfig = require('../config/server');
 const Connector = require('../database/connector');
 const Model = require('../model/model');
+const Log = require('../tool/log');
 
 /**
  * 服务器类
@@ -52,11 +53,11 @@ class Server {
     static asyncModel() {
         let connection = Connector.getInstance().getConnection();
         let model = new Model(connection);
-        connection.async((err) => {
+        connection.sync((err) => {
             if (err) {
                 return Log.error('同步模型失败', err);
             }
-            return Log.log('同步模型成功');
+            return Log.log('同步模型成功，使用Ctrl-C来退出');
         });
     }
 

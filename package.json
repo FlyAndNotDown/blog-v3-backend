@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "updateModel": "node script/update-model.js"
   },
   "repository": {
     "type": "git",
