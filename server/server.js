@@ -1,5 +1,6 @@
 const express = require('express');
 const ModelFactory = require('../model/factory');
+const modelDefineArray = require('../model/index');
 const ControllerFactory = require('../controller/factory');
 const urlArray = require('../controller/url');
 
@@ -38,8 +39,11 @@ class Server {
      */
     __loadModel() {
 
-        this.__model.Post = ModelFactory.getInstance().getModel('post');
-        // TODO add more
+        modelDefineArray.forEach(modelDefine => {
+
+            this.__model[modelDefine.name] = ModelFactory.getInstance().getModel(modelDefine.name);
+
+        });
 
     }
 
