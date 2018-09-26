@@ -4,7 +4,7 @@
  */
 
 module.exports = {
-    type: 'm2m'
+    type: 'm2m',
     ownner: 'post',
     with: 'label',
     name: 'labels'

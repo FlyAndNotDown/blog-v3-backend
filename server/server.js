@@ -60,9 +60,11 @@ class Server {
             Log.log('删除所有模型成功');
             connection.sync((err) => {
                 if (err) {
-                    return Log.error('更新模型失败', err);
+                    Log.error('更新模型失败', err);
+                    process.exit(0);
                 }
-                return Log.log('更新模型成功，使用Ctrl-C来退出');
+                Log.log('更新模型成功');
+                process.exit(0);
             });
         });
     }

@@ -34,7 +34,7 @@ class Model {
         });
         // 创建关联属性
         modelRelationArray.forEach(modelRelation => {
-            switch(modelRelation.type) {
+            switch(modelRelation .type) {
                 case 'm2m':
                     this.__model[modelRelation.ownner].hasMany(
                         modelRelation.name,
