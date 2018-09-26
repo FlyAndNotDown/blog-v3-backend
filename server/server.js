@@ -9,6 +9,8 @@ const Connector = require('../database/connector');
 const Model = require('../model/model');
 const Log = require('../tool/log');
 const ControllerLoader = require('../controller/loader');
+const readline = require('readline');
+const PasswordTool = require('../tool/password');
 
 /**
  * 服务器类
@@ -63,6 +65,40 @@ class Server {
             }
             Log.log('更新模型成功');
             process.exit(0);
+        });
+    }
+
+    /**
+     * 创建管理员账户
+     */
+    static newAdmin() {
+        let connection = Connector.getInstance().getConnection();
+        let model = new Model(connection);
+        const readlineInterface = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+        Log.log('根据指引创建管理员账户');
+        readlineInterface.question('username: ', (username) => {
+            readlineInterface.question('password: ', (password) => {
+                readlineInterface.question('repeat password', (passwordRepeat) => {
+                    if (password !== passwordRepeat) {
+                        Log.error('创建管理员账户失败', 'two password were not equal');
+                    } else {
+                        let salt = PasswordTool.getSalt();
+                        model.admin.create({
+                            username: username,
+                            password: PasswordTool.encode(password, salt),
+                            salt: salt
+                        }, (err) => {
+                            if (err) {
+                                return Log.error('创建管理员账户失败', err);
+                            }
+                            return Log.log('创建管理员账户成功');
+                        });
+                    }
+                });
+            });
         });
     }
 
