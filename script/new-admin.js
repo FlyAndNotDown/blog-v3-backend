@@ -22,6 +22,7 @@ const scriptConfig = require('../config/script');
                 Log.error('创建管理员账户失败', '用户名不符合规格');
                 process.exit(0);
             }
+            // TODO 查验数据库看管理员用户名是否重复
             readlineInterface.question('password: ', (password) => {
                 if (!password.match(scriptConfig.adminRegex.password)) {
                     Log.error('创建管理员账户失败', '密码不符合规格');
