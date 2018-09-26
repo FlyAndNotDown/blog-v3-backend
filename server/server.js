@@ -73,33 +73,37 @@ class Server {
      */
     static newAdmin() {
         let connection = Connector.getInstance().getConnection();
-        let model = new Model(connection);
+        let model = new Model(connection).getModel();
         const readlineInterface = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
-        Log.log('根据指引创建管理员账户');
-        readlineInterface.question('username: ', (username) => {
-            readlineInterface.question('password: ', (password) => {
-                readlineInterface.question('repeat password', (passwordRepeat) => {
-                    if (password !== passwordRepeat) {
-                        Log.error('创建管理员账户失败', 'two password were not equal');
-                    } else {
-                        let salt = PasswordTool.getSalt();
-                        model.admin.create({
-                            username: username,
-                            password: PasswordTool.encode(password, salt),
-                            salt: salt
-                        }, (err) => {
-                            if (err) {
-                                return Log.error('创建管理员账户失败', err);
-                            }
-                            return Log.log('创建管理员账户成功');
-                        });
-                    }
+        setTimeout(() => {
+            readlineInterface.question('username: ', (username) => {
+                readlineInterface.question('password: ', (password) => {
+                    readlineInterface.question('repeat password: ', (passwordRepeat) => {
+                        if (password !== passwordRepeat) {
+                            Log.error('创建管理员账户失败', '两次输入的密码不相同');
+                            process.exit(0);
+                        } else {
+                            let salt = PasswordTool.getSalt();
+                            model.admin.create({
+                                username: username,
+                                password: PasswordTool.encode(password, salt),
+                                salt: salt
+                            }, (err) => {
+                                if (err) {
+                                    Log.error('创建管理员账户失败', err);
+                                    process.exit(0);
+                                }
+                                Log.log('创建管理员账户成功');
+                                process.exit(0);
+                            });
+                        }
+                    });
                 });
             });
-        });
+        }, 1000);
     }
 
 }

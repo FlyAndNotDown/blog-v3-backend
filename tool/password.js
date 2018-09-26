@@ -7,13 +7,18 @@ const sha256 = require('js-sha256');
 
 class PasswordTool {
 
-    // 盐矩阵
-    static __SALT_VERTEX = [
-        '0', '1', '2', '3',
-        '4', '5', '6', '7',
-        '8', '9', 'a', 'b',
-        'c', 'd', 'e', 'f'
-    ];
+    /**
+     * 获取盐矩阵
+     * @return {[type]} [description]
+     */
+    static getSaltVertex() {
+        return [
+            '0', '1', '2', '3',
+            '4', '5', '6', '7',
+            '8', '9', 'a', 'b',
+            'c', 'd', 'e', 'f'
+        ];
+    }
 
     /**
      * 获取盐
@@ -21,8 +26,9 @@ class PasswordTool {
      */
     static getSalt() {
         let salt = '';
+        const saltVertex = PasswordTool.getSaltVertex();
         for (let i = 0; i < 12; i++) {
-            salt += PasswordTool.__SALT_VERTEX[Math.floor(Math.random() * 16)]
+            salt += saltVertex[Math.floor(Math.random() * 16)]
         }
         return salt;
     }
