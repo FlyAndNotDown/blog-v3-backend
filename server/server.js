@@ -56,16 +56,13 @@ class Server {
     static updateModel() {
         let connection = Connector.getInstance().getConnection();
         let model = new Model(connection);
-        connection.drop(() => {
-            Log.log('删除所有模型成功');
-            connection.sync((err) => {
-                if (err) {
-                    Log.error('更新模型失败', err);
-                    process.exit(0);
-                }
-                Log.log('更新模型成功');
+        connection.sync((err) => {
+            if (err) {
+                Log.error('更新模型失败', err);
                 process.exit(0);
-            });
+            }
+            Log.log('更新模型成功');
+            process.exit(0);
         });
     }
 
