@@ -4,6 +4,7 @@
  */
 
 const modelDefineArray = require('./define/index');
+const modelRelationArray = require('./relation/index');
 
 /**
  * 模型类
@@ -30,6 +31,27 @@ class Model {
                 modelDefine.description,
                 modelDefine.method || {}
             );
+        });
+        // 创建关联属性
+        modelRelationArray.forEach(modelRelation => {
+            switch(modelRelation.type) {
+                case 'm2m':
+                    this.__model[modelRelation.ownner].hasMany(
+                        modelRelation.name,
+                        modelRelation.with,
+                        modelRelation.props || {},
+                        modelRelation.options || {}
+                    );
+                    break;
+                case 'm2o':
+                    this.__model[modelRelation.ownner].hasOne(
+                        modelRelation.name,
+                        modelRelation.with,
+                        modelRelation.options || {}
+                    );
+                default:
+                    break;
+            }
         });
     }
 
