@@ -51,16 +51,19 @@ class Server {
     }
 
     /**
-     * 同步模型
+     * 更新模型
      */
-    static asyncModel() {
+    static updateModel() {
         let connection = Connector.getInstance().getConnection();
         let model = new Model(connection);
-        connection.sync((err) => {
-            if (err) {
-                return Log.error('同步模型失败', err);
-            }
-            return Log.log('同步模型成功，使用Ctrl-C来退出');
+        connection.drop(() => {
+            Log.log('删除所有模型成功');
+            connection.sync((err) => {
+                if (err) {
+                    return Log.error('更新模型失败', err);
+                }
+                return Log.log('更新模型成功，使用Ctrl-C来退出');
+            });
         });
     }
 

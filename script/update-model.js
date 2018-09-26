@@ -6,5 +6,5 @@
 const Server = require('../server/server');
 
 (function() {
-    Server.asyncModel();
+    Server.updateModel();
 })();
