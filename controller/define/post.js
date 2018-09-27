@@ -5,9 +5,8 @@
 
 const controllerConfig = require('../../config/controller');
 
+const url = `${controllerConfig.commonUrlPrefix}/post`;
+
 module.exports = {
-    url: `${controllerConfig.commonUrlPrefix}/post`,
-    get: function(connection, model) {
-        return function(req, res) {}
-    },
+    url: url
 };
