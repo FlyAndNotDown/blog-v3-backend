@@ -63,7 +63,46 @@ module.exports = {
      */
     post: function(connection, model) {
         return function(request, response) {
-            // TODO
+            // 服务器日志
+            Log.log(`post ${url}`);
+
+            // 参数获取
+            let username = request.query.username || null;
+            let password = request.query.password || null;
+
+            // 参数校验
+            if (!username || !username.match(regexConfig.admin.username)
+                || !password || !password.match(regexConfig.admin.passwordHash)) {
+                return response.json({
+                    success: false,
+                    reason: 'params error'
+                });
+            }
+
+            // 看用户是否存在
+            model.admin.one({ username: username, }, (err, adminObject) => {
+                if (err) {
+                    return response.json({
+                        success: false,
+                        reason: 'query error'
+                    });
+                }
+                // 如果用户不存在
+                if (!adminObject) {
+                    return response.json({
+                        success: false,
+                        reason: 'admin account is not exist'
+                    });
+                }
+                // 如果用户存在，则进行校验
+                return adminObject.password === password ? response.json({
+                    success: true,
+                    name: adminObject.name
+                }) : response.json({
+                    success: false,
+                    reason: 'username and password is not match'
+                });
+            });
         }
     }
 };
