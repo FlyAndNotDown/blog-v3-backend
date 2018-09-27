@@ -4,7 +4,6 @@
  */
 
 const controllerConfig = require('../../config/controller');
-const HttpError = require('../../tool/http-error');
 const settings = require('../../settings');
 const Log = require('../../tool/log');
 const regexConfig = require('../../config/regex');
@@ -23,8 +22,38 @@ module.exports = {
         return function(request, response) {
             // 服务器日志
             Log.log(`get ${url}`);
+
             // 参数获取
-            // TODO
+            let username = request.query.username || null;
+            // 参数校验
+            if (!username || !username.match(regexConfig.admin.username)) {
+                return response.json({
+                    success: false,
+                    reason: 'params error'
+                });
+            }
+
+            // 看用户名是否存在
+            model.admin.one({ username: username }, (err, adminObject) => {
+                if (err) {
+                    return response.json({
+                        success: false,
+                        reason: 'query error'
+                    });
+                }
+                // 如果用户不存在
+                if (!adminObject) {
+                    return response.json({
+                        success: false,
+                        reason: 'admin account is not exist'
+                    });
+                }
+                // 如果用户存在，返回盐
+                return response.json({
+                    success: true,
+                    salt: adminObject.salt
+                });
+            });
         }
     },
     /**
