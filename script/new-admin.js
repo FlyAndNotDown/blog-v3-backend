@@ -42,18 +42,25 @@ const scriptConfig = require('../config/script');
                             Log.error('创建管理员账户失败', '两次输入的密码不相同');
                             process.exit(0);
                         }
-                        let salt = PasswordTool.getSalt();
-                        model.admin.create({
-                            username: username,
-                            password: PasswordTool.encode(password, salt),
-                            salt: salt
-                        }, (err) => {
-                            if (err) {
-                                Log.error('创建管理员账户失败', err);
+                        readlineInterface.question('your name: ', (name) => {
+                            if (!name.match(scriptConfig.adminRegex.name)) {
+                                Log.error('创建管理员账户失败', '姓名不符合规范');
                                 process.exit(0);
                             }
-                            Log.log('创建管理员账户成功');
-                            process.exit(0);
+                            let salt = PasswordTool.getSalt();
+                            model.admin.create({
+                                username: username,
+                                password: PasswordTool.encode(password, salt),
+                                name: name,
+                                salt: salt
+                            }, (err) => {
+                                if (err) {
+                                    Log.error('创建管理员账户失败', err);
+                                    process.exit(0);
+                                }
+                                Log.log('创建管理员账户成功');
+                                process.exit(0);
+                            });
                         });
                     });
                 });
