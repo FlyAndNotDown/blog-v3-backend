@@ -8,13 +8,15 @@ const HttpError = require('../../tool/http-error');
 const settings = require('../../settings');
 const Log = require('../../tool/log');
 
+const url = `${controllerConfig.commonUrlPrefix}/admin`;
+
 module.exports = {
-    url: `${controllerConfig.commonUrlPrefix}/admin`,
+    url: url,
     // 获取盐
     get: function(connection, model) {
         return function(req, res) {
             // 控制台信息
-            Log.log(`get ${controllerConfig.commonUrlPrefix}/admin`);
+            Log.log(`get ${url}`);
             // 参数校验
             let username = req.query.username || null;
             if (!username) {
