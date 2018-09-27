@@ -8,6 +8,7 @@ const Model = require('../model/model');
 const Log = require('../tool/log');
 const readline = require('readline');
 const scriptConfig = require('../config/script');
+const PasswordTool = require('../tool/password');
 
 (function() {
     let connection = Connector.getInstance().getConnection();

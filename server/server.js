@@ -9,7 +9,6 @@ const Connector = require('../database/connector');
 const Model = require('../model/model');
 const Log = require('../tool/log');
 const ControllerLoader = require('../controller/loader');
-const PasswordTool = require('../tool/password');
 
 /**
  * 服务器类
