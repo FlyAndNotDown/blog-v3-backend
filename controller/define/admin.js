@@ -5,7 +5,7 @@
 
 const controllerConfig = require('../../config/controller');
 const HttpError = require('../../tool/http-error');
-const settings = require('../../../settings');
+const settings = require('../../settings');
 
 module.exports = {
     url: `${controllerConfig.commonUrlPrefix}/admin`,
@@ -26,8 +26,25 @@ module.exports = {
                         HttpError.dbQueryError('db query error on model: admin')
                     ) : res.status(500).end();
                 }
-                // 如果存在
-                
+                // 如果管理员用户不存在
+                if (count === 0) {
+                    // 返回空盐
+                    return res.json({
+                        salt: null
+                    });
+                }
+                // 如果存在则查询管理员用户的盐
+                model.admin.one({ username: username }, (err, adminObject) => {
+                    if (err) {
+                        return settings.devMode ? res.status(500).json(
+                            HttpError.dbQueryError('db query error on model: admin')
+                        ) : res.status(500).end();
+                    }
+                    // 返回结果
+                    return res.json({
+                        salt: adminObject.salt
+                    });
+                });
             });
         }
     }

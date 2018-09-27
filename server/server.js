@@ -59,7 +59,7 @@ class Server {
      */
     __loadController() {
         // 加载 Controller
-        new ControllerLoader(this.__server, this.__connection, this.__server);
+        new ControllerLoader(this.__server, this.__connection, this.__model);
     }
 
     /**

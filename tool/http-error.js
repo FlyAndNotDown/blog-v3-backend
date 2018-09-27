@@ -8,9 +8,6 @@
  */
 class HttpError {
 
-    static TYPE_PARAMS_ERROR = 'paramsError';
-    static TYPE_DB_QUERY_ERROR = 'dbQueryError';
-
     /**
      * 获取错误对象
      * @param  {string} type   错误类型
@@ -31,7 +28,7 @@ class HttpError {
      */
     static paramsError(detail) {
         return HttpError.__getErrorObject(
-            HttpError.TYPE_PARAMS_ERROR,
+            'paramsError',
             detail
         );
     }
@@ -43,7 +40,7 @@ class HttpError {
      */
     static dbQueryError(detail) {
         return HttpError.__getErrorObject(
-            HttpError.TYPE_DB_QUERY_ERROR,
+            'dbQueryError',
             detail
         );
     }
