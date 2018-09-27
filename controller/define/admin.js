@@ -10,7 +10,7 @@ module.exports = {
     // 获取盐
     get: function(connection, model) {
         return function(req, res) {
-            
+            res.send(req.body);
         }
     }
 };

@@ -34,6 +34,7 @@ class Server {
      * 加载中间件
      */
     __loadMiddwares() {
+        // 使用 body-parser 中间件
         this.__server.use(bodyParser.json());
     }
 
