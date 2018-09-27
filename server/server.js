@@ -9,6 +9,7 @@ const Connector = require('../database/connector');
 const Model = require('../model/model');
 const Log = require('../tool/log');
 const ControllerLoader = require('../controller/loader');
+const bodyParser = require('body-parser');
 
 /**
  * 服务器类
@@ -33,7 +34,7 @@ class Server {
      * 加载中间件
      */
     __loadMiddwares() {
-        // TODO
+        this.__server.use(bodyParser.json());
     }
 
     /**
