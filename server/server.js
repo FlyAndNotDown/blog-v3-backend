@@ -30,16 +30,49 @@ class Server {
     }
 
     /**
+     * 加载中间件
+     */
+    __loadMiddwares() {
+        // TODO
+    }
+
+    /**
+     * 生成连接
+     */
+    __generateConnection() {
+        // 获取连接
+        this.__connection = Connector.getInstance().getConnection();
+    }
+
+    /**
+     * 加载模型
+     */
+    __loadModel() {
+        // 创建模型
+        this.__model = new Model(this.__connection).getModel();
+    }
+
+    /**
+     * 加载控制器
+     */
+    __loadController() {
+        // 加载 Controller
+        new ControllerLoader(this.__server, this.__connection, this.__server);
+    }
+
+    /**
      * 初始化
      */
     __init() {
         this.__server = express();
-        // 获取连接
-        this.__connection = Connector.getInstance().getConnection();
-        // 创建模型
-        this.__model = new Model(this.__connection).getModel();
-        // 加载 Controller
-        new ControllerLoader(this.__server, this.__connection, this.__server);
+        // 加载中间件
+        this.__loadMiddwares();
+        // 生成连接
+        this.__generateConnection();
+        // 加载模型
+        this.__loadModel();
+        // 加载控制器
+        this.__loadController();
     }
 
     /**
