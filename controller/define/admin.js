@@ -4,6 +4,7 @@
  */
 
 const controllerConfig = require('../../config/controller');
+const HttpError = require('../../tool/http-error');
 
 module.exports = {
     url: `${controllerConfig.commonUrlPrefix}/admin`,
@@ -11,7 +12,13 @@ module.exports = {
     get: function(connection, model) {
         return function(req, res) {
             // 参数校验
-            // TODO
+            let username = req.query.username || null;
+            if (!username) {
+                return res.status(500).json(
+                    HttpError.paramsError('need param - username')
+                );
+            }
+            
         }
     }
 };
