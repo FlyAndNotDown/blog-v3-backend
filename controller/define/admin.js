@@ -20,7 +20,7 @@ module.exports = {
      * @return {function}          处理函数
      */
     get: function(connection, model) {
-        return function(req, res) {
+        return function(request, response) {
             // 服务器日志
             Log.log(`get ${url}`);
             // 参数获取
@@ -33,7 +33,7 @@ module.exports = {
      * @param  {object} model      数据库模型
      */
     post: function(connection, model) {
-        return function(req, res) {
+        return function(request, response) {
             // TODO
         }
     }
