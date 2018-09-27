@@ -95,13 +95,18 @@ module.exports = {
                     });
                 }
                 // 如果用户存在，则进行校验
-                return adminObject.password === password ? response.json({
-                    success: true,
-                    name: adminObject.name
-                }) : response.json({
-                    success: false,
-                    reason: 'username and password is not match'
-                });
+                if (adminObject.password === password) {
+                    // TODO session相关
+                    return response.json({
+                        success: true,
+                        name: adminObject.name
+                    });
+                } else {
+                    return response.json({
+                        success: false,
+                        reason: 'username and password is not match'
+                    });
+                }
             });
         }
     }
