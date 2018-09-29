@@ -29,7 +29,7 @@ module.exports = {
             if (!username || !username.match(regexConfig.admin.username)) {
                 return response.json({
                     success: false,
-                    reason: 'params error'
+                    reason: '参数错误'
                 });
             }
 
@@ -38,14 +38,14 @@ module.exports = {
                 if (err) {
                     return response.json({
                         success: false,
-                        reason: 'query error'
+                        reason: '查询错误'
                     });
                 }
                 // 如果用户不存在
                 if (!adminObject) {
                     return response.json({
                         success: false,
-                        reason: 'admin account is not exist'
+                        reason: '管理员账户不存在'
                     });
                 }
                 // 如果用户存在，返回盐
@@ -75,7 +75,7 @@ module.exports = {
                 || !password || !password.match(regexConfig.admin.passwordHash)) {
                 return response.json({
                     success: false,
-                    reason: 'params error'
+                    reason: '参数错误'
                 });
             }
 
@@ -84,14 +84,14 @@ module.exports = {
                 if (err) {
                     return response.json({
                         success: false,
-                        reason: 'query error'
+                        reason: '服务器查询错误'
                     });
                 }
                 // 如果用户不存在
                 if (!adminObject) {
                     return response.json({
                         success: false,
-                        reason: 'admin account is not exist'
+                        reason: '管理员账号不存在'
                     });
                 }
                 // 如果用户存在，则进行校验
@@ -104,7 +104,7 @@ module.exports = {
                 } else {
                     return response.json({
                         success: false,
-                        reason: 'username and password is not match'
+                        reason: '用户名与密码不匹配'
                     });
                 }
             });
