@@ -9,7 +9,7 @@ const Connector = require('../database/connector');
 const Model = require('../model/model');
 const Log = require('../tool/log');
 const ControllerLoader = require('../controller/loader');
-const bodyParser = require('body-parser');
+const MiddlewareLoader = require('../middleware/loader');
 
 /**
  * 服务器类
@@ -35,9 +35,8 @@ class Server {
      * 加载中间件
      * @private
      */
-    __loadMiddwares() {
-        // 使用 body-parser 中间件
-        this.__server.use(bodyParser.json());
+    __loadMiddlewares() {
+        new MiddlewareLoader(this.__server);
     }
 
     /**
@@ -74,7 +73,7 @@ class Server {
     __init() {
         this.__server = express();
         // 加载中间件
-        this.__loadMiddwares();
+        this.__loadMiddlewares();
         // 生成连接
         this.__generateConnection();
         // 加载模型
