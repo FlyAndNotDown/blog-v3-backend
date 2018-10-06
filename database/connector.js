@@ -11,12 +11,13 @@ const connectionConfig = databaseConfig.connection;
 
 /**
  * 连接器类
+ * @constructor
  */
 class Connector {
 
     /**
      * 获取单例
-     * @return {object} 连接器单例
+     * @returns {Object} 连接器单例
      */
     static getInstance() {
         if (!Connector.__instance) {

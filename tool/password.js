@@ -9,7 +9,7 @@ class PasswordTool {
 
     /**
      * 获取盐矩阵
-     * @return {[type]} [description]
+     * @returns {Object} 获取盐矩阵
      */
     static getSaltVertex() {
         return [
@@ -22,7 +22,7 @@ class PasswordTool {
 
     /**
      * 获取盐
-     * @return {string} 盐
+     * @returns {string} 盐
      */
     static getSalt() {
         let salt = '';

@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 
 /**
  * 服务器类
+ * @constructor
  */
 class Server {
 
@@ -32,6 +33,7 @@ class Server {
 
     /**
      * 加载中间件
+     * @private
      */
     __loadMiddwares() {
         // 使用 body-parser 中间件
@@ -40,6 +42,7 @@ class Server {
 
     /**
      * 生成连接
+     * @private
      */
     __generateConnection() {
         // 获取连接
@@ -48,6 +51,7 @@ class Server {
 
     /**
      * 加载模型
+     * @private
      */
     __loadModel() {
         // 创建模型
@@ -56,6 +60,7 @@ class Server {
 
     /**
      * 加载控制器
+     * @private
      */
     __loadController() {
         // 加载 Controller
@@ -64,6 +69,7 @@ class Server {
 
     /**
      * 初始化
+     * @private
      */
     __init() {
         this.__server = express();
@@ -79,6 +85,7 @@ class Server {
 
     /**
      * 开启服务器
+     * @private
      */
     __start() {
         // 开始监端口

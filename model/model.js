@@ -8,11 +8,13 @@ const modelRelationArray = require('./relation/index');
 
 /**
  * 模型类
+ * @constructor
  */
 class Model {
 
     /**
      * 构造
+     * @param {Object} connection 连接对象
      */
     constructor(connection) {
         this.__connection = connection;
@@ -23,6 +25,10 @@ class Model {
         this.__init();
     }
 
+    /**
+     * 初始化函数
+     * @private
+     */
     __init() {
         // 根据列表进行定义，并且将模型对象存入 this.__model
         modelDefineArray.forEach(modelDefine => {
@@ -56,8 +62,8 @@ class Model {
     }
 
     /**
-     * 获取模型对象
-     * @return {object} 模型对象
+     * 获取模型对象函数
+     * @returns {Object} 模型对象
      */
     getModel() {
         return this.__model;

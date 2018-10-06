@@ -7,11 +7,15 @@ const controllerDefineArray = require('./define/index');
 
 /**
  * 控制器加载器类
+ * @constructor
  */
 class ControllerLoader {
 
     /**
      * 构造
+     * @param {Object} server 服务器对象
+     * @param {Object} connection 连接对象
+     * @param {Object} model 模型
      */
     constructor(server, connection, model) {
         this.__connection = connection;
