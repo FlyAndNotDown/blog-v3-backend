@@ -7,6 +7,9 @@ const Connector = require('../database/connector');
 const Model = require('../model/model');
 const Log = require('../tool/log');
 
+/**
+ * 更新模型脚本
+ */
 (function() {
     let connection = Connector.getInstance().getConnection();
     let model = new Model(connection);

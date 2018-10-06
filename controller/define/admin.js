@@ -8,6 +8,9 @@ const Log = require('../../tool/log');
 
 const url = `${controllerConfig.commonUrlPrefix}/admin`;
 
+/**
+ * /admin 控制器定义
+ */
 module.exports = {
     url: url,
     /**

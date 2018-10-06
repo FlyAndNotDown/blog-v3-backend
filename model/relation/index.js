@@ -11,4 +11,7 @@ let modelRelationArray = [];
     modelRelationArray.push(postLabel);
 })();
 
+/**
+ * 模型关系定义数组
+ */
 module.exports = modelRelationArray;

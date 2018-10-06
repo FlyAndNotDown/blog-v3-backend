@@ -15,4 +15,7 @@ let controllerDefineArray = [];
     controllerDefineArray.push(admin);
 })();
 
+/**
+ * 控制器数组
+ */
 module.exports = controllerDefineArray;

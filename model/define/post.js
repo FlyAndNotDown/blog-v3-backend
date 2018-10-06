@@ -3,6 +3,9 @@
  * @author John Kindem
  */
 
+/**
+ * Post 模型定义
+ */
 module.exports = {
     name: 'post',
     description: {

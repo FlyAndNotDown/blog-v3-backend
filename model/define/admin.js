@@ -3,6 +3,9 @@
  * @author John Kindem
  */
 
+/**
+ * Admin 模型定义
+ */
 module.exports = {
     name: 'admin',
     description: {

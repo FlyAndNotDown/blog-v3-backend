@@ -5,6 +5,9 @@
 
 const settings = require('../settings');
 
+/**
+ * 数据库配置
+ */
 module.exports = settings.devMode ? {
     connection: {
         driver: 'mysql',

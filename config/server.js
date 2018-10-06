@@ -5,6 +5,9 @@
 
 const settings = require('../settings');
 
+/**
+ * 服务器配置
+ */
 module.exports = settings.devMode ? {
     listenPort: 30000
 } : {

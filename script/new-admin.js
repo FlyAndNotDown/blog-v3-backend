@@ -10,6 +10,9 @@ const readline = require('readline');
 const scriptConfig = require('../config/script');
 const PasswordTool = require('../tool/password');
 
+/**
+ * 新建管理员脚本
+ */
 (function() {
     let connection = Connector.getInstance().getConnection();
     let model = new Model(connection).getModel();

@@ -5,6 +5,9 @@
 
 const settings = require('../settings');
 
+/**
+ * 脚本配置
+ */
 module.exports = settings.devMode ? {
     adminRegex: {
         username: /[0-9a-z]{6,16}/,

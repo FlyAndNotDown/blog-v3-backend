@@ -15,4 +15,8 @@ let modelDefineArray = [];
     modelDefineArray.push(admin);
 })();
 
+
+/**
+ * 模型定义数组
+ */
 module.exports = modelDefineArray;

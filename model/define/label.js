@@ -3,6 +3,9 @@
  * @author John Kindem
  */
 
+/**
+ * Label 模型定义
+ */
 module.exports = {
     name: 'label',
     description: {
