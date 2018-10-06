@@ -19,7 +19,6 @@ module.exports = {
     get: function(connection, model) {
         return function(request, response) {
             // 服务器日志
-            Log.log(`get ${url}`);
             // TODO
         }
     },
@@ -31,7 +30,6 @@ module.exports = {
     post: function(connection, model) {
         return function(request, response) {
             // 服务器日志
-            Log.log(`post ${url}`);
             // TODO
         }
     }
