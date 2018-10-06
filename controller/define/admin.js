@@ -4,9 +4,7 @@
  */
 
 const controllerConfig = require('../../config/controller');
-const settings = require('../../settings');
 const Log = require('../../tool/log');
-const regexConfig = require('../../config/regex');
 
 const url = `${controllerConfig.commonUrlPrefix}/admin`;
 
