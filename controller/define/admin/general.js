@@ -1,15 +1,14 @@
 /**
- * /controller/define/admin.js
+ * /controller/define/admin/general.js
  * @author John Kindem
  */
 
-const controllerConfig = require('../../config/controller');
-const Log = require('../../tool/log');
+const controllerConfig = require('../../../config/controller');
 
-const url = `${controllerConfig.commonUrlPrefix}/admin`;
+const url = `${controllerConfig.commonUrlPrefix}/admin/general`;
 
 /**
- * /admin 控制器定义
+ * /admin/general 控制器定义
  */
 module.exports = {
     url: url,
