@@ -15,13 +15,17 @@ module.exports = {
 
     /**
      * 获取文章
-     * @param connection
-     * @param model
-     * @returns {Function}
+     * @param {Object} connection 连接对象
+     * @param {Object} model 模型
+     * @returns {Function} http处理函数
      */
     get: function (connection, model) {
+        /**
+         * @param {Object} request 请求对象
+         * @param {Object} response 响应对象
+         * @returns {*}
+         */
         return function (request, response) {
-            // 服务器日志
             // TODO
         }
     }
