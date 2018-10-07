@@ -23,7 +23,7 @@ module.exports = {
 
             // 参数校验
             if (!username || !username.match(adminRegex.username)) {
-                Log.error('参数校验错误');
+                Log.error('参数校验错误', `username: ${username}`);
                 return response.status(400).send('参数校验错误');
             }
 
@@ -57,9 +57,12 @@ module.exports = {
             const password = body.password || null;
 
             // 参数校验
-            if (!username || !username.match(adminRegex.username) ||
-                !password || !password.match(adminRegex.passwordHash)) {
-                Log.error('参数校验错误');
+            if (!username || !username.match(adminRegex.username)) {
+                Log.error('参数校验错误', `username: ${username}`);
+                return response.status(400).send('参数校验错误');
+            }
+            if (!password || !password.match(adminRegex.passwordHash)) {
+                Log.error('参数校验错误', `password: ${password}`);
                 return response.status(400).send('参数校验错误');
             }
 
