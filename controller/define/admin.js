@@ -12,5 +12,11 @@ const url = `${controllerConfig.commonUrlPrefix}/admin`;
  * /admin 控制器定义
  */
 module.exports = {
-    url: url
+    url: url,
+    get: function (connection, model) {
+        return function (request, response) {
+            // 获取参数
+            // TODO
+        }
+    }
 };

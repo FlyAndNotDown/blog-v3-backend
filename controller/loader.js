@@ -23,6 +23,7 @@ class ControllerLoader {
 
         // 根据列表依次加载 Controller
         controllerDefineArray.forEach(controllerDefine => {
+            // TODO 如何需要连接池，在这里弄
             if (controllerDefine.get) {
                 server.get(controllerDefine.url, controllerDefine.get(this.__connection, this.__model));
             }
