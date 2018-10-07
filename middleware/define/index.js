@@ -7,6 +7,7 @@ const bodyParser = require('./body-parser');
 const cookieParser = require('./cookie-parser');
 const cors = require('./cors');
 const autoLog = require('./auto-log');
+const session = require('./session');
 
 let middlewareDefineArray = [];
 
@@ -14,6 +15,7 @@ let middlewareDefineArray = [];
     middlewareDefineArray.push(autoLog);
     middlewareDefineArray.push(cors);
     middlewareDefineArray.push(cookieParser);
+    middlewareDefineArray.push(session);
     middlewareDefineArray.push(bodyParser);
 }());
 

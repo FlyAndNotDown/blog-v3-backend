@@ -15,6 +15,14 @@ module.exports = settings.devMode ? {
     cors: {
         origin: 'http://localhost:20000',
         optionsSuccessStatus: 200
+    },
+    session: {
+        secret: 'kindem no.1',
+        cookie: {
+            maxAge: 1000 * 60
+        },
+        resave: false,
+        saveUninitialized: false
     }
 } : {
     cookieParser: {
@@ -23,5 +31,13 @@ module.exports = settings.devMode ? {
     cors: {
         origin: 'http://www.kindemh.cn',
         optionsSuccessStatus: 200
+    },
+    session: {
+        secret: 'kindem no.1',
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7
+        },
+        resave: false,
+        saveUninitialized: false
     }
 };
