@@ -36,6 +36,7 @@ class Server {
      * @private
      */
     __loadMiddlewares() {
+        Log.log('开始加载中间件');
         new MiddlewareLoader(this.__server);
     }
 
@@ -44,7 +45,7 @@ class Server {
      * @private
      */
     __generateConnection() {
-        // 获取连接
+        Log.log('开始获取数据库连接');
         this.__connection = Connector.getInstance().getConnection();
     }
 
@@ -53,7 +54,7 @@ class Server {
      * @private
      */
     __loadModel() {
-        // 创建模型
+        Log.log('开始加载模型');
         this.__model = new Model(this.__connection).getModel();
     }
 
@@ -62,7 +63,7 @@ class Server {
      * @private
      */
     __loadController() {
-        // 加载 Controller
+        Log.log('开始加载控制器');
         new ControllerLoader(this.__server, this.__connection, this.__model);
     }
 
@@ -71,6 +72,7 @@ class Server {
      * @private
      */
     __init() {
+        Log.log('开始初始化服务器');
         this.__server = express();
         // 加载中间件
         this.__loadMiddlewares();
@@ -87,6 +89,7 @@ class Server {
      * @private
      */
     __start() {
+        Log.log('开始监听目标端口');
         // 开始监端口
         this.__server.listen(serverConfig.listenPort);
     }
