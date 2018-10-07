@@ -21,7 +21,7 @@ class Log {
      * @param {string} context 记录内容
      */
     static error(context, error) {
-        console.log(`[error] ${context}\n${error}`);
+        console.log(`[error] ${context}${error ? `\n${error}` : ''}`);
     }
 
 }
