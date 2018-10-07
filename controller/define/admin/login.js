@@ -5,7 +5,9 @@
 
 const controllerConfig = require('../../../config/controller');
 const Log = require('../../../tool/log');
+const regexConfig = require('../../../config/regex');
 
+const adminRegex = regexConfig.admin;
 const url = `${controllerConfig.commonUrlPrefix}/admin/login`;
 
 /**
@@ -20,7 +22,7 @@ module.exports = {
             const username = query.username || null;
 
             // 参数校验
-            if (!username) {
+            if (!username || !username.match(adminRegex.username)) {
                 Log.error('参数校验错误');
                 return response.status(400).send('参数校验错误');
             }
@@ -36,14 +38,56 @@ module.exports = {
                 }
                 // 如果存在
                 if (object) {
-                    Log.log('正常返回');
                     return response.json({
                         salt: object.salt
                     });
                 } else {
-                    Log.log('正常返回');
                     return response.json({
                         salt: null
+                    });
+                }
+            });
+        }
+    },
+    post: function (connection, model) {
+        return function (request, response) {
+            // 获取参数
+            const body = request.body || {};
+            const username = body.username || null;
+            const password = body.password || null;
+
+            // 参数校验
+            if (!username || !username.match(adminRegex.username) ||
+                !password || !password.match(adminRegex.passwordHash)) {
+                Log.error('参数校验错误');
+                return response.status(400).send('参数校验错误');
+            }
+
+            // 查询数据库获取管理员对象
+            model.admin.one({
+                username: username,
+                password: password
+            }, (error, object) => {
+                // 如果查询出错
+                if (error) {
+                    Log.error('数据库查询错误', error);
+                    return response.status(500).send('数据库查询错误');
+                }
+                // 如果存在
+                if (object) {
+                    // 密码校验
+                    if (object.password === password) {
+                        return response.json({
+                            success: true
+                        });
+                    } else {
+                        return response.json({
+                            success: false
+                        });
+                    }
+                } else {
+                    return response.json({
+                        success: false
                     });
                 }
             });
