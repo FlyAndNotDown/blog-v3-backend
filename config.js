@@ -43,7 +43,7 @@ const controllerConfig = mainConfig.devMode ? {
  * 视图层配置
  */
 const viewConfig = mainConfig.devMode ? {
-
+    commonUrlPrefix: '/request/blog'
 } : {};
 
 /**
