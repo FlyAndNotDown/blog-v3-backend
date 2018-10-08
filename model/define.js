@@ -9,22 +9,25 @@ const Sequelize = require('sequelize');
  * 文章模型定义
  */
 const postModel = {
-    id: {
-        type: Sequelize.BIGINT,
-        unique: true,
-        autoIncrement: true
-    },
-    title: {
-        type: Sequelize.STRING(100)
-    },
+    name: 'post',
     description: {
-        type: Sequelize.STRING(1000)
-    },
-    body: {
-        type: Sequelize.STRING(1000)
-    },
-    date: {
-        type: Sequelize.DATEONLY
+        id: {
+            type: Sequelize.BIGINT,
+            unique: true,
+            autoIncrement: true
+        },
+        title: {
+            type: Sequelize.STRING(100)
+        },
+        description: {
+            type: Sequelize.STRING(1000)
+        },
+        body: {
+            type: Sequelize.STRING(1000)
+        },
+        date: {
+            type: Sequelize.DATEONLY
+        }
     }
 };
 
@@ -32,13 +35,16 @@ const postModel = {
  * 标签模型定义
  */
 const labelModel = {
-    id: {
-        type: Sequelize.BIGINT,
-        unique: true,
-        autoIncrement: true
-    },
-    name: {
-        type: Sequelize.STRING(20)
+    name: 'label',
+    description: {
+        id: {
+            type: Sequelize.BIGINT,
+            unique: true,
+            autoIncrement: true
+        },
+        name: {
+            type: Sequelize.STRING(20)
+        }
     }
 };
 
@@ -46,25 +52,28 @@ const labelModel = {
  * 管理员模型定义
  */
 const adminModel = {
-    id: {
-        type: Sequelize.BIGINT,
-        unique: true,
-        autoIncrement: true
-    },
-    name: {
-        type: Sequelize.STRING(20)
-    },
-    username: {
-        type: Sequelize.STRING(20)
-    },
-    password: {
-        type: Sequelize.STRING(64)
-    },
-    salt: {
-        type: Sequelize.STRING(12)
-    },
-    phone: {
-        type: Sequelize.STRING(11)
+    name: 'admin',
+    description: {
+        id: {
+            type: Sequelize.BIGINT,
+            unique: true,
+            autoIncrement: true
+        },
+        name: {
+            type: Sequelize.STRING(20)
+        },
+        username: {
+            type: Sequelize.STRING(20)
+        },
+        password: {
+            type: Sequelize.STRING(64)
+        },
+        salt: {
+            type: Sequelize.STRING(12)
+        },
+        phone: {
+            type: Sequelize.STRING(11)
+        }
     }
 };
 

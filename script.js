@@ -23,13 +23,13 @@ const funcMap = {
          */
         test: function () {
             Log.log('测试服务器连接');
-            const model = new Sequelize(
+            const db = new Sequelize(
                 connectionConfig.database,
                 connectionConfig.username,
                 connectionConfig.password,
                 connectionConfig.options
             );
-            model
+            db
                 .authenticate()
                 .then(() => {
                     Log.log('连接成功');
