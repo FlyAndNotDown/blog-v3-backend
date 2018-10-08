@@ -12,6 +12,13 @@ const mainConfig = {
 };
 
 /**
+ * 服务器配置
+ */
+const serverConfig = mainConfig.devMode ? {
+    listenPort: 30000
+} : {};
+
+/**
  * 模型层配置
  */
 const modelConfig = mainConfig.devMode ? {
@@ -58,6 +65,7 @@ const regexConfig = mainConfig.devMode ? {
  */
 module.exports = {
     main: mainConfig,
+    server: serverConfig,
     model: modelConfig,
     controller: controllerConfig,
     middleware: middlewareConfig
