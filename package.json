@@ -2,9 +2,9 @@
   "name": "blog-v3-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node main.js",
     "updateModel": "node script/update-model.js",
     "newAdmin": "node script/new-admin.js"
   },
