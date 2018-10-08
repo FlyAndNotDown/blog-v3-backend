@@ -68,6 +68,9 @@ const adminModel = {
     }
 };
 
+/**
+ * 文章标签关系定义
+ */
 const postLabelRelation = {
     type: 'm2m',
     owner: ['post', 'label']
