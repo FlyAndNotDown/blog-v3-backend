@@ -62,7 +62,7 @@ class Server {
      */
     __loadController() {
         Log.log('开始加载控制器');
-        new ControllerLoader(this.__server, this.__models).load();
+        new ControllerLoader(this.__server, this.__models, this.__db).load();
     }
 
     /**

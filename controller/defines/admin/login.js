@@ -4,14 +4,21 @@
  */
 
 const config = require('../../../config');
+const Log = require('../../../tool/log');
 
 const controllerConfig = config.controller;
 
 module.exports = {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
-    get: function (models) {
+    get: function (db, models) {
         return function (req, res) {
             // TODO
+            db
+                .authenticate()
+                .then(() => {
+                    Log.log('测试连接数据库成功');
+                    res.send('hello');
+                });
         }
     }
 };

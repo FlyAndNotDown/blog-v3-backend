@@ -16,9 +16,10 @@ class ControllerLoader {
      * @param {{}} server 服务器对象
      * @param {{}} models 模型对象
      */
-    constructor(server, models) {
+    constructor(server, models, db) {
         this.__server = server;
         this.__models = models;
+        this.__db = db;
     }
 
     /**
@@ -27,16 +28,16 @@ class ControllerLoader {
     load() {
         controllerDefineList.forEach((controller) => {
             if (controller.get) {
-                this.__server.get(controller.url, controller.get(this.__models));
+                this.__server.get(controller.url, controller.get(this.__db, this.__models));
             }
             if (controller.post) {
-                this.__server.post(controller.url, controller.post(this.__models));
+                this.__server.post(controller.url, controller.post(this.__db, this.__models));
             }
             if (controller.put) {
-                this.__server.put(controller.url, controller.put(this.__models));
+                this.__server.put(controller.url, controller.put(this.__db, this.__models));
             }
             if (controller.delete) {
-                this.__server.delete(controller.url, controller.delete(this.__models));
+                this.__server.delete(controller.url, controller.delete(this.__db, this.__models));
             }
         });
     }
