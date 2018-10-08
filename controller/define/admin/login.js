@@ -99,7 +99,13 @@ module.exports = {
                     if (object.password === password) {
                         // 如果校验成功
                         // 在 session 中保存登录状态
-                        // TODO
+                        request.session.adminLoginInfo = {
+                            login: true,
+                            id: object.id,
+                            name: object.name,
+                            username: object.username,
+                            phone: object.phone
+                        };
 
                         // 返回登录结果
                         return response.json({
