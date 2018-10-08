@@ -80,6 +80,11 @@ module.exports = {
                 if (object) {
                     // 密码校验
                     if (object.password === password) {
+                        // 如果校验成功
+                        // 在 session 中保存登录状态
+                        // TODO
+
+                        // 返回登录结果
                         return response.json({
                             success: true
                         });
