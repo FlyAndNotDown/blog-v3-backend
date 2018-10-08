@@ -19,34 +19,51 @@ module.exports = {
         return function (request, response) {
             // 获取参数
             const query = request.query || {};
+            const type = request.query || null;
             const username = query.username || null;
 
             // 参数校验
+            if (!type) {
+                Log.error('参数校验错误', `type: ${type}`);
+                return response.status(400).send('参数校验错误');
+            }
             if (!username || !username.match(adminRegex.username)) {
                 Log.error('参数校验错误', `username: ${username}`);
                 return response.status(400).send('参数校验错误');
             }
 
-            // 查询 username 是否存在
-            model.admin.one({
-                username: username
-            }, (error, object) => {
-                // 如果查询出错
-                if (error) {
-                    Log.error('数据库查询错误', error);
-                    return response.status(500).send('数据库查询错误');
-                }
-                // 如果存在
-                if (object) {
-                    return response.json({
-                        salt: object.salt
+            // 根据 get 的类型进行处理
+            switch (type) {
+                case 'salt':
+                    // 如果是获取盐
+                    // 查询 username 是否存在
+                    model.admin.one({
+                        username: username
+                    }, (error, object) => {
+                        // 如果查询出错
+                        if (error) {
+                            Log.error('数据库查询错误', error);
+                            return response.status(500).send('数据库查询错误');
+                        }
+                        // 如果存在
+                        if (object) {
+                            return response.json({
+                                salt: object.salt
+                            });
+                        } else {
+                            return response.json({
+                                salt: null
+                            });
+                        }
                     });
-                } else {
-                    return response.json({
-                        salt: null
-                    });
-                }
-            });
+                    break;
+                case 'info':
+                    // 如果是获取登录情况
+                    // TODO
+                default:
+                    Log.error('参数校验错误', `type: ${type}`);
+                    return response.status(400).send('参数校验错误');
+            }
         }
     },
     post: function (connection, model) {
