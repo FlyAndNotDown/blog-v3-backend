@@ -27,10 +27,6 @@ module.exports = {
                 Log.error('参数校验错误', `type: ${type}`);
                 return response.status(400).send('参数校验错误');
             }
-            if (!username || !username.match(adminRegex.username)) {
-                Log.error('参数校验错误', `username: ${username}`);
-                return response.status(400).send('参数校验错误');
-            }
 
             // 根据 get 的类型进行处理
             switch (type) {
@@ -59,6 +55,11 @@ module.exports = {
                     break;
                 case 'info':
                     // 如果是获取登录情况
+                    // 参数校验
+                    if (!username || !username.match(adminRegex.username)) {
+                        Log.error('参数校验错误', `username: ${username}`);
+                        return response.status(400).send('参数校验错误');
+                    }
                     // 查询 session 看是否已经登录
                     const adminLoginStatus = !!request.session.adminLoginStatus;
                     const adminLoginInfo = request.session.adminLoginInfo || null;
