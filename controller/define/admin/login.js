@@ -19,7 +19,7 @@ module.exports = {
         return function (request, response) {
             // 获取参数
             const query = request.query || {};
-            const type = request.query || null;
+            const type = query.type || null;
             const username = query.username || null;
 
             // 参数校验

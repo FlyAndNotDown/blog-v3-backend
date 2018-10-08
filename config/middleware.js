@@ -14,7 +14,8 @@ module.exports = settings.devMode ? {
     },
     cors: {
         origin: 'http://localhost:20000',
-        optionsSuccessStatus: 200
+        optionsSuccessStatus: 200,
+        credentials: true
     },
     session: {
         secret: 'kindem no.1',
@@ -30,7 +31,8 @@ module.exports = settings.devMode ? {
     },
     cors: {
         origin: 'http://www.kindemh.cn',
-        optionsSuccessStatus: 200
+        optionsSuccessStatus: 200,
+        credentials: true
     },
     session: {
         secret: 'kindem no.1',
