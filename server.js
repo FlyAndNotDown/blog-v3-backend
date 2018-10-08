@@ -37,6 +37,9 @@ class Server {
                     break;
             }
         });
+        return model;
     }
 
 }
+
+module.exports = Server;

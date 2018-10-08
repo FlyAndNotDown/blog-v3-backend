@@ -14,7 +14,8 @@ const postModel = {
         id: {
             type: Sequelize.BIGINT,
             unique: true,
-            autoIncrement: true
+            autoIncrement: true,
+            primaryKey: true
         },
         title: {
             type: Sequelize.STRING(100)
@@ -40,7 +41,8 @@ const labelModel = {
         id: {
             type: Sequelize.BIGINT,
             unique: true,
-            autoIncrement: true
+            autoIncrement: true,
+            primaryKey: true
         },
         name: {
             type: Sequelize.STRING(20)
@@ -57,7 +59,8 @@ const adminModel = {
         id: {
             type: Sequelize.BIGINT,
             unique: true,
-            autoIncrement: true
+            autoIncrement: true,
+            primaryKey: true
         },
         name: {
             type: Sequelize.STRING(20)
