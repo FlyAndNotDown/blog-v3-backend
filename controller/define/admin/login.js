@@ -32,6 +32,11 @@ module.exports = {
             switch (type) {
                 case 'salt':
                     // 如果是获取盐
+                    // 参数校验
+                    if (!username || !username.match(adminRegex.username)) {
+                        Log.error('参数校验错误', `username: ${username}`);
+                        return response.status(400).send('参数校验错误');
+                    }
                     // 查询 username 是否存在
                     model.admin.one({
                         username: username
@@ -55,11 +60,6 @@ module.exports = {
                     break;
                 case 'info':
                     // 如果是获取登录情况
-                    // 参数校验
-                    if (!username || !username.match(adminRegex.username)) {
-                        Log.error('参数校验错误', `username: ${username}`);
-                        return response.status(400).send('参数校验错误');
-                    }
                     // 查询 session 看是否已经登录
                     const adminLoginStatus = !!request.session.adminLoginStatus;
                     const adminLoginInfo = request.session.adminLoginInfo || null;
