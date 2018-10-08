@@ -3,93 +3,13 @@
  * @author John Kindem
  */
 
-const Sequelize = require('sequelize');
+const postModel = require('./defines/model/post');
+const labelModel = require('./defines/model/label');
+const adminModel = require('./defines/model/admin');
+const postLabelRelation = require('./defines/relation/post-label');
 
 /**
- * 文章模型定义
- */
-const postModel = {
-    name: 'post',
-    description: {
-        id: {
-            type: Sequelize.BIGINT,
-            unique: true,
-            autoIncrement: true,
-            primaryKey: true
-        },
-        title: {
-            type: Sequelize.STRING(100)
-        },
-        description: {
-            type: Sequelize.STRING(1000)
-        },
-        body: {
-            type: Sequelize.STRING(1000)
-        },
-        date: {
-            type: Sequelize.DATEONLY
-        }
-    }
-};
-
-/**
- * 标签模型定义
- */
-const labelModel = {
-    name: 'label',
-    description: {
-        id: {
-            type: Sequelize.BIGINT,
-            unique: true,
-            autoIncrement: true,
-            primaryKey: true
-        },
-        name: {
-            type: Sequelize.STRING(20)
-        }
-    }
-};
-
-/**
- * 管理员模型定义
- */
-const adminModel = {
-    name: 'admin',
-    description: {
-        id: {
-            type: Sequelize.BIGINT,
-            unique: true,
-            autoIncrement: true,
-            primaryKey: true
-        },
-        name: {
-            type: Sequelize.STRING(20)
-        },
-        username: {
-            type: Sequelize.STRING(20)
-        },
-        password: {
-            type: Sequelize.STRING(64)
-        },
-        salt: {
-            type: Sequelize.STRING(12)
-        },
-        phone: {
-            type: Sequelize.STRING(11)
-        }
-    }
-};
-
-/**
- * 文章标签关系定义
- */
-const postLabelRelation = {
-    type: 'm2m',
-    owner: ['post', 'label']
-};
-
-/**
- * 导出定义列表
+ * 导出定义对象
  */
 module.exports = {
     model: [

@@ -36,14 +36,14 @@ const modelConfig = mainConfig.devMode ? {
  * 控制器层配置
  */
 const controllerConfig = mainConfig.devMode ? {
-
+    commonUrlPrefix: '/request/blog'
 } : {};
 
 /**
- * 视图层配置
+ * 中间件层配置
  */
-const viewConfig = mainConfig.devMode ? {
-    commonUrlPrefix: '/request/blog'
+const middlewareConfig = mainConfig.devMode ? {
+
 } : {};
 
 /**
@@ -60,5 +60,5 @@ module.exports = {
     main: mainConfig,
     model: modelConfig,
     controller: controllerConfig,
-    view: viewConfig
+    middleware: middlewareConfig
 };

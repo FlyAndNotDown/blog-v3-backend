@@ -3,14 +3,8 @@
  * @author John Kindem
  */
 
-/**
- * 导出控制器对象
- */
-module.exports = {
-    deal: {
+const adminLoginController = require('./defines/admin/login');
 
-    },
-    middleware: {
-
-    }
-};
+module.exports = [
+    adminLoginController
+];
