@@ -30,7 +30,7 @@ class Server {
                     model[name1].belongsToMany(model[name2], { through: `${name1}${name2}` });
                     model[name2].belongsToMany(model[name1], { through: `${name1}${name2}` });
                     break;
-                case: 'm2o':
+                case 'm2o':
                     // TODO
                     break;
                 default:
