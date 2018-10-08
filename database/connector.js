@@ -30,6 +30,8 @@ class Connector {
      * 构造
      */
     constructor() {
+        // 进行配置
+        orm.settings.set('connection.reconnect', databaseConfig.orm.connection.reconnect);
         // 创建新连接
         this.__connection = orm.connect(
             `${connectionConfig.driver}://${connectionConfig.username}:${connectionConfig.password}@${connectionConfig.url}/${connectionConfig.database}`

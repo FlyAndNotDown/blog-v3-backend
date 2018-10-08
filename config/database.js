@@ -16,6 +16,11 @@ module.exports = settings.devMode ? {
         database: 'blog',
         username: 'development',
         password: 'development'
+    },
+    orm: {
+        connection: {
+            reconnect: true
+        }
     }
 } : {
     connection: {
@@ -25,5 +30,10 @@ module.exports = settings.devMode ? {
         database: 'blog',
         username: 'development',
         password: 'development'
+    },
+    orm: {
+        connection: {
+            reconnect: true
+        }
     }
 };
