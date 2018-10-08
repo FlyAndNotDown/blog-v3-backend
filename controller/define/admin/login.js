@@ -59,7 +59,13 @@ module.exports = {
                     break;
                 case 'info':
                     // 如果是获取登录情况
-                    // TODO
+                    // 查询 session 看是否已经登录
+                    const adminLoginStatus = !!request.session.adminLoginStatus;
+                    const adminLoginInfo = request.session.adminLoginInfo || null;
+                    return response.json({
+                        status: adminLoginStatus,
+                        info: adminLoginInfo
+                    });
                 default:
                     Log.error('参数校验错误', `type: ${type}`);
                     return response.status(400).send('参数校验错误');
@@ -99,8 +105,8 @@ module.exports = {
                     if (object.password === password) {
                         // 如果校验成功
                         // 在 session 中保存登录状态
+                        request.session.adminLoginStatus = true;
                         request.session.adminLoginInfo = {
-                            login: true,
                             id: object.id,
                             name: object.name,
                             username: object.username,
