@@ -83,8 +83,11 @@ function getAdminModel(model) {
 /**
  * 导出定义列表
  */
-module.exports = [
-    getPostModel,
-    getLabelModel,
-    getAdminModel
-];
+module.exports = {
+    model: [
+        getPostModel,
+        getLabelModel,
+        getAdminModel
+    ],
+    relation: []
+};
