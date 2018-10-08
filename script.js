@@ -6,8 +6,7 @@
 const config = require('./config');
 const Sequelize = require('sequelize');
 const Log = require('./tool/log');
-const Server = require('./server');
-const modelDefineObject = require('./model/define');
+const ModelLoader = require('./model/loader');
 
 const modelConfig = config.model;
 const connectionConfig = modelConfig.connection;
@@ -54,12 +53,12 @@ const funcMap = {
                 connectionConfig.options
             );
             // 加载模型配置
-            let model = Server.modelLoader(db, modelDefineObject.model, modelDefineObject.relation);
+            let models = new ModelLoader(db).getModels();
             let count = 0;
-            let length = Object.getOwnPropertyNames(model).length;
-            for (let modelKey in model) {
-                if (model.hasOwnProperty(modelKey)) {
-                    model[modelKey].sync({
+            let length = Object.getOwnPropertyNames(models).length;
+            for (let modelKey in models) {
+                if (models.hasOwnProperty(modelKey)) {
+                    models[modelKey].sync({
                         force: true
                     }).then(() => {
                         Log.log(`同步${modelKey}成功`);
