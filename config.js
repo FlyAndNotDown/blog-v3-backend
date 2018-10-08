@@ -16,15 +16,18 @@ const mainConfig = {
  */
 const modelConfig = mainConfig.devMode ? {
     connection: {
-        host: '134.175.59.165',
-        dialect: '3306',
+        database: 'blog',
         username: 'development',
         password: 'development',
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
+        options: {
+            host: '134.175.59.165',
+            dialect: 'mysql',
+            pool: {
+                max: 5,
+                min: 0,
+                acquire: 30000,
+                idle: 10000
+            }
         }
     }
 } : {};

@@ -5,8 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "updateModel": "node script/update-model.js",
-    "newAdmin": "node script/new-admin.js"
+    "server": "node script.js"
   },
   "repository": {
     "type": "git",
