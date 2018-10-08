@@ -3,6 +3,8 @@
  * @author John Kindem
  */
 
+const Sequelize = require('sequelize');
+
 /**
  * 导出标签模型定义
  */

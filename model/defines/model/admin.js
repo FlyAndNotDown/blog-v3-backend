@@ -3,6 +3,8 @@
  * @author John Kindem
  */
 
+const Sequelize = require('sequelize');
+
 /**
  * 管理员模型定义
  */

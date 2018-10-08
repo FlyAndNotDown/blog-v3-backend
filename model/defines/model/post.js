@@ -3,6 +3,8 @@
  * @author John Kindem
  */
 
+const Sequelize = require('sequelize');
+
 /**
  * 导出文章模型定义
  */
