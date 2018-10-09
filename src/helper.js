@@ -3,12 +3,11 @@
  * @author John Kindem
  */
 
-import config from './config';
+import modelConfig from './configs/model';
 import Sequelize from 'sequelize';
 import { Log } from "./tool/log";
 import { ModelLoader } from "./model/loader";
 
-const modelConfig = config.model;
 const connectionConfig = modelConfig.connection;
 
 /**

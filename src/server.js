@@ -3,16 +3,15 @@
  * @author John Kindem
  */
 
-import config from './config';
 import { ModelLoader } from "./model/loader";
 import { ControllerLoader } from "./controller/loader";
 import { MiddlewareLoader } from "./middleware/loader";
 import Sequelize from 'sequelize';
 import express from 'express';
 import { Log } from "./tool/log";
+import modelConfig from './configs/model';
+import serverConfig from './configs/server';
 
-const modelConfig = config.model;
-const serverConfig = config.server;
 const connectionConfig = modelConfig.connection;
 
 /**

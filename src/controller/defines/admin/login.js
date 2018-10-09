@@ -3,10 +3,8 @@
  * @author John Kindem
  */
 
-import config from '../../../config';
+import controllerConfig from '../../../configs/controller';
 import { Log } from "../../../tool/log";
-
-const controllerConfig = config.controller;
 
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,

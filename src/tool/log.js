@@ -3,9 +3,7 @@
  * @author John Kindem
  */
 
-import config from '../config';
-
-const mainConfig = config.main;
+import mainConfig from '../configs/main';
 
 /**
  * 日志类
