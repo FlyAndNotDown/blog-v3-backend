@@ -3,10 +3,10 @@
  * @author John Kindem
  */
 
-const config = require('./config');
-const Sequelize = require('sequelize');
-const Log = require('./tool/log');
-const ModelLoader = require('./model/loader');
+import config from './config';
+import Sequelize from 'sequelize';
+import { Log } from "./tool/log";
+import { ModelLoader } from "./model/loader";
 
 const modelConfig = config.model;
 const connectionConfig = modelConfig.connection;
