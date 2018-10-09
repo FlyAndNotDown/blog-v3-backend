@@ -3,7 +3,7 @@
  * @author John Kindem
  */
 
-import session from 'koa-session2';
+import session from 'koa-session';
 import middlewareConfig from '../../configs/middleware';
 
 const sessionConfig = middlewareConfig.session;
@@ -11,4 +11,6 @@ const sessionConfig = middlewareConfig.session;
 /**
  * session 处理中间件
  */
-export default session(sessionConfig);
+export default (server) => {
+    return session(sessionConfig, server);
+};

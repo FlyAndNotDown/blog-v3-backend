@@ -8,4 +8,6 @@ import bodyParser from 'koa-bodyparser';
 /**
  * body 转 json 中间件
  */
-export default bodyParser();
+export default () => {
+    return bodyParser();
+};

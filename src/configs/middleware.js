@@ -15,7 +15,12 @@ export default mainConfig.devMode ? {
     },
     session: {
         key: 'kindem',
-        httpOnly: false,
-        overwrite: true
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        autoCommit: true,
+        overwrite: true,
+        httpOnly: true,
+        signed: true,
+        rolling: false,
+        renew: false
     }
 } : {};

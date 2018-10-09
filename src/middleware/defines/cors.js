@@ -11,4 +11,6 @@ const corsConfig = middlewareConfig.cors;
 /**
  * CORS 跨域认证中间件
  */
-export default cors(corsConfig);
+export default () => {
+    return cors(corsConfig);
+};
