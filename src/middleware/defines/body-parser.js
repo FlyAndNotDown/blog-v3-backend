@@ -3,9 +3,9 @@
  * @author John Kindem
  */
 
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 
 /**
  * body 转 json 中间件
  */
-module.exports = bodyParser.json();
+export default bodyParser.json();

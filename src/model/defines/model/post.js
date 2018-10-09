@@ -3,12 +3,12 @@
  * @author John Kindem
  */
 
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
 /**
  * 导出文章模型定义
  */
-module.exports = {
+export default {
     name: 'post',
     description: {
         id: {

@@ -3,13 +3,13 @@
  * @author John Kindem
  */
 
-const middlewareDefineList = require('./define');
+import middlewareDefineList from './define';
 
 /**
  * 中间件加载器
  * @constructor
  */
-class MiddlewareLoader {
+export class MiddlewareLoader {
 
     /**
      * 构造
@@ -29,5 +29,3 @@ class MiddlewareLoader {
     }
 
 }
-
-module.exports = MiddlewareLoader;

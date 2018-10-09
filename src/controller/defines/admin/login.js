@@ -4,11 +4,11 @@
  */
 
 import config from '../../../config';
-const Log = require('../../../tool/log');
+import { Log } from "../../../tool/log";
 
 const controllerConfig = config.controller;
 
-module.exports = {
+export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
     get: function (db, models) {
         return function (req, res) {

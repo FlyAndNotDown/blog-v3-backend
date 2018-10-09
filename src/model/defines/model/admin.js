@@ -3,12 +3,12 @@
  * @author John Kindem
  */
 
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
 /**
  * 管理员模型定义
  */
-module.exports = {
+export default {
     name: 'admin',
     description: {
         id: {

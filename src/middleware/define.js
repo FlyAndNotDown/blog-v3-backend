@@ -3,6 +3,6 @@
  * @author John Kindem
  */
 
-module.exports = [
+export default [
     
 ];

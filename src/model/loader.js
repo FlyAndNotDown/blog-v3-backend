@@ -3,13 +3,12 @@
  * @author John Kindem
  */
 
-
-const modelDefineObject = require('./define');
+import modelDefineObject from './define';
 
 /**
  * 模型加载器
  */
-class ModelLoader {
+export class ModelLoader {
 
     /**
      * 构造
@@ -50,5 +49,3 @@ class ModelLoader {
     }
 
 }
-
-module.exports = ModelLoader;

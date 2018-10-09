@@ -3,8 +3,8 @@
  * @author John Kindem
  */
 
-const adminLoginController = require('./defines/admin/login');
+import adminLoginController from './defines/admin/login';
 
-module.exports = [
+export default [
     adminLoginController
 ];

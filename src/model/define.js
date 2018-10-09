@@ -3,15 +3,15 @@
  * @author John Kindem
  */
 
-const postModel = require('./defines/model/post');
-const labelModel = require('./defines/model/label');
-const adminModel = require('./defines/model/admin');
-const postLabelRelation = require('./defines/relation/post-label');
+import postModel from './defines/model/post';
+import labelModel from './defines/model/label';
+import adminModel from './defines/model/admin';
+import postLabelRelation from './defines/relation/post-label';
 
 /**
  * 导出定义对象
  */
-module.exports = {
+export default {
     model: [
         postModel,
         labelModel,

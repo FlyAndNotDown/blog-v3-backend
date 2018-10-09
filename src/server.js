@@ -4,13 +4,12 @@
  */
 
 import config from './config';
-
-const ModelLoader = require('./model/loader');
-const ControllerLoader = require('./controller/loader');
-const MiddlewareLoader = require('./middleware/loader');
-const Sequelize = require('sequelize');
-const express = require('express');
-const Log = require('./tool/log');
+import { ModelLoader } from "./model/loader";
+import { ControllerLoader } from "./controller/loader";
+import { MiddlewareLoader } from "./middleware/loader";
+import Sequelize from 'sequelize';
+import express from 'express';
+import { Log } from "./tool/log";
 
 const modelConfig = config.model;
 const serverConfig = config.server;

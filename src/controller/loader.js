@@ -3,13 +3,13 @@
  * @author John Kindem
  */
 
-const controllerDefineList = require('./define');
+import controllerDefineList from './define';
 
 /**
  * 控制器加载器
  * @constructor
  */
-class ControllerLoader {
+export class ControllerLoader {
 
     /**
      * 构造
@@ -43,5 +43,3 @@ class ControllerLoader {
     }
 
 }
-
-module.exports = ControllerLoader;

@@ -3,12 +3,12 @@
  * @author John Kindem
  */
 
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
 /**
  * 导出标签模型定义
  */
-module.exports = {
+export default {
     name: 'label',
     description: {
         id: {

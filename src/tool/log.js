@@ -11,7 +11,7 @@ const mainConfig = config.main;
  * 日志类
  * @constructor
  */
-class Log {
+export class Log {
 
     /**
      * 记录生产日志
@@ -58,5 +58,3 @@ class Log {
     }
 
 }
-
-module.exports = Log;
