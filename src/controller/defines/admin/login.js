@@ -58,7 +58,11 @@ export default {
                     };
                     return null;
                 case 'info':
-                    // TODO
+                    // 查询 session
+                    ctx.response.body = {
+                        login: !!ctx.session.adminLogin,
+                        info: ctx.session.adminInfo || null
+                    };
                     return null;
                 default:
                     Log.error('status 400', `type: ${type}`);

@@ -11,6 +11,6 @@ import session from './defines/session';
 export default [
     autoLog,
     bodyParser,
-    cors,
-    session
+    session,
+    cors
 ];

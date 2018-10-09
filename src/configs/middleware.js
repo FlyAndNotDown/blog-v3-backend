@@ -14,6 +14,8 @@ export default mainConfig.devMode ? {
         credentials: true
     },
     session: {
-        key: 'SESSIONID'
+        key: 'kindem',
+        httpOnly: false,
+        overwrite: true
     }
 } : {};
