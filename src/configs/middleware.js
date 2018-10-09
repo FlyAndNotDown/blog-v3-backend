@@ -16,5 +16,13 @@ export default mainConfig.devMode ? {
         origin: 'http://localhost:20000',
         optionsSuccessStatus: 200,
         credentials: true
+    },
+    session: {
+        secret: 'kindem no.1',
+        cookie: {
+            maxAge: 1000 * 60
+        },
+        resave: true,
+        saveUninitialized: true
     }
 } : {};

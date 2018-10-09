@@ -24,7 +24,7 @@ export class MiddlewareLoader {
      */
     load() {
         middlewareDefineList.forEach((middleware) => {
-            this.__server.use(middleware());
+            this.__server.use(middleware);
         });
     }
 

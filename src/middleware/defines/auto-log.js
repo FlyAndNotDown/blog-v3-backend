@@ -3,6 +3,8 @@
  * @author John Kindem
  */
 
+import { Log } from "../../tool/log";
+
 /**
  * 服务器自动日志中间件
  */
