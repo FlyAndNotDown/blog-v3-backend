@@ -11,5 +11,10 @@ import mainConfig from './main';
 export default mainConfig.devMode ? {
     cookieParser: {
         signedSecret: 'kindem no.1'
+    },
+    cors: {
+        origin: 'http://localhost:20000',
+        optionsSuccessStatus: 200,
+        credentials: true
     }
 } : {};
