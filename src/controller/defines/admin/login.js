@@ -4,19 +4,16 @@
  */
 
 import controllerConfig from '../../../configs/controller';
+import regexConfig from '../../../configs/regex';
 import { Log } from "../../../tool/log";
+
+const adminRegex = regexConfig.admin;
 
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
     get: function (db, models) {
-        return function (req, res) {
+        return async function (request, response) {
             // TODO
-            db
-                .authenticate()
-                .then(() => {
-                    Log.log('测试连接数据库成功');
-                    res.send('hello');
-                });
         }
     }
 };
