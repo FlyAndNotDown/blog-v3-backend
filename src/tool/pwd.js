@@ -8,14 +8,17 @@ import sha256 from 'js-sha256';
 export class PwdTool {
 
     /**
-     * 盐偏移矩阵
+     * 获取盐矩阵
+     * @returns {Object} 获取盐矩阵
      */
-    static saltVertex = [
-        '0', '1', '2', '3',
-        '4', '5', '6', '7',
-        '8', '9', 'a', 'b',
-        'c', 'd', 'e', 'f'
-    ];
+    static getSaltVertex() {
+        return [
+            '0', '1', '2', '3',
+            '4', '5', '6', '7',
+            '8', '9', 'a', 'b',
+            'c', 'd', 'e', 'f'
+        ];
+    }
 
     /**
      * 获取盐
@@ -23,8 +26,9 @@ export class PwdTool {
      */
     static getSalt() {
         let salt = '';
+        const saltVertex = PwdTool.getSaltVertex();
         for (let i = 0; i < 12; i++) {
-            salt += PwdTool.saltVertex[Math.floor(Math.random() * 16)]
+            salt += saltVertex[Math.floor(Math.random() * 16)]
         }
         return salt;
     }

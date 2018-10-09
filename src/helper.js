@@ -94,17 +94,17 @@ const funcMap = {
             let models = new ModelLoader(db).getModels();
 
             // 创建 readlineInterface
-            readline.createInterface({
+            let rdInterface = readline.createInterface({
                 input: process.stdin,
                 output: process.stdout
             });
 
             // 询问用户用户名
-            readline.question('username: ', username => {
-                readline.question('password: ', password => {
-                    readline.question('repeat: ', repeat => {
-                        readline.question('your name: ', name => {
-                            readline.question('your phone', phone => {
+            rdInterface.question('username: ', username => {
+                rdInterface.question('password: ', password => {
+                    rdInterface.question('repeat: ', repeat => {
+                        rdInterface.question('your name: ', name => {
+                            rdInterface.question('your phone: ', phone => {
                                 // 验证用户名
                                 if (!username.match(regexConfig.admin.username)) {
                                     Log.error('创建管理员账户失败', '用户名不符合规范');
