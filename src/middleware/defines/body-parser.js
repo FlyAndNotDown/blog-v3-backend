@@ -3,9 +3,9 @@
  * @author John Kindem
  */
 
-import bodyParser from 'body-parser';
+import bodyParser from 'koa-bodyparser';
 
 /**
  * body 转 json 中间件
  */
-export default bodyParser.json();
+export default bodyParser();

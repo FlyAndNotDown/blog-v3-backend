@@ -8,7 +8,7 @@ import { Log } from "../../tool/log";
 /**
  * 服务器自动日志中间件
  */
-export default async function (ctx, next) {
+export default async (ctx, next) => {
     await next();
 
     // 记录请求日志
