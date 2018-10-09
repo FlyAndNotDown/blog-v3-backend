@@ -3,7 +3,7 @@
  * @author John Kindem
  */
 
-import cors from 'cors';
+import cors from 'koa-cors';
 import middlewareConfig from '../../configs/middleware';
 
 const corsConfig = middlewareConfig.cors;
