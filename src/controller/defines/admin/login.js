@@ -114,7 +114,13 @@ export default {
 
             // 如果校验成功
             // 在 session 中保存登录状态
-            // TODO
+            ctx.session.adminLogin = true;
+            ctx.session.adminInfo = {
+                id: admin.id,
+                name: admin.name,
+                username: admin.username,
+                phone: admin.phone
+            };
 
             // 返回结果
             ctx.response.body = {
