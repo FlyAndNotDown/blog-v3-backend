@@ -23,6 +23,7 @@ export default mainConfig.devMode ? {
             maxAge: 1000 * 60
         },
         resave: true,
-        saveUninitialized: true
+        saveUninitialized: true,
+        fileStorePath: '../../storage/sessions'
     }
 } : {};
