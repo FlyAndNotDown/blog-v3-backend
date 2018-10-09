@@ -3,16 +3,16 @@
  * @author John Kindem
  */
 
-const mainConfig = require('./configs/main');
-const serverConfig = require('./configs/server');
-const modelConfig = require('./configs/model');
-const controllerConfig = require('./configs/controller');
-const middlewareConfig = require('./configs/middleware');
+import mainConfig from './configs/main';
+import serverConfig from './configs/server';
+import modelConfig from './configs/model';
+import controllerConfig from './configs/controller';
+import middlewareConfig from './configs/middleware';
 
 /**
  * 导出总配置
  */
-module.exports = {
+export default {
     main: mainConfig,
     server: serverConfig,
     model: modelConfig,

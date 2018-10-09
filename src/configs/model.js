@@ -3,12 +3,12 @@
  * @author John Kindem
  */
 
-const mainConfig = require('./main');
+import mainConfig from './main';
 
 /**
  * 导出模型配置
  */
-module.exports = mainConfig.devMode ? {
+export default mainConfig.devMode ? {
     connection: {
         database: 'blog',
         username: 'development',

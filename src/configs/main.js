@@ -6,7 +6,7 @@
 /**
  * 导出主配置
  */
-module.exports = {
+export default {
     devMode: true,
     log: true
 };

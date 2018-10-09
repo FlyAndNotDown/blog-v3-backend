@@ -3,11 +3,11 @@
  * @author John Kindem
  */
 
-const mainConfig = require('./main');
+import mainConfig from './main';
 
 /**
  * 导出服务器配置
  */
-module.exports = mainConfig.devMode ? {
+export default mainConfig.devMode ? {
     listenPort: 30000
 } : {};

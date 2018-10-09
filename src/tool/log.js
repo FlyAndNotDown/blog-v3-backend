@@ -3,7 +3,7 @@
  * @author John Kindem
  */
 
-const config = require('../config');
+import config from '../config';
 
 const mainConfig = config.main;
 

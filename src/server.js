@@ -3,11 +3,12 @@
  * @author John Kindem
  */
 
+import config from './config';
+
 const ModelLoader = require('./model/loader');
 const ControllerLoader = require('./controller/loader');
 const MiddlewareLoader = require('./middleware/loader');
 const Sequelize = require('sequelize');
-const config = require('./config');
 const express = require('express');
 const Log = require('./tool/log');
 
@@ -19,7 +20,7 @@ const connectionConfig = modelConfig.connection;
  * 服务器类
  * @constructor
  */
-class Server {
+export class Server {
 
     /**
      * 构造
@@ -97,5 +98,3 @@ class Server {
     }
 
 }
-
-module.exports = Server;

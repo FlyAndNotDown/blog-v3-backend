@@ -3,6 +3,7 @@
  * @author John Kindem
  */
 
-const Server = require('./server');
+import { Server } from "./server";
 
-const server = new Server().start();
+const server = new Server();
+server.start();

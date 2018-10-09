@@ -3,7 +3,7 @@
  * @author John Kindem
  */
 
-const config = require('../../../config');
+import config from '../../../config';
 const Log = require('../../../tool/log');
 
 const controllerConfig = config.controller;

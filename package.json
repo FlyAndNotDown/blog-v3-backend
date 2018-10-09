@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "dev": "node dev.js",
+    "start": "node dev.js",
     "prod": "node build/main.js",
     "build": "rimraf build && babel src -d build",
     "helper": "node build/helper.js"
