@@ -12,7 +12,8 @@ const adminRegex = regexConfig.admin;
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
     get: (db, models) => {
-        return async ctx => {
+        return async (ctx, next) => {
+            await next();
             // 获取参数
             const query = ctx.request.query || {};
             const type = query.type || null;
@@ -35,7 +36,6 @@ export default {
                         ctx.response.status = 400;
                         return null;
                     }
-                    // TODO 执行查询
                     let admin = await models.admin.findOne({
                         where: {
                             username: username

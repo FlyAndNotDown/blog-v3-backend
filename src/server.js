@@ -66,6 +66,8 @@ export class Server {
     __loadController() {
         Log.log('开始加载控制器');
         new ControllerLoader(this.__router, this.__models, this.__db).load();
+        // 使用路由
+        this.__server.use(this.__router.routes());
     }
 
     /**
@@ -83,8 +85,6 @@ export class Server {
      */
     __listen() {
         Log.log('开始监听端口');
-        // 使用路由
-        this.__server.use(this.__router.routes());
         this.__server.listen(serverConfig.listenPort);
     }
 
