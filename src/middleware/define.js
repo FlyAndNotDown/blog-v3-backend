@@ -3,6 +3,8 @@
  * @author John Kindem
  */
 
-export default [
+import autoLog from './defines/auto-log';
 
+export default [
+    autoLog
 ];

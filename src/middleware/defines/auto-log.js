@@ -8,10 +8,9 @@ import { Log } from "../../tool/log";
 /**
  * 服务器自动日志中间件
  */
-export default function (request, response, next) {
-    // 记录请求日志
-    Log.log(`${request.method.toLowerCase()} ${request.url.split('?')[0]}`);
+export default async function (ctx, next) {
+    await next();
 
-    // 跳转到下一个中间件
-    next();
+    // 记录请求日志
+    Log.log(`${ctx.request.method.toLowerCase()} ${ctx.request.url.split('?')[0]}`);
 };
