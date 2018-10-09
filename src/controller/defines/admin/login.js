@@ -12,7 +12,7 @@ const adminRegex = regexConfig.admin;
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
     get: function (db, models) {
-        return async function (request, response) {
+        return async function (ctx) {
             // TODO
         }
     }
