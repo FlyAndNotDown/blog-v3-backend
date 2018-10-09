@@ -66,5 +66,61 @@ export default {
                     return null;
             }
         }
+    },
+    post: (db, models) => {
+        return async (ctx, next) => {
+            await next();
+
+            // 获取参数
+            const body = ctx.request.body || {};
+            const username = body.username || null;
+            const password = body.password || null;
+
+            // 参数校验
+            if (!username || !username.match(adminRegex.username)) {
+                Log.error('参数错误', `username: ${username}`);
+                ctx.response.status = 400;
+                return null;
+            }
+            if (!password || !password.match(adminRegex.password)) {
+                Log.error('参数错误', `password: ${password}`);
+                ctx.response.status = 400;
+                return null;
+            }
+
+            // 查询数据库获取管理员对象
+            let admin = await models.admin.findOne({
+                where: {
+                    username: username
+                }
+            });
+
+            // 如果没有查到
+            if (!admin) {
+                ctx.response.body = {
+                    success: false
+                };
+                return null;
+            }
+
+            // 如果查到了，进行密码校验
+            if (admin.password !== password) {
+                // 如果校验失败
+                ctx.response.body = {
+                    success: false
+                };
+                return null;
+            }
+
+            // 如果校验成功
+            // 在 session 中保存登录状态
+            // TODO
+
+            // 返回结果
+            ctx.response.body = {
+                success: true
+            };
+            return null;
+        }
     }
 };
