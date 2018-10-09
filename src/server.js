@@ -7,7 +7,8 @@ import { ModelLoader } from "./model/loader";
 import { ControllerLoader } from "./controller/loader";
 import { MiddlewareLoader } from "./middleware/loader";
 import Sequelize from 'sequelize';
-import express from 'express';
+import Koa from 'koa';
+import routerGenerator from 'koa-router';
 import { Log } from "./tool/log";
 import modelConfig from './configs/model';
 import serverConfig from './configs/server';
@@ -27,6 +28,7 @@ export class Server {
         this.__server = null;
         this.__models = null;
         this.__db = null;
+        this.__router = null;
     }
 
     /**
@@ -35,8 +37,10 @@ export class Server {
      */
     __init() {
         Log.log('开始初始化服务器');
-        // 创建 express 对象
-        this.__server = express();
+        // 创建 koa 对象
+        this.__server = new Koa();
+        // 创建路由
+        this.__router = routerGenerator();
         // 实例化 sequelize 对象
         this.__db = new Sequelize(
             connectionConfig.database,
@@ -79,6 +83,8 @@ export class Server {
      */
     __listen() {
         Log.log('开始监听端口');
+        // 使用路由
+        this.__server.use(this.__router);
         this.__server.listen(serverConfig.listenPort);
     }
 
