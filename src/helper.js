@@ -7,6 +7,9 @@ import modelConfig from './configs/model';
 import Sequelize from 'sequelize';
 import { Log } from "./tool/log";
 import { ModelLoader } from "./model/loader";
+import readline from 'readline';
+import regexConfig from "./configs/regex";
+import { PwdTool } from "./tool/pwd";
 
 const connectionConfig = modelConfig.connection;
 
@@ -21,7 +24,7 @@ const funcMap = {
         /**
          * 测试数据库连接
          */
-        test: function () {
+        test: () => {
             Log.log('开始测试数据库连接');
             const db = new Sequelize(
                 connectionConfig.database,
@@ -43,7 +46,7 @@ const funcMap = {
         /**
          * 初始化数据库
          */
-        init: function () {
+        init: () => {
             Log.log('连接到数据库');
             const db = new Sequelize(
                 connectionConfig.database,
@@ -51,8 +54,10 @@ const funcMap = {
                 connectionConfig.password,
                 connectionConfig.options
             );
+
             // 加载模型配置
             let models = new ModelLoader(db).getModels();
+
             let count = 0;
             let length = Object.getOwnPropertyNames(models).length;
             for (let modelKey in models) {
@@ -67,6 +72,84 @@ const funcMap = {
                     });
                 }
             }
+        }
+    },
+    /**
+     * 管理员操作
+     */
+    admin: {
+        /**
+         * 新建管理员账户
+         */
+        new: () => {
+            Log.log('连接到数据库');
+            const db = new Sequelize(
+                connectionConfig.database,
+                connectionConfig.username,
+                connectionConfig.password,
+                connectionConfig.options
+            );
+
+            // 加载模型配置
+            let models = new ModelLoader(db).getModels();
+
+            // 创建 readlineInterface
+            readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            });
+
+            // 询问用户用户名
+            readline.question('username: ', username => {
+                readline.question('password: ', password => {
+                    readline.question('repeat: ', repeat => {
+                        readline.question('your name: ', name => {
+                            readline.question('your phone', phone => {
+                                // 验证用户名
+                                if (!username.match(regexConfig.admin.username)) {
+                                    Log.error('创建管理员账户失败', '用户名不符合规范');
+                                    process.exit(0);
+                                }
+
+                                // 验证密码
+                                if (!password.match(regexConfig.admin.password)) {
+                                    Log.error('创建管理员账户失败', '密码不符合规范');
+                                    process.exit(0);
+                                }
+                                if (password !== repeat) {
+                                    Log.error('创建管理员账户失败', '两次输入密码不一致');
+                                    process.exit(0);
+                                }
+
+                                // 验证姓名
+                                if (!name.match(regexConfig.admin.name)) {
+                                    Log.error('创建管理员账户失败', '姓名不符合规范');
+                                    process.exit(0);
+                                }
+
+                                // 验证手机号码
+                                if (!phone.match(regexConfig.admin.phone)) {
+                                    Log.error('创建管理员账户失败', '手机号不符合规范');
+                                    process.exit(0);
+                                }
+
+                                const salt = PwdTool.getSalt();
+
+                                // 存入数据库
+                                models.admin.create({
+                                    name: name,
+                                    username: username,
+                                    password: PwdTool.encode(password, salt),
+                                    salt: salt,
+                                    phone: phone
+                                }).then((result) => {
+                                    console.log(result);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         }
     }
 };
