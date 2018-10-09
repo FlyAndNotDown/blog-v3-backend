@@ -36,11 +36,26 @@ export default {
                         ctx.response.status = 400;
                         return null;
                     }
+
+                    // 查询管理员用户
                     let admin = await models.admin.findOne({
                         where: {
                             username: username
                         }
                     });
+
+                    // 如果管理员的用户名不存在，则返回结果
+                    if (!admin) {
+                        ctx.response.body = {
+                            salt: null
+                        };
+                        return null;
+                    }
+
+                    // 如果查到了管理员信息，返回盐
+                    ctx.response.body = {
+                        salt: admin.salt
+                    };
                     return null;
                 case 'info':
                     // TODO
