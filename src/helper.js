@@ -100,50 +100,72 @@ const funcMap = {
             });
 
             // 询问用户用户名
-            rdInterface.question('username: ', username => {
+            rdInterface.question('username: ', async username => {
+                // 验证用户名
+                if (!username.match(regexConfig.admin.username)) {
+                    Log.error('创建管理员账户失败', '用户名不符合规范');
+                    process.exit(0);
+                }
+
+                // 判断用户名在数据库中是否已经被使用过了
+                let usernameCount = await models.admin.count({
+                    username: username
+                });
+                // 如果已经被使用过了
+                if (usernameCount > 0) {
+                    Log.error('创建管理员账户失败', '管理员账户已经存在');
+                    process.exit(0);
+                }
+
                 rdInterface.question('password: ', password => {
+                    // 验证密码
+                    if (!password.match(regexConfig.admin.password)) {
+                        Log.error('创建管理员账户失败', '密码不符合规范');
+                        process.exit(0);
+                    }
+
                     rdInterface.question('repeat: ', repeat => {
+                        // 验证重复密码
+                        if (!repeat.match(regexConfig.admin.password)) {
+                            Log.error('创建管理员账户失败', '密码不符合规范');
+                            process.exit(0);
+                        }
+                        // 验证两次密码
+                        if (password !== repeat) {
+                            Log.error('创建管理员账户失败', '两次输入密码不一致');
+                            process.exit(0);
+                        }
+
                         rdInterface.question('your name: ', name => {
-                            rdInterface.question('your phone: ', phone => {
-                                // 验证用户名
-                                if (!username.match(regexConfig.admin.username)) {
-                                    Log.error('创建管理员账户失败', '用户名不符合规范');
-                                    process.exit(0);
-                                }
+                            // 验证姓名
+                            if (!name.match(regexConfig.admin.name)) {
+                                Log.error('创建管理员账户失败', '姓名不符合规范');
+                                process.exit(0);
+                            }
 
-                                // 验证密码
-                                if (!password.match(regexConfig.admin.password)) {
-                                    Log.error('创建管理员账户失败', '密码不符合规范');
-                                    process.exit(0);
-                                }
-                                if (password !== repeat) {
-                                    Log.error('创建管理员账户失败', '两次输入密码不一致');
-                                    process.exit(0);
-                                }
-
-                                // 验证姓名
-                                if (!name.match(regexConfig.admin.name)) {
-                                    Log.error('创建管理员账户失败', '姓名不符合规范');
-                                    process.exit(0);
-                                }
-
+                            rdInterface.question('your phone: ', async phone => {
                                 // 验证手机号码
                                 if (!phone.match(regexConfig.admin.phone)) {
                                     Log.error('创建管理员账户失败', '手机号不符合规范');
                                     process.exit(0);
                                 }
 
+                                // 获取加密用的盐
                                 const salt = PwdTool.getSalt();
 
                                 // 存入数据库
-                                models.admin.create({
+                                await models.admin.create({
                                     name: name,
                                     username: username,
                                     password: PwdTool.encode(password, salt),
                                     salt: salt,
                                     phone: phone
-                                }).then((result) => {
-                                    console.log(result);
+                                }).then(() => {
+                                    Log.log('创建管理员账户成功');
+                                    process.exit(0);
+                                }).catch((error) => {
+                                    Log.error('创建管理员账户失败', error);
+                                    process.exit(0);
                                 });
                             });
                         });
