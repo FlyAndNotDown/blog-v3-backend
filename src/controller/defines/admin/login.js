@@ -9,11 +9,15 @@ import { Log } from "../../../tool/log";
 
 const adminRegex = regexConfig.admin;
 
+/**
+ * /admin/login 控制器
+ */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
     get: (db, models) => {
         return async (ctx, next) => {
             await next();
+
             // 获取参数
             const query = ctx.request.query || {};
             const type = query.type || null;

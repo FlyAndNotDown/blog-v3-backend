@@ -11,5 +11,5 @@ import KeyGrip from 'keygrip';
  */
 export default mainConfig.devMode ? {
     listenPort: 30000,
-    keys: new KeyGrip(['kindem no.1 over the world', 'i love single river'], 'sha256')
+    keys: new KeyGrip(['kindem no.1 over the world'], 'sha256')
 } : {};

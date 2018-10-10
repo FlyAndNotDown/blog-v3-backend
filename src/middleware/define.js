@@ -12,5 +12,5 @@ export default [
     autoLog,
     bodyParser,
     session,
-    cors
+    cors,
 ];

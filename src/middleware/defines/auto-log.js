@@ -6,7 +6,8 @@
 import { Log } from "../../tool/log";
 
 /**
- * 服务器自动日志中间件
+ * 服务器自动日志中间件生成器
+ * @returns {Function} 中间件
  */
 export default () => {
     return async (ctx, next) => {
