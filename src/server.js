@@ -39,6 +39,8 @@ export class Server {
         Log.log('开始初始化服务器');
         // 创建 koa 对象
         this.__server = new Koa();
+        // 设置 keys
+        this.__server.keys = serverConfig.keys;
         // 创建路由
         this.__router = routerGenerator();
         // 实例化 sequelize 对象

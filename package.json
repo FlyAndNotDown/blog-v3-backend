@@ -21,6 +21,7 @@
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
     "js-sha256": "^0.9.0",
+    "keygrip": "^1.0.3",
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
