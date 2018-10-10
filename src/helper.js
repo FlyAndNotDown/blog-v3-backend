@@ -56,22 +56,16 @@ const funcMap = {
             );
 
             // 加载模型配置
-            let models = new ModelLoader(db).getModels();
-
-            let count = 0;
-            let length = Object.getOwnPropertyNames(models).length;
-            for (let modelKey in models) {
-                if (models.hasOwnProperty(modelKey)) {
-                    models[modelKey].sync({
-                        force: true
-                    }).then(() => {
-                        Log.log(`同步${modelKey}成功`);
-                        if (++count === length) process.exit(0);
-                    }).catch((error) => {
-                        Log.error(`同步${modelKey}失败`, error);
-                    });
-                }
-            }
+            new ModelLoader(db).getModels();
+            db
+                .sync({ force: true })
+                .then(() => {
+                    Log.log(`同步成功`);
+                    process.exit(0);
+                })
+                .catch(error => {
+                    Log.error(`同步失败`, error);
+                });
         }
     },
     /**
