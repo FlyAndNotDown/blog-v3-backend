@@ -11,6 +11,13 @@ const adminRegex = regexConfig.admin;
 
 /**
  * /admin/login 控制器
+ * @description get 获取盐获取登录状态
+ * * @param {'salt'|'info'} type 获取内容类型
+ * * @param {string} username 用户名
+ * @description post 登录校验
+ * * @param {string} username 用户名
+ * * @param {string} password 密码sha256Hash值
+ * @description delete 注销
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
@@ -135,6 +142,15 @@ export default {
                 success: true
             };
             return null;
+        }
+    },
+    delete: (db, models) => {
+        return async (ctx, next) => {
+            await next();
+
+            // 删除 session 中的登录信息
+            ctx.session.adminLogin = false;
+            ctx.session.adminInfo = null;
         }
     }
 };
