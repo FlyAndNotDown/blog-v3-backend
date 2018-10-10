@@ -14,7 +14,7 @@ export default mainConfig.devMode ? {
         credentials: true
     },
     session: {
-        key: 'sessionId',
+        key: 'sessionid',
         maxAge: 1000 * 60 * 60 * 24 * 7,
         autoCommit: true,
         overwrite: true,
