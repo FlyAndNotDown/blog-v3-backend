@@ -96,8 +96,8 @@ export class Server {
     start() {
         this.__init();
         this.__loadModel();
-        this.__loadController();
         this.__loadMiddleware();
+        this.__loadController();
         this.__listen();
         Log.log('服务器正在运行');
         return this;

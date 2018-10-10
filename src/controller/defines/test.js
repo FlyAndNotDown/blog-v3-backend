@@ -15,7 +15,9 @@ export default {
         return async (ctx, next) => {
             await next();
 
-            ctx.session.test = 'hello';
+            let n = ctx.session.views || 0;
+            ctx.session.views = ++n;
+            ctx.body = n + ' views';
             return null;
         }
     }
