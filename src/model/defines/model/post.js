@@ -24,7 +24,7 @@ export default {
             type: Sequelize.STRING(1000)
         },
         body: {
-            type: Sequelize.STRING(1000)
+            type: Sequelize.TEXT
         }
     }
 };
