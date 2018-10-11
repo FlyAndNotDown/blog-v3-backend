@@ -34,7 +34,7 @@ export default {
                     // 获取所有标签
                     let labels = null;
                     try {
-                        labels = models.label.findAll();
+                        labels = await models.label.findAll();
                     } catch (e) {
                         Log.error('status 500', e);
                         ctx.response.status = 500;
