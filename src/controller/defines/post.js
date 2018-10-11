@@ -84,8 +84,6 @@ export default {
                 return null;
             }
 
-            // TODO 貌似标签校验错误也能入库？
-
             // 存入数据库
             // 先存基础对象
             let newPost;
