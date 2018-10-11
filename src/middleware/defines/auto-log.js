@@ -11,9 +11,9 @@ import { Log } from "../../tool/log";
  */
 export default () => {
     return async (ctx, next) => {
-        await next();
-
         // 记录请求日志
         Log.log(`${ctx.request.method.toLowerCase()} ${ctx.request.url.split('?')[0]}`);
+
+        await next();
     };
 };

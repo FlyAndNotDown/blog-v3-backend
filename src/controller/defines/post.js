@@ -63,26 +63,30 @@ export default {
                 return null;
             }
 
+            Log.devLog(`labels: ${labels}`);
+
             // 看传过来的标签是否都在这个列表中
             let needLabelObjects = [];
-            labels.forEach(label => {
-                let find = false;
-                for (let name in dbLabelMapFromIdToObject) {
-                    if (dbLabelMapFromIdToObject.hasOwnProperty(name)) {
-                        if (name === label) {
-                            find = true;
-                            needLabelObjects.push(dbLabelMapFromIdToObject[name]);
-                            break;
+            try {
+                labels.forEach(label => {
+                    let find = false;
+                    for (let name in dbLabelMapFromIdToObject) {
+                        if (dbLabelMapFromIdToObject.hasOwnProperty(name)) {
+                            if (name === label) {
+                                find = true;
+                                needLabelObjects.push(dbLabelMapFromIdToObject[name]);
+                                break;
+                            }
                         }
                     }
-                }
-                // 如果不在，则报错
-                if (!find) {
-                    Log.error('status 400', `label ${label} not found in database`);
-                    ctx.response.status = 400;
-                    return null;
-                }
-            });
+                    // 如果不在，则报错
+                    if (!find) throw new Error(`label ${label} not found in database`);
+                });
+            } catch (e) {
+                Log.error('status 400', e);
+                ctx.response.status = 400;
+                return null;
+            }
 
             // 存入数据库
             // 先存基础对象
