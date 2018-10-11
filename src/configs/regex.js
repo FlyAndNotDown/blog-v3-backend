@@ -10,10 +10,14 @@ import mainConfig from './main';
  */
 export default mainConfig.devMode ? {
     admin: {
-        username: /[0-9a-z]{6,16}/,
-        password: /[0-9a-z@#]{6,16}/,
-        passwordHash: /[0-9a-f]{64,64}/,
-        name: /[0-9a-z]{6,16}/,
-        phone: /[0-9]{11}/
+        username: /^[0-9a-z]{6,16}$/,
+        password: /^[0-9a-z@#]{6,16}$/,
+        passwordHash: /^[0-9a-f]{64,64}$/,
+        name: /^[0-9a-z]{6,16}$/,
+        phone: /^[0-9]{11}$/
+    },
+    post: {
+        title: /^.{0,100}$/,
+        description: /^.{0,1000}$/
     }
 } : {};
