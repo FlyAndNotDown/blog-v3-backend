@@ -50,10 +50,10 @@ export default {
 
             // 查询所有标签
             let dbLabelObjects;
-            let dbLabelMapFromIdToObject = [];
+            let dbLabelMapFromIdToObjectList = [];
             try {
                 dbLabelObjects = await models.label.findAll();
-                dbLabelObjects.forEach(object => dbLabelMapFromIdToObject.push({
+                dbLabelObjects.forEach(object => dbLabelMapFromIdToObjectList.push({
                     key: object.id,
                     value: object
                 }));
@@ -63,30 +63,28 @@ export default {
                 return null;
             }
 
-            Log.devLog(`labels: ${labels}`);
-
             // 看传过来的标签是否都在这个列表中
             let needLabelObjects = [];
             try {
-                labels.forEach(label => {
+                labels.forEach(labelId => {
                     let find = false;
-                    for (let name in dbLabelMapFromIdToObject) {
-                        if (dbLabelMapFromIdToObject.hasOwnProperty(name)) {
-                            if (name === label) {
-                                find = true;
-                                needLabelObjects.push(dbLabelMapFromIdToObject[name]);
-                                break;
-                            }
+                    for (let i = 0; i < dbLabelMapFromIdToObjectList.length; i++) {
+                        if (dbLabelMapFromIdToObjectList[i].key === labelId) {
+                            find = true;
+                            needLabelObjects.push(dbLabelMapFromIdToObjectList[i].value);
+                            break;
                         }
                     }
                     // 如果不在，则报错
-                    if (!find) throw new Error(`label ${label} not found in database`);
+                    if (!find) throw new Error(`label ${labelId} not found in database`);
                 });
             } catch (e) {
                 Log.error('status 400', e);
                 ctx.response.status = 400;
                 return null;
             }
+
+            // TODO 貌似标签校验错误也能入库？
 
             // 存入数据库
             // 先存基础对象
