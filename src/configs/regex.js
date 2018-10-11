@@ -17,7 +17,7 @@ export default mainConfig.devMode ? {
         phone: /^[0-9]{11}$/
     },
     post: {
-        title: /^.{0,100}$/,
-        description: /^.{0,1000}$/
+        title: /^.{1,100}$/,
+        description: /^.{1,1000}$/
     }
 } : {};

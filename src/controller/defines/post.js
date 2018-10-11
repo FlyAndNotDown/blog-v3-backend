@@ -6,7 +6,6 @@
 import controllerConfig from '../../configs/controller';
 import regexConfig from '../../configs/regex';
 import { Log } from "../../tool/log";
-import label from "../../model/defines/model/label";
 
 const postRegex = regexConfig.post;
 
@@ -51,10 +50,13 @@ export default {
 
             // 查询所有标签
             let dbLabelObjects;
-            let dbLabelNames = [];
+            let dbLabelMapFromNameToObject = [];
             try {
                 dbLabelObjects = await models.label.findAll();
-                dbLabelObjects.forEach(object => dbLabelNames.push(object.name));
+                dbLabelObjects.forEach(object => dbLabelMapFromNameToObject.push({
+                    key: object.name,
+                    value: object
+                }));
             } catch (e) {
                 Log.error('status 500', e);
                 ctx.response.status = 500;
@@ -62,12 +64,16 @@ export default {
             }
 
             // 看传过来的标签是否都在这个列表中
+            let needLabelObjects = [];
             labels.forEach(label => {
                 let find = false;
-                for (let dbLabelName in dbLabelNames) {
-                    if (dbLabelName === label) {
-                        find = true;
-                        break;
+                for (let name in dbLabelMapFromNameToObject) {
+                    if (dbLabelMapFromNameToObject.hasOwnProperty(name)) {
+                        if (name === label) {
+                            find = true;
+                            needLabelObjects.push(dbLabelMapFromNameToObject[name]);
+                            break;
+                        }
                     }
                 }
                 // 如果不在，则报错
@@ -89,13 +95,34 @@ export default {
                 });
             } catch (e) {
                 Log.error('status 500', e);
-                ctx.response.status = 400;
+                ctx.response.status = 500;
                 return null;
             }
 
-            console.log(newPost);
+            // 设置标签关系
+            try {
+                await newPost.setLabels(needLabelObjects);
+            } catch (e) {
+                Log.error('status 500', e);
+                ctx.response.status = 500;
 
-            // TODO
+                // 回滚
+                if (newPost) {
+                    await models.post.destroy({
+                        where: {
+                            id: newPost.id
+                        }
+                    });
+                }
+
+                return null;
+            }
+
+            // 设置完成之后则返回成功
+            ctx.response.body = {
+                success: true
+            };
+            return null;
         }
     }
 }
