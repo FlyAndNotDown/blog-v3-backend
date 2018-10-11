@@ -48,12 +48,19 @@ export default {
                         return null;
                     }
 
-                    // 查询管理员用户
-                    let admin = await models.admin.findOne({
-                        where: {
-                            username: username
-                        }
-                    });
+                    let admin;
+                    try {
+                        // 查询管理员用户
+                        admin = await models.admin.findOne({
+                            where: {
+                                username: username
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        ctx.response.status = 500;
+                        return null;
+                    }
 
                     // 如果管理员的用户名不存在，则返回结果
                     if (!admin) {
@@ -104,11 +111,18 @@ export default {
             }
 
             // 查询数据库获取管理员对象
-            let admin = await models.admin.findOne({
-                where: {
-                    username: username
-                }
-            });
+            let admin;
+            try {
+                admin = await models.admin.findOne({
+                    where: {
+                        username: username
+                    }
+                });
+            } catch (e) {
+                Log.error('status 500', e);
+                ctx.response.status = 500;
+                return null;
+            }
 
             // 如果没有查到
             if (!admin) {
