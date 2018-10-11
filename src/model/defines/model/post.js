@@ -25,9 +25,6 @@ export default {
         },
         body: {
             type: Sequelize.STRING(1000)
-        },
-        date: {
-            type: Sequelize.DATEONLY
         }
     }
 };

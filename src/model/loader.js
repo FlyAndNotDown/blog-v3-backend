@@ -31,9 +31,6 @@ export class ModelLoader {
                     this.__models[name1].belongsToMany(this.__models[name2], { through: `${name1}${name2}` });
                     this.__models[name2].belongsToMany(this.__models[name1], { through: `${name1}${name2}` });
                     break;
-                case 'm2o':
-                    // TODO
-                    break;
                 default:
                     break;
             }
