@@ -50,11 +50,11 @@ export default {
 
             // 查询所有标签
             let dbLabelObjects;
-            let dbLabelMapFromNameToObject = [];
+            let dbLabelMapFromIdToObject = [];
             try {
                 dbLabelObjects = await models.label.findAll();
-                dbLabelObjects.forEach(object => dbLabelMapFromNameToObject.push({
-                    key: object.name,
+                dbLabelObjects.forEach(object => dbLabelMapFromIdToObject.push({
+                    key: object.id,
                     value: object
                 }));
             } catch (e) {
@@ -67,11 +67,11 @@ export default {
             let needLabelObjects = [];
             labels.forEach(label => {
                 let find = false;
-                for (let name in dbLabelMapFromNameToObject) {
-                    if (dbLabelMapFromNameToObject.hasOwnProperty(name)) {
+                for (let name in dbLabelMapFromIdToObject) {
+                    if (dbLabelMapFromIdToObject.hasOwnProperty(name)) {
                         if (name === label) {
                             find = true;
-                            needLabelObjects.push(dbLabelMapFromNameToObject[name]);
+                            needLabelObjects.push(dbLabelMapFromIdToObject[name]);
                             break;
                         }
                     }
