@@ -7,7 +7,7 @@ import controllerConfig from '../../configs/controller';
 import { Log } from "../../tool/log";
 
 /**
- * /test 控制器
+ * ${commonUrlPrefix}/test 控制器
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/test`,

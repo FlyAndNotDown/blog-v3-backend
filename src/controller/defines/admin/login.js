@@ -10,7 +10,7 @@ import { Log } from "../../../tool/log";
 const adminRegex = regexConfig.admin;
 
 /**
- * /admin/login 控制器
+ * ${commonUrlPrefix}/admin/login 控制器
  * @description get 获取盐获取登录状态
  * * @param {'salt'|'info'} type 获取内容类型
  * * @param {string} username 用户名

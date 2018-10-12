@@ -9,7 +9,7 @@ import controllerConfig from '../../configs/controller';
 import { Log } from "../../tool/log";
 
 /**
- * /label 控制器
+ * ${commonUrlPrefix}/label 控制器
  * @description get 获取标签
  * * @param {'all'|'some'} type 获取类型
  * * @todo

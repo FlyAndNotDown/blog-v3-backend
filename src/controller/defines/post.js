@@ -10,12 +10,7 @@ import { Log } from "../../tool/log";
 const postRegex = regexConfig.post;
 
 /**
- * /post 控制器
- * @description get 获取文章
- * * @param {'summary'|'detail'|'archive'} contentType 内容类型
- * * @param {'range'|'one'|'all'} amountType 数量类型
- * * @param {{from: number, to: number}} range 范围(amountType=='summary')
- * * @param {number} id id(amountType='one')
+ * ${commonUrlPrefix}/post 控制器
  * @description post 新建文章
  * * @param {string} title 标题
  * * @param {string} body 文章主体
@@ -24,31 +19,6 @@ const postRegex = regexConfig.post;
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/post`,
-    get: (db, models) => {
-        return async (ctx, next) => {
-            await next();
-
-            // 获取参数
-            const requestBody = ctx.request.body || {};
-            const contentType = requestBody.contentType || null;
-            const amountType = requestBody.amountType || null;
-
-            switch (contentType) {
-                case 'summary':
-                    // TODO
-                    break;
-                case 'detail':
-                    // TODO
-                    break;
-                case  'archive':
-                    // TODO
-                    break;
-                default:
-                    Log.error('status 400', `contentType: ${contentType}`);
-                    return ctx.response.status = 400;
-            }
-        };
-    },
     post: (db, models) => {
         return async (ctx, next) => {
             await next();
