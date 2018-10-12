@@ -104,7 +104,7 @@ export default {
                 ctx.response.status = 400;
                 return null;
             }
-            if (!password || !password.match(adminRegex.password)) {
+            if (!password || !password.match(adminRegex.passwordHash)) {
                 Log.error('参数错误', `password: ${password}`);
                 ctx.response.status = 400;
                 return null;
