@@ -11,6 +11,11 @@ const postRegex = regexConfig.post;
 
 /**
  * /post 控制器
+ * @description post 新建文章
+ * * @param {string} title 标题
+ * * @param {string} body 文章主体
+ * * @param {string} description 描述
+ * * @param {[id: number]} labels 标签id数组
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/post`,
