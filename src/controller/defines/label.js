@@ -61,6 +61,6 @@ export default {
                     ctx.response.status = 400;
                     return null;
             }
-        }
+        };
     }
 }

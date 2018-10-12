@@ -128,6 +128,6 @@ export default {
                 success: true
             };
             return null;
-        }
+        };
     }
 }

@@ -87,7 +87,7 @@ export default {
                     ctx.response.status = 400;
                     return null;
             }
-        }
+        };
     },
     post: (db, models) => {
         return async (ctx, next) => {
@@ -156,7 +156,7 @@ export default {
                 success: true
             };
             return null;
-        }
+        };
     },
     delete: (db, models) => {
         return async (ctx, next) => {
@@ -165,6 +165,6 @@ export default {
             // 删除 session 中的登录信息
             ctx.session.adminLogin = false;
             ctx.session.adminInfo = null;
-        }
+        };
     }
 };

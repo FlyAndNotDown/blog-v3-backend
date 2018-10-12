@@ -12,5 +12,10 @@ import { Log } from '../../tool/log';
  * ${commonUrlPrefix}/index 控制器
  */
 export default {
-    url: `${controllerConfig.commonUrlPrefix}/index`
+    url: `${controllerConfig.commonUrlPrefix}/index`,
+    get: (db, models) => {
+        return async (ctx, next) => {
+            // TODO
+        };
+    }
 }
