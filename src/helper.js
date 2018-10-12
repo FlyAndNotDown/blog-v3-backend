@@ -14,6 +14,30 @@ import { PwdTool } from "./tool/pwd";
 const connectionConfig = modelConfig.connection;
 
 /**
+ * 同步函数
+ * @param {boolean} force 同步是否为强制
+ */
+let syncFunc = async (force) => {
+    Log.log('连接到数据库');
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+
+    // 加载模型配置
+    new ModelLoader(db).getModels();
+    try {
+        await db.sync({ force: force });
+    } catch(e) {
+        Log.error(`同步失败`, e);
+    }
+    Log.log(`同步成功`);
+    process.exit(0);
+};
+
+/**
  * 对应脚本输入的处理函数
  */
 const funcMap = {
@@ -44,28 +68,18 @@ const funcMap = {
                 });
         },
         /**
-         * 初始化数据库
+         * 同步数据库
          */
-        init: () => {
-            Log.log('连接到数据库');
-            const db = new Sequelize(
-                connectionConfig.database,
-                connectionConfig.username,
-                connectionConfig.password,
-                connectionConfig.options
-            );
-
-            // 加载模型配置
-            new ModelLoader(db).getModels();
-            db
-                .sync({ force: true })
-                .then(() => {
-                    Log.log(`同步成功`);
-                    process.exit(0);
-                })
-                .catch(error => {
-                    Log.error(`同步失败`, error);
-                });
+        sync: () => {
+            syncFunc(false);
+        },
+        /**
+         * 强制同步数据库
+         */
+        force: {
+            sync: () => {
+                syncFunc(true);
+            }
         }
     },
     /**
