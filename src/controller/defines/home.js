@@ -111,7 +111,24 @@ export default {
                 return ctx.response.status = 500;
             }
 
-            // TODO 组合成主页需要的格式，明天再写了，这傻逼室友又在烦人了
+            // 保护
+            postList = postList || [];
+            emotionList = emotionList || [];
+
+            let blockList = [];
+            let i = 0, j = 0;
+            let count = 0;
+
+            // 开始添加
+            while (
+                count < amount &&
+                i < postList.length &&
+                j < emotionList.length
+            ) {
+                // TODO 时间比较，并且添加到 blockList
+            }
+
+            // TODO 返回结果
         };
     }
 }
