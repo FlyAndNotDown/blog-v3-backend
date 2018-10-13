@@ -1,7 +1,7 @@
 /**
- * /controller/define/index.js
+ * /controller/define/home.js
  * @author John Kindem
- * @description ${commonUrlPrefix}/index 控制器源文件
+ * @description ${commonUrlPrefix}/home 控制器源文件
  * @version v1.0
  */
 
@@ -16,10 +16,10 @@ const indexGetMaxAmount = controllerConfig.index.get.maxAmount;
 const Op = Sequelize.Op;
 
 /**
- * ${commonUrlPrefix}/index 控制器
+ * ${commonUrlPrefix}/home 控制器
  */
 export default {
-    url: `${controllerConfig.commonUrlPrefix}/index`,
+    url: `${controllerConfig.commonUrlPrefix}/home`,
     get: (db, models) => {
         return async (ctx, next) => {
             await next();
