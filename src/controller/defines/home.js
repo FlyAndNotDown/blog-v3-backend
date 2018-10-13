@@ -1,7 +1,7 @@
 /**
  * /controller/define/home.js
  * @author John Kindem
- * @description ${commonUrlPrefix}/home 控制器源文件
+ * @description ${commonUrlPrefix}/home 主页控制器源文件
  * @version v1.0
  */
 
