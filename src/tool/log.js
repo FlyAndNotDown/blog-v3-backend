@@ -18,7 +18,13 @@ export class Log {
      */
     static log(context, detail) {
         if (mainConfig.log) {
-            console.log(`[log] ${context}${detail ? `\n${detail}` : ''}`);
+            console.log(`[log] ${context}`);
+            if (detail) {
+                let lines = detail.split('\n');
+                lines.forEach(line => {
+                    console.log(`      ${line}`);
+                });
+            }
         }
     }
 
@@ -29,7 +35,13 @@ export class Log {
      */
     static error(context, detail) {
         if (mainConfig.log) {
-            console.log(`[error] ${context}${detail ? `\n${detail}` : ''}`);
+            console.log(`[err] ${context}`);
+            if (detail) {
+                let lines = detail.split('\n');
+                lines.forEach(line => {
+                    console.log(`      ${line}`);
+                });
+            }
         }
     }
 
@@ -40,7 +52,13 @@ export class Log {
      */
     static devLog(context, detail) {
         if (mainConfig.devMode && mainConfig.log) {
-            console.log(`[log] ${context}${detail ? `\n${detail}` : ''}`);
+            console.log(`[log] ${context}`);
+            if (detail) {
+                let lines = detail.split('\n');
+                lines.forEach(line => {
+                    console.log(`      ${line}`);
+                });
+            }
         }
     }
 
@@ -51,7 +69,13 @@ export class Log {
      */
     static devError(context, detail) {
         if (mainConfig.devMode && mainConfig.log) {
-            console.log(`[error] ${context}${detail ? `\n${detail}` : ''}`);
+            console.log(`[err] ${context}`);
+            if (detail) {
+                let lines = detail.split('\n');
+                lines.forEach(line => {
+                    console.log(`      ${line}`);
+                });
+            }
         }
     }
 
