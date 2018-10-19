@@ -8,9 +8,13 @@ import regexConfig from '../../configs/regex';
 import { Log } from "../../tool/log";
 
 const postRegex = regexConfig.post;
+const normalRegex = regexConfig.normal;
 
 /**
  * ${commonUrlPrefix}/post 控制器
+ * @description get 获取文章内容
+ * * @param {'detail'} type 获取文章内容的类型
+ * * @param {number} id 文章 id (when type == 'detail')
  * @description post 新建文章
  * * @param {string} title 标题
  * * @param {string} body 文章主体
@@ -19,6 +23,64 @@ const postRegex = regexConfig.post;
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/post`,
+    get: (db, models) => {
+        return async (ctx, next) => {
+            await next();
+
+            // 获取参数
+            const requestBody = ctx.request.body || {};
+            const type = requestBody.type || null;
+
+            // 参数校验
+            if (!type) {
+                Log.error('status 400', `type: ${type}`);
+                return ctx.response.status = 400;
+            }
+
+            // 根据 get 的类型进行处理
+            switch (type) {
+                case 'detail':
+                    // 根据 id 获取详细信息
+                    // 获取 id
+                    const id = requestBody.id || null;
+                    // 参数校验
+                    if (!id || !id.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `id: ${id}`);
+                        return ctx.response.status = 400;
+                    }
+
+                    // 查询 id
+                    let post;
+                    try {
+                        post = await models.post.findOne({
+                            where: {
+                                id: id
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // 如果没有查询到 post 的内容
+                    if (!post) {
+                        return ctx.response.body = {
+                            post: null
+                        };
+                    }
+
+                    return ctx.response.body = {
+                        id: post.id || 0,
+                        title: post.title || '',
+                        description: post.description || '',
+                        body: post.body || ''
+                    };
+                default:
+                    Log.error('status 400', `type: ${type}`);
+                    return ctx.response.status = 400;
+            }
+        };
+    },
     post: (db, models) => {
         return async (ctx, next) => {
             await next();
