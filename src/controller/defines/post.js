@@ -69,11 +69,13 @@ export default {
                         };
                     }
 
+                    // TODO 时间精制
                     return ctx.response.body = {
                         id: post.id || 0,
                         title: post.title || '',
                         description: post.description || '',
-                        body: post.body || ''
+                        body: post.body || '',
+                        time: post.createAt || ''
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
