@@ -104,7 +104,7 @@ export default {
                             title: post.title,
                             description: post.description,
                             body: post.body,
-                            time: (post.split(' ')[0] || '').replace('-', '.');
+                            time: (post.split(' ')[0] || '').replace('-', '.')
                         });
                     });
 
@@ -112,8 +112,45 @@ export default {
                     return ctx.response.body = {
                         posts: posts
                     };
-                case 'detail':
-                    break;
+                // 如果是获取单篇文章详情
+                case 'detail':a
+                    // 获取参数
+                    const id = query.id || null;
+
+                    // 参数校验
+                    if (!id || !id.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `id: ${id}`);
+                        return ctx.response.status = 400;
+                    }
+
+                    let post;
+                    // 查询 post 详情
+                    try {
+                        await post = models.post.findOne({
+                            where: {
+                                id: id
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // 如果没有查询到对应的文章
+                    if (!post) {
+                        return ctx.response.body = {
+                            post: null
+                        };
+                    }
+
+                    // 正常返回
+                    return ctx.response.body = {
+                        id: post.id,
+                        title: post.title,
+                        description: post.description,
+                        body: post.body,
+                        time: (post.split(' ')[0] || '').replace('-', '.')
+                    };
                 default:
                     Log.error('status 400', `type: ${type}`);
                     return ctx.response.status = 400;
