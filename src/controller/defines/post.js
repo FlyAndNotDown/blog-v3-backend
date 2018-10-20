@@ -6,15 +6,19 @@
 import controllerConfig from '../../configs/controller';
 import regexConfig from '../../configs/regex';
 import { Log } from "../../tool/log";
+import Sequelize from 'sequelize';
 
 const postRegex = regexConfig.post;
 const normalRegex = regexConfig.normal;
 
+const SequelizeOp = Sequelize.Op;
+
 /**
  * ${commonUrlPrefix}/post 控制器
  * @description get 获取文章内容
- * * @param {'detail'} type 获取文章内容的类型
- * * @param {number} id 文章 id (when type == 'detail')
+ * * @param {'summary'|'detail'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情)
+ * * @param {number} id 文章 id (where type == 'detail')
+ * * @param {{start: number, length: number}} range 文章 id 范围 (where type == 'summary')
  * @description post 新建文章
  * * @param {string} title 标题
  * * @param {string} body 文章主体
@@ -28,55 +32,88 @@ export default {
             await next();
 
             // 获取参数
-            const requestBody = ctx.request.body || {};
-            const type = requestBody.type || null;
+            const query = ctx.request.query || {};
+            const type = query || null;
 
-            // 参数校验
+            // 校验参数
             if (!type) {
                 Log.error('status 400', `type: ${type}`);
                 return ctx.response.status = 400;
             }
 
-            // 根据 get 的类型进行处理
+            // 根据不同类型进行不同处理
             switch (type) {
-                case 'detail':
-                    // 根据 id 获取详细信息
-                    // 获取 id
-                    const id = requestBody.id || null;
+                // 如果是获取文章概述
+                case 'summary':
+                    // 获取参数
+                    const range = query.range || null;
+                    const rangeStart = range.start || null;
+                    const rangeLength = range.length || null;
+
                     // 参数校验
-                    if (!id || !id.match(normalRegex.naturalNumber)) {
-                        Log.error('status 400', `id: ${id}`);
+                    if (!range) {
+                        Log.error('status 400', `range: ${JSON.stringify(range)}`);
+                        return ctx.response.status = 400;
+                    }
+                    if (!rangeStart || !rangeStart.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `range: ${JSON.stringify(range)}`);
+                        return ctx.response.status = 400;
+                    }
+                    if (!rangeLength || !rangeLength.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `range: ${JSON.stringify(range)}`);
                         return ctx.response.status = 400;
                     }
 
-                    // 查询 id
-                    let post;
-                    try {
-                        post = await models.post.findOne({
-                            where: {
-                                id: id
-                            }
+                    let posts;
+                    if (rangeStart === 0) {
+                        // 如果 rangeStart == 0，则意味着获取最新的 length 篇文章概述
+                        try {
+                            await posts = models.post.findAll({
+                                order: {
+                                    ['createdAt', 'DESC']
+                                },
+                                limit: rangeLength
+                            });
+                        } catch (e) {
+                            Log.error('status 500', e);
+                            return ctx.response.status = 500;
+                        }
+                    } else {
+                        // 如果 rangeStart != 0，则按照分页取得文章
+                        try {
+                            await posts = models.post.findAll({
+                                where: {
+                                    [SequelizeOp.lt]: rangeStart
+                                },
+                                order: {
+                                    ['createdAt', 'DESC']
+                                },
+                                limit: rangeLength
+                            });
+                        } catch (e) {
+                            Log.error('staus 500', e);
+                            return ctx.response.status = 500;
+                        }
+                    }
+
+                    // 进行数据过滤
+                    let result = [];
+                    posts.forEach(post => {
+                        result.push({
+                            id: post.id,
+                            title: post.title,
+                            description: post.description,
+                            body: post.body,
+                            time: (post.split(' ')[0] || '').replace('-', '.');
                         });
-                    } catch (e) {
-                        Log.error('status 500', e);
-                        return ctx.response.status = 500;
-                    }
+                    });
 
-                    // 如果没有查询到 post 的内容
-                    if (!post) {
-                        return ctx.response.body = {
-                            post: null
-                        };
-                    }
-
-                    // TODO 时间精制
+                    // 返回结果
                     return ctx.response.body = {
-                        id: post.id || 0,
-                        title: post.title || '',
-                        description: post.description || '',
-                        body: post.body || '',
-                        time: post.createAt || ''
+                        posts: posts
                     };
+                case 'detail':
+                    break;
                 default:
                     Log.error('status 400', `type: ${type}`);
                     return ctx.response.status = 400;
