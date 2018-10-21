@@ -96,21 +96,38 @@ export default {
                         }
                     }
 
-                    // 进行数据过滤
-                    // TODO 标签
                     let result = [];
-                    posts.forEach(post => {
-                        const createdAt = post.createdAt;
-                        const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
-                        result.push({
-                            id: post.id,
-                            title: post.title,
-                            description: post.description,
-                            body: post.body,
-                            time: time,
-                            labels: []
+
+                    // 查询标签内容，组装数据
+                    try {
+                        posts.forEach(post => {
+                            const createdAt = post.createdAt;
+                            const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+
+                            // 查询标签内容
+                            let postLabels = await post.getLabels();
+                            let labels = [];
+
+                            postLabels.forEach(label => {
+                                labels.push({
+                                    key: label.id,
+                                    name: label.name
+                                });
+                            });
+
+                            result.push({
+                                id: post.id,
+                                title: post.title,
+                                description: post.description,
+                                body: post.body,
+                                time: time,
+                                labels: labels
+                            });
                         });
-                    });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
 
                     // 返回结果
                     return ctx.response.body = {
@@ -147,10 +164,29 @@ export default {
                         };
                     }
 
-                    // 处理并返回
+                    // 查询标签
+                    let postLabels;
+                    try {
+                        postLabels = await post.getLabels();
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // 数据处理
+                    let labels = [];
+                    postLabels.forEach(label => {
+                        labels.push({
+                            key: label.id,
+                            name: label.name
+                        });
+                    });
+
+                    // 处理时间
                     const createdAt = post.createdAt;
                     const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
-                    // TODO 标签
+
+                    // 响应客户端
                     return ctx.response.body = {
                         post: {
                             id: post.id,
@@ -158,7 +194,7 @@ export default {
                             description: post.description,
                             body: post.body,
                             time: time,
-                            labels: []
+                            labels: labels
                         }
                     };
                 default:
