@@ -97,6 +97,7 @@ export default {
                     }
 
                     // 进行数据过滤
+                    // TODO 标签
                     let result = [];
                     posts.forEach(post => {
                         const createdAt = post.createdAt;
@@ -106,7 +107,8 @@ export default {
                             title: post.title,
                             description: post.description,
                             body: post.body,
-                            time: time
+                            time: time,
+                            labels: []
                         });
                     });
 
@@ -145,15 +147,19 @@ export default {
                         };
                     }
 
-                    // 处理时间并返回
+                    // 处理并返回
                     const createdAt = post.createdAt;
                     const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+                    // TODO 标签
                     return ctx.response.body = {
-                        id: post.id,
-                        title: post.title,
-                        description: post.description,
-                        body: post.body,
-                        time: time
+                        post: {
+                            id: post.id,
+                            title: post.title,
+                            description: post.description,
+                            body: post.body,
+                            time: time,
+                            labels: []
+                        }
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
