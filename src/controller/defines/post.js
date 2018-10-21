@@ -68,10 +68,10 @@ export default {
                     if (rangeStart === 0) {
                         // 如果 rangeStart == 0，则意味着获取最新的 length 篇文章概述
                         try {
-                            await posts = models.post.findAll({
-                                order: {
+                            posts = await models.post.findAll({
+                                order: [
                                     ['createdAt', 'DESC']
-                                },
+                                ],
                                 limit: rangeLength
                             });
                         } catch (e) {
@@ -81,13 +81,13 @@ export default {
                     } else {
                         // 如果 rangeStart != 0，则按照分页取得文章
                         try {
-                            await posts = models.post.findAll({
+                            posts = await models.post.findAll({
                                 where: {
                                     [SequelizeOp.lt]: rangeStart
                                 },
-                                order: {
+                                order: [
                                     ['createdAt', 'DESC']
-                                },
+                                ],
                                 limit: rangeLength
                             });
                         } catch (e) {
@@ -126,7 +126,7 @@ export default {
                     let post;
                     // 查询 post 详情
                     try {
-                        await post = models.post.findOne({
+                        post = await models.post.findOne({
                             where: {
                                 id: id
                             }
