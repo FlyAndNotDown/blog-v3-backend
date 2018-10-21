@@ -33,7 +33,7 @@ export default {
 
             // 获取参数
             const query = ctx.request.query || {};
-            const type = query || null;
+            const type = query.type || null;
 
             // 校验参数
             if (!type) {
@@ -99,12 +99,14 @@ export default {
                     // 进行数据过滤
                     let result = [];
                     posts.forEach(post => {
+                        const createdAt = post.createdAt;
+                        const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
                         result.push({
                             id: post.id,
                             title: post.title,
                             description: post.description,
                             body: post.body,
-                            time: (post.split(' ')[0] || '').replace('-', '.')
+                            time: time
                         });
                     });
 
@@ -113,7 +115,7 @@ export default {
                         posts: posts
                     };
                 // 如果是获取单篇文章详情
-                case 'detail':a
+                case 'detail':
                     // 获取参数
                     const id = query.id || null;
 
@@ -143,13 +145,15 @@ export default {
                         };
                     }
 
-                    // 正常返回
+                    // 处理时间并返回
+                    const createdAt = post.createdAt;
+                    const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
                     return ctx.response.body = {
                         id: post.id,
                         title: post.title,
                         description: post.description,
                         body: post.body,
-                        time: (post.split(' ')[0] || '').replace('-', '.')
+                        time: time
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
