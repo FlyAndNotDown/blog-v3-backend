@@ -17,8 +17,9 @@ const SequelizeOp = Sequelize.Op;
  * ${commonUrlPrefix}/post 控制器
  * @description get 获取文章内容
  * * @param {'summary'|'detail'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情)
- * * @param {number} id 文章 id (where type == 'detail')
- * * @param {{start: number, length: number}} range 文章 id 范围 (where type == 'summary')
+ * * @param {number} id 文章 id (where type === 'detail')
+ * * @param {number} start post summary list range - start (where type === 'summary')
+ * * @param {number} length post summary list range - length (where type === 'summary')
  * @description post 新建文章
  * * @param {string} title 标题
  * * @param {string} body 文章主体
@@ -46,42 +47,18 @@ export default {
                 // 如果是获取文章概述
                 case 'summary':
                     // 获取参数
-                    const range = query.range || null;
-                    const rangeStart = range.start ?
-                        (typeof range.start === 'number' ?
-                            Math.floor(range.start) :
-                            Math.floor(parseInt(range.start, 10))
-                        ) : null;
-                    const rangeLength = range.length ?
-                        (typeof range.length === 'number' ?
-                            Math.floor(range.length) :
-                            Math.floor(parseInt(range.length, 10))
-                        ) : null;
-
-                    // 参数校验
-                    if (!range) {
-                        Log.error('status 400', `range: ${JSON.stringify(range)}`);
-                        return ctx.response.status = 400;
-                    }
-                    if (!rangeStart || rangeStart < 0) {
-                        Log.error('status 400', `range.start: ${range.start}`);
-                        return ctx.response.status = 400;
-                    }
-                    if (!rangeLength || rangeLength < 0) {
-                        Log.error('staus 400', `range.length: ${range.length}`);
-                        return ctx.response.status = 400;
-                    }
+                    // TODO
 
                     // query db for posts
                     // if range.start === 0, query the latest ${range.length} posts
                     let posts;
                     try {
                         posts = await models.post.findAll(
-                            rangeStart === 0 ? {
+                            start === 0 ? {
                                 order: [
                                     ['createdAt', 'DESC']
                                 ],
-                                limit: rangeLength
+                                limit: length
                             } : {
                                 where: {
                                     [SequelizeOp.lt]: range.start
@@ -89,7 +66,7 @@ export default {
                                 order: [
                                     ['createdAt', 'DESC']
                                 ],
-                                limit: rangeLength
+                                limit: length
                             }
                         );
                     } catch (e) {
