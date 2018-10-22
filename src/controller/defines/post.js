@@ -46,7 +46,70 @@ export default {
                 // 如果是获取文章概述
                 case 'summary':
                     // 获取参数
-                    // TODO
+                    const range = query.range || null;
+                    const rangeStart = range.start ?
+                        (typeof range.start === 'number' ?
+                            Math.floor(range.start) :
+                            Math.floor(parseInt(range.start, 10))
+                        ) : null;
+                    const rangeLength = range.length ?
+                        (typeof range.length === 'number' ?
+                            Math.floor(range.length) :
+                            Math.floor(parseInt(range.length, 10))
+                        ) : null;
+
+                    // 参数校验
+                    if (!range) {
+                        Log.error('status 400', `range: ${JSON.stringify(range)}`);
+                        return ctx.response.status = 400;
+                    }
+                    if (!rangeStart || rangeStart < 0) {
+                        Log.error('status 400', `range.start: ${range.start}`);
+                        return ctx.response.status = 400;
+                    }
+                    if (!rangeLength || rangeLength < 0) {
+                        Log.error('staus 400', `range.length: ${range.length}`);
+                        return ctx.response.status = 400;
+                    }
+
+                    // query db for posts
+                    // if range.start === 0, query the latest ${range.length} posts
+                    let posts;
+                    try {
+                        posts = await models.post.findAll(
+                            rangeStart === 0 ? {
+                                order: [
+                                    ['createdAt', 'DESC']
+                                ],
+                                limit: rangeLength
+                            } : {
+                                where: {
+                                    [SequelizeOp.lt]: range.start
+                                },
+                                order: [
+                                    ['createdAt', 'DESC']
+                                ],
+                                limit: rangeLength
+                            }
+                        );
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // define the result list
+                    let result = [];
+
+                    // iteration for dealing datas
+                    // by the way, query the labels data in the iteration
+                    try {
+                        // do query labels
+                        // TODO
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
                 // 如果是获取单篇文章详情
                 case 'detail':
                     // 获取参数
