@@ -71,7 +71,7 @@ export default {
                         posts = await models.post.findAll(
                             start === 0 ? {
                                 order: [
-                                    ['createdAt', 'DESC']
+                                    ['id', 'DESC']
                                 ],
                                 limit: length
                             } : {
@@ -81,7 +81,7 @@ export default {
                                     }
                                 },
                                 order: [
-                                    ['createdAt', 'DESC']
+                                    ['id', 'DESC']
                                 ],
                                 limit: length
                             }
