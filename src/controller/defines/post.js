@@ -47,7 +47,6 @@ export default {
                 // 如果是获取文章概述
                 case 'summary':
                     // get the params
-                    const query = ctx.request.query || {};
                     let start = query.start || null;
                     let length = query.length || null;
 
@@ -113,7 +112,7 @@ export default {
                             const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
 
                             result.push({
-                                id: posts[i].id,
+                                key: posts[i].id,
                                 title: posts[i].title,
                                 description: posts[i].description,
                                 body: posts[i].body,
@@ -186,7 +185,7 @@ export default {
                     // 响应客户端
                     return ctx.response.body = {
                         post: {
-                            id: post.id,
+                            key: post.id,
                             title: post.title,
                             description: post.description,
                             body: post.body,
