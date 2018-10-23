@@ -46,11 +46,27 @@ export default {
             switch (type) {
                 // 如果是获取文章概述
                 case 'summary':
-                    // 获取参数
-                    // TODO
+                    // get the params
+                    const query = ctx.request.query || {};
+                    let start = query.start || null;
+                    let length = query.length || null;
+
+                    // check the params
+                    if (!start || !start.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `start: ${start}`);
+                        return ctx.response.status = 400;
+                    }
+                    if (!length || !length.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `length: ${length}`);
+                        return ctx.response.status = 400;
+                    }
+
+                    // parse the variants from string to integer
+                    start = parseInt(start);
+                    length = parseInt(length);
 
                     // query db for posts
-                    // if range.start === 0, query the latest ${range.length} posts
+                    // if start === 0, query the latest ${length} posts
                     let posts;
                     try {
                         posts = await models.post.findAll(
@@ -61,7 +77,7 @@ export default {
                                 limit: length
                             } : {
                                 where: {
-                                    [SequelizeOp.lt]: range.start
+                                    [SequelizeOp.lt]: start
                                 },
                                 order: [
                                     ['createdAt', 'DESC']
@@ -80,12 +96,39 @@ export default {
                     // iteration for dealing datas
                     // by the way, query the labels data in the iteration
                     try {
-                        // do query labels
-                        // TODO
+                        // for every post, do something
+                        for (let i = 0; i < posts.length; i++) {
+                            // do query labels
+                            let dbLabels = await posts[i].getLabels();
+                            let labels = [];
+                            for (let j = 0; j < dbLabels.length; j++) {
+                                labels.push({
+                                    key: dbLabels[j].id,
+                                    name: dbLabels[j].name
+                                });
+                            }
+
+                            // deal with time
+                            const createdAt = posts[i].createdAt;
+                            const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+
+                            result.push({
+                                id: posts[i].id,
+                                title: posts[i].title,
+                                description: posts[i].description,
+                                body: posts[i].body,
+                                time: time,
+                                labels: labels
+                            });
+                        }
                     } catch (e) {
                         Log.error('status 500', e);
                         return ctx.response.status = 500;
                     }
+
+                    return ctx.response.body = {
+                        posts: result
+                    };
 
                 // 如果是获取单篇文章详情
                 case 'detail':
