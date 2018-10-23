@@ -76,7 +76,9 @@ export default {
                                 limit: length
                             } : {
                                 where: {
-                                    [SequelizeOp.lt]: start
+                                    id: {
+                                        [SequelizeOp.lt]: start
+                                    }
                                 },
                                 order: [
                                     ['createdAt', 'DESC']
