@@ -16,7 +16,7 @@ const SequelizeOp = Sequelize.Op;
 /**
  * ${commonUrlPrefix}/post 控制器
  * @description get 获取文章内容
- * * @param {'summary'|'detail'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情)
+ * * @param {'summary'|'detail'|'count'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数)
  * * @param {number} id 文章 id (where type === 'detail')
  * * @param {number} start post summary list range - start (where type === 'summary')
  * * @param {number} length post summary list range - length (where type === 'summary')
@@ -192,6 +192,20 @@ export default {
                             date: date,
                             labels: labels
                         }
+                    };
+                case 'count':
+                    // do query
+                    let count;
+                    try {
+                        count = await models.post.count();
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // response the client
+                    return ctx.response.body = {
+                        count: count || 0
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
