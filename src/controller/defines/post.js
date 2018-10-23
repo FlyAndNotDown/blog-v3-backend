@@ -110,7 +110,7 @@ export default {
 
                             // deal with time
                             const createdAt = posts[i].createdAt;
-                            const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+                            const time = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
 
                             result.push({
                                 id: posts[i].id,
@@ -181,7 +181,7 @@ export default {
 
                     // 处理时间
                     const createdAt = post.createdAt;
-                    const time = `${createdAt.getYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+                    const time = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
 
                     // 响应客户端
                     return ctx.response.body = {
