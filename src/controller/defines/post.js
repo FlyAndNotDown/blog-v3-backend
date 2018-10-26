@@ -16,7 +16,7 @@ const SequelizeOp = Sequelize.Op;
 /**
  * ${commonUrlPrefix}/post 控制器
  * @description get 获取文章内容
- * * @param {'summary'|'detail'|'count'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数)
+ * * @param {'summary'|'detail'|'count'|'archive'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数 | archive 归档)
  * * @param {number} id 文章 id (where type === 'detail')
  * * @param {number} start post summary list range - start (where type === 'summary')
  * * @param {number} length post summary list range - length (where type === 'summary')
@@ -130,7 +130,6 @@ export default {
                     return ctx.response.body = {
                         posts: result
                     };
-
                 // 如果是获取单篇文章详情
                 case 'detail':
                     // 获取参数
@@ -195,6 +194,7 @@ export default {
                             labels: labels
                         }
                     };
+                // 如果是获取文章总数
                 case 'count':
                     // do query
                     let count;
@@ -208,6 +208,49 @@ export default {
                     // response the client
                     return ctx.response.body = {
                         count: count || 0
+                    };
+                // 获取文章归档内容
+                case 'archive':
+                    // do query
+                    let posts;
+                    try {
+                        posts = await models.post.findAll({
+                            attributes: ['id', 'title', 'createdAt'],
+                            order: [
+                                ['id', 'DESC']
+                            ]
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // check the result is not null
+                    if (!posts) {
+                        return ctx.response.body = {
+                            posts: []
+                        };
+                    }
+
+                    // deal the posts
+                    let result = [];
+                    posts.forEach(post => {
+                        // get the created time
+                        const createdAt = post.createdAt;
+                        // translate the date format
+                        const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+
+                        // add it to result list
+                        result.push({
+                            id: post.id,
+                            title: post.title,
+                            date: date
+                        });
+                    });
+
+                    // return the result to client
+                    return ctx.response.body = {
+                        posts: result
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
