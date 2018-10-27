@@ -212,9 +212,9 @@ export default {
                 // 获取文章归档内容
                 case 'archive':
                     // do query
-                    let posts;
+                    let archivePosts;
                     try {
-                        posts = await models.post.findAll({
+                        archivePosts = await models.post.findAll({
                             attributes: ['id', 'title', 'createdAt'],
                             order: [
                                 ['id', 'DESC']
@@ -226,22 +226,22 @@ export default {
                     }
 
                     // check the result is not null
-                    if (!posts) {
+                    if (!archivePosts) {
                         return ctx.response.body = {
                             posts: []
                         };
                     }
 
                     // deal the posts
-                    let result = [];
-                    posts.forEach(post => {
+                    let archiveResult = [];
+                    archivePosts.forEach(post => {
                         // get the created time
                         const createdAt = post.createdAt;
                         // translate the date format
                         const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
 
                         // add it to result list
-                        result.push({
+                        archiveResult.push({
                             id: post.id,
                             title: post.title,
                             date: date
@@ -250,7 +250,7 @@ export default {
 
                     // return the result to client
                     return ctx.response.body = {
-                        posts: result
+                        posts: archiveResult
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
