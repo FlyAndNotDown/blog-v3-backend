@@ -251,7 +251,7 @@ export default {
                                     archiveResult[i].posts.push({
                                         id: post.id,
                                         title: post.title,
-                                        day: post.day
+                                        day: day
                                     });
                                     find = true;
                                     break;
@@ -259,11 +259,13 @@ export default {
                         }
 
                         // if not found, create a new list and add it to this list
-                        archiveResult.push({
-                            year: year,
-                            month: month,
-                            posts: []
-                        });
+                        if (!find) {
+                            archiveResult.push({
+                                year: year,
+                                month: month,
+                                posts: []
+                            });
+                        }
                     });
 
                     // return the result to client
