@@ -237,8 +237,15 @@ export default {
                     archivePosts.forEach(post => {
                         // get the created time
                         const createdAt = post.createdAt;
-                        // translate the date format
-                        const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+                        // get the year and
+                        const year = createdAt.getFullYear();
+                        const month = createdAt.getMonth();
+                        const day = createdAt.getDay();
+
+                        // judge if the month list already exist
+                        for (let i = 0; i < archiveResult.length; i++) {
+                            // TODO
+                        }
 
                         // add it to result list
                         archiveResult.push({
