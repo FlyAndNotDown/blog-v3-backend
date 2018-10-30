@@ -243,15 +243,26 @@ export default {
                         const day = createdAt.getDay();
 
                         // judge if the month list already exist
+                        let find = false;
                         for (let i = 0; i < archiveResult.length; i++) {
-                            // TODO
+                            if (archiveResult[i].year === year &&
+                                archiveResult[i].month === month) {
+                                    // add it to the list
+                                    archiveResult[i].posts.push({
+                                        id: post.id,
+                                        title: post.title,
+                                        day: post.day
+                                    });
+                                    find = true;
+                                    break;
+                                }
                         }
 
-                        // add it to result list
+                        // if not found, create a new list and add it to this list
                         archiveResult.push({
-                            id: post.id,
-                            title: post.title,
-                            date: date
+                            year: year,
+                            month: month,
+                            posts: []
                         });
                     });
 
