@@ -1,5 +1,5 @@
 /**
- * /model/defines/model/admin
+ * /model/defines/model/admin.js
  * @author John Kindem
  */
 
