@@ -6,7 +6,7 @@
  */
 
 import controllerConfig from '../../configs/controller';
-import { Log } from "../../tool/log";
+import { Log } from '../../tool/log';
 
 /**
  * ${commonUrlPrefix}/label 控制器
