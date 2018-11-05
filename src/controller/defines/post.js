@@ -16,10 +16,11 @@ const SequelizeOp = Sequelize.Op;
 /**
  * ${commonUrlPrefix}/post 控制器
  * @description get 获取文章内容
- * * @param {'summary'|'detail'|'count'|'archive'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数 | archive 归档)
+ * * @param {'summary'|'detail'|'count'|'archive'|'label'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数 | archive 归档)
  * * @param {number} id 文章 id (where type === 'detail')
  * * @param {number} start post summary list range - start (where type === 'summary')
  * * @param {number} length post summary list range - length (where type === 'summary')
+ * * @param {number} labelId label id (where type === 'label')
  * @description post 新建文章
  * * @param {string} title 标题
  * * @param {string} body 文章主体
@@ -271,6 +272,50 @@ export default {
                     // return the result to client
                     return ctx.response.body = {
                         posts: archiveResult
+                    };
+                case 'label':
+                    // get the params
+                    const labelId = query.labelId || null;
+
+                    // check the params
+                    if (!labelId || typeof labelId !== 'number' || labelId.toString().match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `labelId: ${labelId}`);
+                        return ctx.response.status = 400;
+                    }
+
+                    // do the query
+                    let label;
+                    try {
+                        label = await models.post.findOne({
+                            where: {
+                                id: labelId
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    // if can't find label
+                    // return null
+                    return ctx.response.body = {
+                        posts: null
+                    };
+
+                    // get posts
+                    let labelPosts;
+                    try {
+                        labelPosts = await label.getPosts();
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return ctx.response.status = 500;
+                    }
+
+                    labelPosts = labelPosts || [];
+
+                    // return the result
+                    return ctx.response.body = {
+                        posts: labelPosts
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
