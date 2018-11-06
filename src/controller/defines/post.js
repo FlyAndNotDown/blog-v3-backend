@@ -313,9 +313,25 @@ export default {
 
                     labelPosts = labelPosts || [];
 
+                    // define the result
+                    let labelPostsResult = [];
+
+                    // for every post, do something
+                    for (let i = 0; i < labelPosts.length; i++) {
+                        // deal with time
+                        const createdAt = labelPosts[i].createdAt;
+                        const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDay()}`;
+
+                        labelPostsResult.push({
+                            key: labelPosts[i].id,
+                            title: labelPosts[i].title,
+                            date: date
+                        });
+                    }
+
                     // return the result
                     return ctx.response.body = {
-                        posts: labelPosts
+                        posts: labelPostsResult
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
