@@ -278,7 +278,7 @@ export default {
                     const labelId = query.labelId || null;
 
                     // check the params
-                    if (!labelId || typeof labelId !== 'number' || labelId.toString().match(normalRegex.naturalNumber)) {
+                    if (!labelId || !labelId.match(normalRegex.naturalNumber)) {
                         Log.error('status 400', `labelId: ${labelId}`);
                         return ctx.response.status = 400;
                     }
@@ -298,9 +298,11 @@ export default {
 
                     // if can't find label
                     // return null
-                    return ctx.response.body = {
-                        posts: null
-                    };
+                    if (!label) {
+                        return ctx.response.body = {
+                            posts: []
+                        };
+                    }
 
                     // get posts
                     let labelPosts;
