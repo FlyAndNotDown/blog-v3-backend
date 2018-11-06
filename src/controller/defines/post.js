@@ -286,7 +286,7 @@ export default {
                     // do the query
                     let label;
                     try {
-                        label = await models.post.findOne({
+                        label = await models.label.findOne({
                             where: {
                                 id: labelId
                             }
