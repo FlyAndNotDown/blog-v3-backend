@@ -273,6 +273,7 @@ export default {
                     return ctx.response.body = {
                         posts: archiveResult
                     };
+                // 根据标签获取文章概述列表
                 case 'label':
                     // get the params
                     const labelId = query.labelId || null;
