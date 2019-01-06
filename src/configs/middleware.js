@@ -23,4 +23,19 @@ export default mainConfig.devMode ? {
         rolling: false,
         renew: false
     }
-} : {};
+} : {
+    cors: {
+        origin: 'http://dev.kindem.cn',
+        credentials: true
+    },
+    session: {
+        key: 'sessionid',
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        autoCommit: true,
+        overwrite: true,
+        httpOnly: true,
+        signed: true,
+        rolling: false,
+        renew: false
+    }
+};
