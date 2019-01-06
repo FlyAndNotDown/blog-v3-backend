@@ -15,4 +15,11 @@ export default mainConfig.devMode ? {
             maxAmount: 15
         }
     }
-} : {};
+} : {
+    commonUrlPrefix: '/request/blog',
+    index: {
+        get: {
+            maxAmount: 15
+        }
+    }
+};
