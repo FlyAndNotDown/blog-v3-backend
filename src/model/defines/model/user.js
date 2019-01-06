@@ -30,6 +30,12 @@ export default {
         },
         avatar: {
             type: Sequelize.STRING(200)
+        },
+        username: {
+            type: Sequelize.STRING(20)
+        },
+        password: {
+            type: Sequelize.STRING(64)
         }
     }
 };
