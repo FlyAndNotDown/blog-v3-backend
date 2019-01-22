@@ -1,5 +1,5 @@
 /**
- * /controller/define/label.js
+ * /controller/defines/label.js
  * @author John Kindem
  * @description /${commonUrlPrefix}/label 控制器
  * @version v1.0
