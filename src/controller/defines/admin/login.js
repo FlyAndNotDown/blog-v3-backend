@@ -165,6 +165,8 @@ export default {
             // 删除 session 中的登录信息
             ctx.session.adminLogin = false;
             ctx.session.adminInfo = null;
+
+            return;
         };
     }
 };

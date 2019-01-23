@@ -138,5 +138,16 @@ export default {
                     break;
             }
         };
+    },
+    delete: (db, models) => {
+        return async (ctx, next) => {
+            await next();
+
+            // delete the session info
+            ctx.session.userLogin = false;
+            ctx.session.userInfo = null;
+
+            return;
+        };
     }
 };
