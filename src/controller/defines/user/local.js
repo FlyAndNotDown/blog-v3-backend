@@ -51,7 +51,40 @@ export default {
                 return ctx.response.status = 400;
             }
 
-            // TODO
+            // judge if the username have been used
+            let count = 1;
+            try {
+                count = await models.user.count({
+                    username: username
+                });
+            } catch (e) {
+                Log.error('status 500', e);
+                return ctx.response.status = 500;
+            }
+
+            if (count > 0) {
+                return ctx.response.body = {
+                    success: false,
+                    reason: '用户名已经被使用'
+                };
+            }
+
+            // save all the info to the database
+            try {
+                await models.user.create({
+                    username: username,
+                    password: password,
+                    nickname: nickname,
+                    salt: salt
+                });
+            } catch (e) {
+                Log.error('status 500', e);
+                return ctx.response.status = 500;
+            }
+
+            return ctx.response.body = {
+                success: true
+            };
         };
     }
 };
