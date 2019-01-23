@@ -13,7 +13,7 @@ const { commonUrlPrefix } = controllerConfig;
 /**
  * /${commonUrlPrefix}/user/login 控制器
  * @description {get} get login user info
- * * @param {'loginUser'} type type of get
+ * * @param {'info'} type type of get
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/user/login`,
@@ -33,8 +33,12 @@ export default {
 
             // do something due type
             switch (type) {
-                case 'loginUser':
-                    // TODO
+                case 'info':
+                    // if get type is 'info', get user info from session
+                    return ctx.response.body = {
+                        login: !!ctx.session.userLogin,
+                        info: ctx.session.userInfo || null
+                    };
                     break;
                 default:
                     Log.error('status 400', `type: ${type}`);
