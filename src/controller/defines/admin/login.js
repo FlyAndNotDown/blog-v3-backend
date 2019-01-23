@@ -100,12 +100,12 @@ export default {
 
             // 参数校验
             if (!username || !username.match(adminRegex.username)) {
-                Log.error('参数错误', `username: ${username}`);
+                Log.error('status 400', `username: ${username}`);
                 ctx.response.status = 400;
                 return null;
             }
             if (!password || !password.match(adminRegex.passwordHash)) {
-                Log.error('参数错误', `password: ${password}`);
+                Log.error('status 400', `password: ${password}`);
                 ctx.response.status = 400;
                 return null;
             }
