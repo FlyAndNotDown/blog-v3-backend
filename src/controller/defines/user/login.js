@@ -20,9 +20,11 @@ const userRegex = regexConfig.user;
  * * @param {'local'} userType type of user
  * * @param {string} username username
  * * @param {string} password sha256 hash of password
+ * @description {delete} logout
+ * * @todo
  */
 export default {
-    url: `${controllerConfig.commonUrlPrefix}/user/login`,
+    url: `${commonUrlPrefix}/user/login`,
     get: (db, models) => {
         return async (ctx, next) => {
             await next();
