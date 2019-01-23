@@ -36,6 +36,9 @@ export default {
         },
         password: {
             type: Sequelize.STRING(64)
+        },
+        salt: {
+            type: Sequelize.STRING(12)
         }
     }
 };
