@@ -14,6 +14,9 @@ const userRegex = regexConfig.user;
 
 /**
  * /${commonUrlPrefix}/user/local controller
+ * @description {get} get local user salt of password
+ * * @param {'salt'} type type of get request
+ * * @param {string} username username of local user
  * @description {post} register a new local user account
  * * @param {string} username username of user
  * * @param {string} nickname nickname of user
@@ -22,6 +25,80 @@ const userRegex = regexConfig.user;
  */
 export default {
     url: `${commonUrlPrefix}/user/local`,
+    get: (db, models) => {
+        return async (context, next) => {
+            await next();
+
+            // get params
+            const query = context.request.query || {};
+            const type = query.type || null;
+
+            // check the params
+            if (!type) {
+                Log.error('status 400', `type: ${type}`);
+                return context.response.status = 400;
+            }
+
+            // do different thing when get different type
+            switch (type) {
+                case 'salt':
+                    // get params
+                    const username = query.username || null;
+
+                    // check the params
+                    if (!username || !username.match(userRegex.username)) {
+                        Log.error('status 400', `type: ${type}`);
+                        return context.response.status = 400;
+                    }
+
+                    // // query the database
+                    // let count = 1;
+                    // try {
+                    //     count = await models.user.count({
+                    //         username: username
+                    //     });
+                    // } catch (e) {
+                    //     Log.error('status 500', e);
+                    //     return context.response.status = 500;
+                    // }
+                    //
+                    // // if username have exist
+                    // if (count > 0) {
+                    //     return context.response.body = {
+                    //         salt: null
+                    //     };
+                    // }
+
+                    // query the database
+                    let user;
+                    try {
+                        user = await models.user.findOne({
+                            where: {
+                                username: username
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if not found
+                    if (!user) {
+                        return context.response.body = {
+                            salt: null
+                        };
+                    }
+
+                    // if found
+                    return context.response.body = {
+                        salt: user.salt || null
+                    };
+                default:
+                    Log.error('status 400', `type: ${type}`);
+                    return context.response.status = 400;
+            }
+        };
+    },
     post: (db, models) => {
         return async (ctx, next) => {
             await next();
