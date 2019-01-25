@@ -7,6 +7,7 @@ import postModel from './defines/model/post';
 import labelModel from './defines/model/label';
 import adminModel from './defines/model/admin';
 import settingModel from './defines/model/setting';
+import userModel from './defines/model/user';
 import postLabelRelation from './defines/relation/post-label';
 
 /**
@@ -17,7 +18,8 @@ export default {
         postModel,
         labelModel,
         adminModel,
-        settingModel
+        settingModel,
+        userModel
     ],
     relation: [
         postLabelRelation
