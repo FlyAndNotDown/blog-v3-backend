@@ -24,4 +24,4 @@ export default {
             type: Sequelize.STRING(200)
         }
     }
-}
+};
