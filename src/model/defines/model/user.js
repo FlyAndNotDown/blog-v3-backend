@@ -31,17 +31,14 @@ export default {
         avatar: {
             type: Sequelize.STRING(200)
         },
-        username: {
-            type: Sequelize.STRING(20)
+        email: {
+            type: Sequelize.STRING(50)
         },
         password: {
             type: Sequelize.STRING(64)
         },
         salt: {
             type: Sequelize.STRING(12)
-        },
-        email: {
-            type: Sequelize.STRING(50)
         }
     }
 };
