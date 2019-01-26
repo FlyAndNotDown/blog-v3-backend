@@ -39,6 +39,9 @@ export default {
         },
         salt: {
             type: Sequelize.STRING(12)
+        },
+        email: {
+            type: Sequelize.STRING(50)
         }
     }
 };
