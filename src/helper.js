@@ -14,6 +14,7 @@ import { PwdTool } from "./tool/pwd";
 import nodeMailder from 'nodemailer';
 
 const connectionConfig = modelConfig.connection;
+const mailConnection = mainConfig.connection;
 
 /**
  * 同步函数
@@ -176,8 +177,8 @@ let cmdAdminNew = () => {
  * command - yarn helper mail test
  * @return {[type]} [description]
  */
-let cmdMailTest = () => {
-    let transport = nodeMailder.createTransport(mailConfig);
+let cmdMailTestConnection = () => {
+    let transport = nodeMailder.createTransport(mailConnection);
     transport.verify((error) => {
         if (error) {
             Log.log('SMTP服务异常', error);
@@ -202,7 +203,9 @@ const funcMap = {
         new: cmdAdminNew
     },
     mail: {
-        test: cmdMailTest
+        test: {
+            connection: cmdMailTestConnection
+        }
     }
 };
 
