@@ -38,149 +38,151 @@ let syncFunc = async (force) => {
 };
 
 /**
- * 对应脚本输入的处理函数
+ * command - yarn helper db test
  */
-const funcMap = {
-    /**
-     * 数据库操作
-     */
-    db: {
-        /**
-         * 测试数据库连接
-         */
-        test: () => {
-            Log.log('开始测试数据库连接');
-            const db = new Sequelize(
-                connectionConfig.database,
-                connectionConfig.username,
-                connectionConfig.password,
-                connectionConfig.options
-            );
-            db
-                .authenticate()
-                .then(() => {
-                    Log.log('连接成功');
-                    process.exit(0);
-                })
-                .catch((error) => {
-                    Log.error('连接失败', error);
-                    process.exit(0);
-                });
-        },
-        /**
-         * 同步数据库
-         */
-        sync: () => {
-            syncFunc(false);
-        },
-        /**
-         * 强制同步数据库
-         */
-        force: {
-            sync: () => {
-                syncFunc(true);
-            }
+let cmdDbTest = () => {
+    Log.log('开始测试数据库连接');
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    db
+        .authenticate()
+        .then(() => {
+            Log.log('连接成功');
+            process.exit(0);
+        })
+        .catch((error) => {
+            Log.error('连接失败', error);
+            process.exit(0);
+        });
+};
+
+/**
+ * command - yarn helper db sync
+ */
+let cmdDbSync = () => {
+    syncFunc(false);
+};
+
+/**
+ * command - yarn helper db force sync
+ */
+let cmdDbForceSync = () => {
+    syncFunc(true);
+};
+
+/**
+ * command - yarn helper admin new
+ */
+let cmdAdminNew = () => {
+    Log.log('连接到数据库');
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+
+    // 加载模型配置
+    let models = new ModelLoader(db).getModels();
+
+    // 创建 readlineInterface
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    // 询问用户用户名
+    rdInterface.question('username: ', async username => {
+        // 验证用户名
+        if (!username.match(regexConfig.admin.username)) {
+            Log.error('创建管理员账户失败', '用户名不符合规范');
+            process.exit(0);
         }
-    },
-    /**
-     * 管理员操作
-     */
-    admin: {
-        /**
-         * 新建管理员账户
-         */
-        new: () => {
-            Log.log('连接到数据库');
-            const db = new Sequelize(
-                connectionConfig.database,
-                connectionConfig.username,
-                connectionConfig.password,
-                connectionConfig.options
-            );
 
-            // 加载模型配置
-            let models = new ModelLoader(db).getModels();
+        // 判断用户名在数据库中是否已经被使用过了
+        let usernameCount = await models.admin.count({
+            username: username
+        });
+        // 如果已经被使用过了
+        if (usernameCount > 0) {
+            Log.error('创建管理员账户失败', '管理员账户已经存在');
+            process.exit(0);
+        }
 
-            // 创建 readlineInterface
-            let rdInterface = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout
-            });
+        rdInterface.question('password: ', password => {
+            // 验证密码
+            if (!password.match(regexConfig.admin.password)) {
+                Log.error('创建管理员账户失败', '密码不符合规范');
+                process.exit(0);
+            }
 
-            // 询问用户用户名
-            rdInterface.question('username: ', async username => {
-                // 验证用户名
-                if (!username.match(regexConfig.admin.username)) {
-                    Log.error('创建管理员账户失败', '用户名不符合规范');
+            rdInterface.question('repeat: ', repeat => {
+                // 验证重复密码
+                if (!repeat.match(regexConfig.admin.password)) {
+                    Log.error('创建管理员账户失败', '密码不符合规范');
+                    process.exit(0);
+                }
+                // 验证两次密码
+                if (password !== repeat) {
+                    Log.error('创建管理员账户失败', '两次输入密码不一致');
                     process.exit(0);
                 }
 
-                // 判断用户名在数据库中是否已经被使用过了
-                let usernameCount = await models.admin.count({
-                    username: username
-                });
-                // 如果已经被使用过了
-                if (usernameCount > 0) {
-                    Log.error('创建管理员账户失败', '管理员账户已经存在');
-                    process.exit(0);
-                }
-
-                rdInterface.question('password: ', password => {
-                    // 验证密码
-                    if (!password.match(regexConfig.admin.password)) {
-                        Log.error('创建管理员账户失败', '密码不符合规范');
+                rdInterface.question('your name: ', name => {
+                    // 验证姓名
+                    if (!name.match(regexConfig.admin.name)) {
+                        Log.error('创建管理员账户失败', '姓名不符合规范');
                         process.exit(0);
                     }
 
-                    rdInterface.question('repeat: ', repeat => {
-                        // 验证重复密码
-                        if (!repeat.match(regexConfig.admin.password)) {
-                            Log.error('创建管理员账户失败', '密码不符合规范');
-                            process.exit(0);
-                        }
-                        // 验证两次密码
-                        if (password !== repeat) {
-                            Log.error('创建管理员账户失败', '两次输入密码不一致');
+                    rdInterface.question('your phone: ', async phone => {
+                        // 验证手机号码
+                        if (!phone.match(regexConfig.admin.phone)) {
+                            Log.error('创建管理员账户失败', '手机号不符合规范');
                             process.exit(0);
                         }
 
-                        rdInterface.question('your name: ', name => {
-                            // 验证姓名
-                            if (!name.match(regexConfig.admin.name)) {
-                                Log.error('创建管理员账户失败', '姓名不符合规范');
-                                process.exit(0);
-                            }
+                        // 获取加密用的盐
+                        const salt = PwdTool.getSalt();
 
-                            rdInterface.question('your phone: ', async phone => {
-                                // 验证手机号码
-                                if (!phone.match(regexConfig.admin.phone)) {
-                                    Log.error('创建管理员账户失败', '手机号不符合规范');
-                                    process.exit(0);
-                                }
-
-                                // 获取加密用的盐
-                                const salt = PwdTool.getSalt();
-
-                                // 存入数据库
-                                await models.admin.create({
-                                    name: name,
-                                    username: username,
-                                    password: PwdTool.encode(password, salt),
-                                    salt: salt,
-                                    phone: phone
-                                }).then(() => {
-                                    Log.log('创建管理员账户成功');
-                                    process.exit(0);
-                                }).catch((error) => {
-                                    Log.error('创建管理员账户失败', error);
-                                    process.exit(0);
-                                });
-                            });
+                        // 存入数据库
+                        await models.admin.create({
+                            name: name,
+                            username: username,
+                            password: PwdTool.encode(password, salt),
+                            salt: salt,
+                            phone: phone
+                        }).then(() => {
+                            Log.log('创建管理员账户成功');
+                            process.exit(0);
+                        }).catch((error) => {
+                            Log.error('创建管理员账户失败', error);
+                            process.exit(0);
                         });
                     });
                 });
             });
+        });
+    });
+};
+
+/**
+ * 对应脚本输入的处理函数
+ */
+const funcMap = {
+    db: {
+        test: cmdDbTest,
+        sync: cmdDbSync,
+        force: {
+            sync: cmdDbForceSync
         }
+    },
+    admin: {
+        new: cmdAdminNew
     }
 };
 
