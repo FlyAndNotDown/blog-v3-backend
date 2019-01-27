@@ -9,7 +9,9 @@ import { Log } from "./tool/log";
 import { ModelLoader } from "./model/loader";
 import readline from 'readline';
 import regexConfig from "./configs/regex";
+import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
+import nodeMailder from 'nodemailer';
 
 const connectionConfig = modelConfig.connection;
 
@@ -171,6 +173,21 @@ let cmdAdminNew = () => {
 };
 
 /**
+ * command - yarn helper mail test
+ * @return {[type]} [description]
+ */
+let cmdMailTest = () => {
+    let transport = nodeMailder.createTransport(mailConfig);
+    transport.verify((error) => {
+        if (error) {
+            Log.log('SMTP服务异常', error);
+        } else {
+            Log.log('SMTP服务正常');
+        }
+    });
+};
+
+/**
  * 对应脚本输入的处理函数
  */
 const funcMap = {
@@ -183,6 +200,9 @@ const funcMap = {
     },
     admin: {
         new: cmdAdminNew
+    },
+    mail: {
+        test: cmdMailTest
     }
 };
 
