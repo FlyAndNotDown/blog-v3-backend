@@ -122,7 +122,71 @@ export default {
         return async (context, next) => {
             await next();
 
-            // TODO
+            // get params
+            const body = context.request.body || {};
+            const email = body.email || null;
+            const nickname = body.nickname || null;
+            const salt = body.salt || null;
+            const password = body.password || null;
+
+            // check the params
+            if (!email || !email.match(userRegex.email)) {
+                Log.error('status 400', `email: ${email}`);
+                return context.response.status = 400;
+            }
+            if (!nickname || !nickname.match(userRegex.nickname)) {
+                Log.error('status 400', `nickname: ${nickname}`);
+                return context.response.status = 400;
+            }
+            if (!salt || !salt.match(userRegex.salt)) {
+                Log.error('status 400', `salt: ${salt}`);
+                return context.response.status = 400;
+            }
+            if (!password || !password.match(userRegex.passwordHash)) {
+                Log.error('status 400', `password: ${password}`);
+                return context.response.status = 400;
+            }
+
+            // judge if the email have existed
+            let count = 1;
+            try {
+                count = await models.user.count({
+                    where: {
+                        email: email
+                    }
+                });
+            } catch (e) {
+                Log.error('status 500', e);
+                return context.response.status = 500;
+            }
+
+            // if the email have existed
+            if (count > 0) {
+                return context.response.body = {
+                    success: false
+                };
+            }
+
+            // if the email have not existed
+            // register a new local user
+            try {
+                await models.user.create({
+                    email: email,
+                    nickname: nickname,
+                    salt: salt,
+                    password: password,
+                    actived: false
+                });
+            } catch (e) {
+                Log.error('status 500', e);
+                return context.response.status = 500;
+            }
+
+            // TODO send active email
+
+            return context.response.body = {
+                success: true
+            };
         };
     }
 };
