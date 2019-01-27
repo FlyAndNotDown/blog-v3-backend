@@ -11,25 +11,21 @@ import mainConfig from './main';
  * export mail config
  */
 export default mainConfig.devMode ? {
+    pool: true,
     host: 'smtp.exmail.qq.com',
     port: 465,
     secure: true,
     auth: {
         user: 'noreply@kindemh.cn',
-        pass: 'Hwq@3764611#'
-    },
-    tls: {
-        rejectUnauthorized: false
+        pass: 'wbPu3EcdE5wkwnZ3'
     }
 } : {
+    pool: true,
     host: 'smtp.exmail.qq.com',
     port: 465,
     secure: true,
     auth: {
         user: 'noreply@kindemh.cn',
-        pass: 'Hwq@3764611#'
-    },
-    tls: {
-        rejectUnauthorized: false
+        pass: 'wbPu3EcdE5wkwnZ3'
     }
 };
