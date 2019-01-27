@@ -80,20 +80,20 @@ export default {
                     };
                 case 'actived':
                     // get params
-                    const email = query.email || null;
+                    const emailAnother = query.email || null;
 
                     // check the params
-                    if (!email || !email.match(userRegex.email)) {
-                        Log.error('status 400', `email: ${email}`);
+                    if (!emailAnother || !emailAnother.match(userRegex.email)) {
+                        Log.error('status 400', `email: ${emailAnother}`);
                         return context.response.status = 400;
                     }
 
                     // query the database
-                    let user;
+                    let userAnother;
                     try {
-                        user = await models.user.findOne({
+                        userAnother = await models.user.findOne({
                             where: {
-                                email: email
+                                email: emailAnother
                             }
                         });
                     } catch (e) {
@@ -102,7 +102,7 @@ export default {
                     }
 
                     // if the target user is not exist
-                    if (!user) {
+                    if (!userAnother) {
                         return context.response.body = {
                             actived: null
                         };
@@ -110,7 +110,7 @@ export default {
 
                     // if the target user is exist
                     return context.response.body = {
-                        actived: user.actived || false
+                        actived: userAnother.actived || false
                     };
                 default:
                     Log.error('status 400', `type: ${type}`);
