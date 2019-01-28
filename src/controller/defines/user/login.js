@@ -129,7 +129,8 @@ export default {
                         key: user.key,
                         nickname: user.nickname,
                         avatar: user.avatar,
-                        username: user.username
+                        username: user.username,
+                        actived: user.actived
                     };
 
                     // return the result
