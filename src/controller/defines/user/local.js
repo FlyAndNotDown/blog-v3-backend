@@ -15,16 +15,27 @@ const userRegex = regexConfig.user;
 /**
  * /${commonUrlPrefix}/user/local controller
  * @description {get} get local user's salt of password
- * * @param {'salt'} type type of get request
- * * @param {string} email email of local user
+ * @param {'salt'} type type of get request
+ * @param {string} email email of local user
+ * 
  * @description {get} get local user's account actived status
- * * @param {'actived'} type type of get request
- * * @param {string} email email of local user
+ * @param {'actived'} type type of get request
+ * @param {string} email email of local user
+ * 
+ * @description {get} send a active email to user
+ * @todo count time from last sent
+ * @param {'activeEmail'} type type of get request
+ * @param {string} email email of user
+ * 
  * @description {post} register a new local user account
- * * @param {string} email email of user
- * * @param {string} nickname nickname of user
- * * @param {string} salt salt of password
- * * @param {string} password sha256 hash value of password
+ * @param {string} email email of user
+ * @param {string} nickname nickname of user
+ * @param {string} salt salt of password
+ * @param {string} password sha256 hash value of password
+ * 
+ * @description {put} active the local user account
+ * @param {string} email email of user
+ * @param {string} activeCode active code of user
  */
 export default {
     url: `${commonUrlPrefix}/user/local`,
@@ -112,6 +123,9 @@ export default {
                     return context.response.body = {
                         actived: userAnother.actived || false
                     };
+                case 'activeEmail':
+                    // TODO send a active emial to user
+                    return context.response.status = 500;
                 default:
                     Log.error('status 400', `type: ${type}`);
                     return context.response.status = 400;
@@ -184,9 +198,18 @@ export default {
 
             // TODO send active email
 
+            // http response
             return context.response.body = {
                 success: true
             };
+        };
+    },
+    put: (db, models) => {
+        return async (context, next) => {
+            await next();
+
+            // TODO do active
+            return context.response.status = 500;
         };
     }
 };

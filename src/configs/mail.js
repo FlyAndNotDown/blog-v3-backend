@@ -27,7 +27,8 @@ export default mainConfig.devMode ? {
         subject: 'Test Email',
         text: 'hello!',
         html: '<p>hello!</p>'
-    }
+    },
+    activeCallback: 'http://dev.kindemh.cn/request/blog/user/local'
 } : {
     connection: {
         pool: true,
@@ -45,5 +46,6 @@ export default mainConfig.devMode ? {
         subject: 'Test Email',
         text: 'hello!',
         html: '<p>hello!</p>'
-    }
+    },
+    activeCallback: 'http://dev.kindemh.cn/request/blog/user/local'
 };

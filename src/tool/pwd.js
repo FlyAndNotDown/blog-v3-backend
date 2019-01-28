@@ -5,6 +5,10 @@
 
 import sha256 from 'js-sha256';
 
+/**
+ * Password Tool
+ * @constructor
+ */
 export class PwdTool {
 
     /**

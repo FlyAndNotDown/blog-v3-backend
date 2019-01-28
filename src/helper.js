@@ -213,7 +213,7 @@ let cmdMailTestSend = () => {
 };
 
 /**
- * 对应脚本输入的处理函数
+ * deal logic object
  */
 const funcMap = {
     db: {
