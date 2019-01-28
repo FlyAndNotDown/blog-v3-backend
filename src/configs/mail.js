@@ -21,6 +21,12 @@ export default mainConfig.devMode ? {
             pass: 'wbPu3EcdE5wkwnZ3'
         }
     },
+    info: {
+        sender: 'Kindem的小秘书 <noreply@kindemh.cn>',
+        subject: '[Kindem的博客] 激活账户',
+        publicText: '欢迎加入Kindem的博客，点击链接激活账户，完成注册 ',
+        publicHtml: '<p>欢迎加入Kindem的博客，点击链接激活账户，完成注册</p>'
+    },
     testSend: {
         from: 'Kindem的小秘书 <noreply@kindemh.cn>',
         to: '461425614@qq.com',
@@ -39,6 +45,12 @@ export default mainConfig.devMode ? {
             user: 'noreply@kindemh.cn',
             pass: 'wbPu3EcdE5wkwnZ3'
         }
+    },
+    info: {
+        sender: 'Kindem的小秘书 <noreply@kindemh.cn>',
+        subject: '[Kindem的博客] 激活账户',
+        publicText: '欢迎加入Kindem的博客，点击链接激活账户，完成注册 ',
+        publicHtml: '<p>欢迎加入Kindem的博客，点击链接激活账户，完成注册</p>'
     },
     testSend: {
         from: 'Kindem的小秘书 <noreply@kindemh.cn>',

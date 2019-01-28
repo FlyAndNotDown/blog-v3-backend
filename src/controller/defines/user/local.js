@@ -28,15 +28,16 @@ const userRegex = regexConfig.user;
  * @param {'activeEmail'} type type of get request
  * @param {string} email email of user
  * 
+ * @description {get} active the account
+ * @param {'active'} type type of get request
+ * @param {string} email email of user
+ * @param {string} activeCode active code of user
+ * 
  * @description {post} register a new local user account
  * @param {string} email email of user
  * @param {string} nickname nickname of user
  * @param {string} salt salt of password
  * @param {string} password sha256 hash value of password
- * 
- * @description {put} active the local user account
- * @param {string} email email of user
- * @param {string} activeCode active code of user
  */
 export default {
     url: `${commonUrlPrefix}/user/local`,
@@ -203,14 +204,6 @@ export default {
             return context.response.body = {
                 success: true
             };
-        };
-    },
-    put: (db, models) => {
-        return async (context, next) => {
-            await next();
-
-            // TODO do active
-            return context.response.status = 500;
         };
     }
 };
