@@ -193,6 +193,7 @@ let cmdMailTestConnection = () => {
         } else {
             Log.log('SMTP service worked');
         }
+        transport.close();
         process.exit(0);
     });
 };
@@ -208,6 +209,7 @@ let cmdMailTestSend = () => {
         } else {
             Log.log('test mail sent and success');
         }
+        transport.close();
         process.exit(0);
     });
 };

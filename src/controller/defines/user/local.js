@@ -8,6 +8,7 @@
 import controllerConfig from '../../../configs/controller';
 import regexConfig from '../../../configs/regex';
 import { Log } from '../../../tool/log';
+import { LocalUserTool } from '../../../tool/local-user';
 
 const { commonUrlPrefix } = controllerConfig;
 const userRegex = regexConfig.user;
