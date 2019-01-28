@@ -11,8 +11,8 @@ import { Log } from '../../tool/log';
 /**
  * ${commonUrlPrefix}/label 控制器
  * @description get 获取标签
- * * @param {'all'|'some'} type 获取类型
- * * @todo
+ * @param {'all'|'some'} type 获取类型
+ * @todo
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/label`,

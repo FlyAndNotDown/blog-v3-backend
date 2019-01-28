@@ -15,17 +15,22 @@ const userRegex = regexConfig.user;
 /**
  * /${commonUrlPrefix}/user/login controller
  * @description {get} get login user info
- * * @param {'info'} type type of get
+ * @param {'info'} type type of get
+ * 
  * @description {post} local user login
- * * @param {'local'} userType type of user
- * * @param {string} email email of local user
- * * @param {string} password sha256 hash of password
+ * @param {'local'} userType type of user
+ * @param {string} email email of local user
+ * @param {string} password sha256 hash of password
+ * 
  * @description {post} GitHub user login
- * * @TODO
+ * @TODO
+ * 
  * @description {post} QQ user login
- * * @TODO
+ * @TODO
+ * 
  * @description {post} WeiBo user login
- * * @TODO
+ * @TODO
+ * 
  * @description {delete} logout
  */
 export default {

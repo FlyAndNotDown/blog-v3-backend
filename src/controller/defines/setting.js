@@ -11,9 +11,10 @@ import { Log } from '../../tool/log';
 /**
  * /${commonUrlPrefix}/label controller
  * @description get get value by keys
- * * @param {[key: string]} keys key of setting
+ * @param {[key: string]} keys key of setting
+ * 
  * @description post update the value by keys
- * * @param {[{key: string, value: string}]} maps maps of key and value
+ * @param {[{key: string, value: string}]} maps maps of key and value
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/setting`,

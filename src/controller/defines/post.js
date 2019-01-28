@@ -16,16 +16,17 @@ const SequelizeOp = Sequelize.Op;
 /**
  * ${commonUrlPrefix}/post 控制器
  * @description get 获取文章内容
- * * @param {'summary'|'detail'|'count'|'archive'|'label'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数 | archive 归档)
- * * @param {number} id 文章 id (where type === 'detail')
- * * @param {number} start post summary list range - start (where type === 'summary')
- * * @param {number} length post summary list range - length (where type === 'summary')
- * * @param {number} labelId label id (where type === 'label')
+ * @param {'summary'|'detail'|'count'|'archive'|'label'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数 | archive 归档)
+ * @param {number} id 文章 id (where type === 'detail')
+ * @param {number} start post summary list range - start (where type === 'summary')
+ * @param {number} length post summary list range - length (where type === 'summary')
+ * @param {number} labelId label id (where type === 'label')
+ * 
  * @description post 新建文章
- * * @param {string} title 标题
- * * @param {string} body 文章主体
- * * @param {string} description 描述
- * * @param {[id: number]} labels 标签id数组
+ * @param {string} title 标题
+ * @param {string} body 文章主体
+ * @param {string} description 描述
+ * @param {[id: number]} labels 标签id数组
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/post`,
