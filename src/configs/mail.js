@@ -21,10 +21,12 @@ export default mainConfig.devMode ? {
             pass: 'wbPu3EcdE5wkwnZ3'
         }
     },
-    test: {
-        dstMail: '461425614@qq.com',
-        title: 'hello',
-        body: 'hello'
+    testSend: {
+        from: 'Kindem的小秘书 <noreply@kindemh.cn>',
+        to: '461425614@qq.com',
+        subject: 'Test Email',
+        text: 'hello!',
+        html: '<p>hello!</p>'
     }
 } : {
     connection: {
@@ -37,9 +39,11 @@ export default mainConfig.devMode ? {
             pass: 'wbPu3EcdE5wkwnZ3'
         }
     },
-    test: {
-        dstMail: '461425614@qq.com',
-        title: 'hello',
-        body: 'hello'
+    testSend: {
+        from: 'Kindem的小秘书 <noreply@kindemh.cn>',
+        to: '461425614@qq.com',
+        subject: 'Test Email',
+        text: 'hello!',
+        html: '<p>hello!</p>'
     }
 };

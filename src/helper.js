@@ -15,13 +15,14 @@ import nodeMailder from 'nodemailer';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mainConfig.connection;
+const mailTestSend = mainConfig.testSend;
 
 /**
- * 同步函数
- * @param {boolean} force 同步是否为强制
+ * database sync function
+ * @param {boolean} force if do the sync as force
  */
 let syncFunc = async (force) => {
-    Log.log('连接到数据库');
+    Log.log('connecting to database');
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -29,14 +30,14 @@ let syncFunc = async (force) => {
         connectionConfig.options
     );
 
-    // 加载模型配置
+    // load models
     new ModelLoader(db).getModels();
     try {
         await db.sync({ force: force });
     } catch(e) {
-        Log.error(`同步失败`, e);
+        Log.error(`sync failed`, e);
     }
-    Log.log(`同步成功`);
+    Log.log(`sync ok`);
     process.exit(0);
 };
 
@@ -44,7 +45,7 @@ let syncFunc = async (force) => {
  * command - yarn helper db test
  */
 let cmdDbTest = () => {
-    Log.log('开始测试数据库连接');
+    Log.log('start testing connection of database');
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -54,11 +55,11 @@ let cmdDbTest = () => {
     db
         .authenticate()
         .then(() => {
-            Log.log('连接成功');
+            Log.log('connection is usable');
             process.exit(0);
         })
         .catch((error) => {
-            Log.error('连接失败', error);
+            Log.error('can\'t connected to database', error);
             process.exit(0);
         });
 };
@@ -81,7 +82,7 @@ let cmdDbForceSync = () => {
  * command - yarn helper admin new
  */
 let cmdAdminNew = () => {
-    Log.log('连接到数据库');
+    Log.log('connection to database');
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -89,70 +90,77 @@ let cmdAdminNew = () => {
         connectionConfig.options
     );
 
-    // 加载模型配置
+    // load models
     let models = new ModelLoader(db).getModels();
 
-    // 创建 readlineInterface
+    // create readline interface
     let rdInterface = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
-    // 询问用户用户名
+    // ask user for username
     rdInterface.question('username: ', async username => {
-        // 验证用户名
+        // check the username
         if (!username.match(regexConfig.admin.username)) {
-            Log.error('创建管理员账户失败', '用户名不符合规范');
+            Log.error('create admin account failed', 'username is not meet the requirement');
             process.exit(0);
         }
 
-        // 判断用户名在数据库中是否已经被使用过了
+        // judge if the username have exist in database
         let usernameCount = await models.admin.count({
             username: username
         });
-        // 如果已经被使用过了
+        // if it have been used
         if (usernameCount > 0) {
-            Log.error('创建管理员账户失败', '管理员账户已经存在');
+            Log.error(
+                'create admin account failed',
+                'the username have exist in database, please chose another username and try again'
+            );
             process.exit(0);
         }
 
+        // ask username for password
         rdInterface.question('password: ', password => {
-            // 验证密码
+            // check the password
             if (!password.match(regexConfig.admin.password)) {
-                Log.error('创建管理员账户失败', '密码不符合规范');
+                Log.error('create admin account failed', 'password is not meet the requirement');
                 process.exit(0);
             }
 
+            // ask user for password repeat
             rdInterface.question('repeat: ', repeat => {
-                // 验证重复密码
+                // check the password repeat
                 if (!repeat.match(regexConfig.admin.password)) {
-                    Log.error('创建管理员账户失败', '密码不符合规范');
+                    Log.error('create admin account failed', 'password is not meet the requirement');
                     process.exit(0);
                 }
-                // 验证两次密码
+                // check passwords which input in second times is equal
                 if (password !== repeat) {
-                    Log.error('创建管理员账户失败', '两次输入密码不一致');
+                    Log.error('create admin account failed', 'passwords is not equal');
                     process.exit(0);
                 }
 
+                // ask user for name
                 rdInterface.question('your name: ', name => {
-                    // 验证姓名
+                    // check the name
                     if (!name.match(regexConfig.admin.name)) {
-                        Log.error('创建管理员账户失败', '姓名不符合规范');
+                        Log.error('create admin account failed', 'name is not meet the requirement');
                         process.exit(0);
                     }
 
+                    // ask user for phone number
                     rdInterface.question('your phone: ', async phone => {
-                        // 验证手机号码
+                        // check the phone number
                         if (!phone.match(regexConfig.admin.phone)) {
-                            Log.error('创建管理员账户失败', '手机号不符合规范');
+                            Log.error('create admin account failed', 'phone number it not meet the requirement');
                             process.exit(0);
                         }
 
-                        // 获取加密用的盐
+                        // get salt for encode
                         const salt = PwdTool.getSalt();
 
-                        // 存入数据库
+                        // save all the thing to database
                         await models.admin.create({
                             name: name,
                             username: username,
@@ -160,10 +168,10 @@ let cmdAdminNew = () => {
                             salt: salt,
                             phone: phone
                         }).then(() => {
-                            Log.log('创建管理员账户成功');
+                            Log.log('create admin account success');
                             process.exit(0);
                         }).catch((error) => {
-                            Log.error('创建管理员账户失败', error);
+                            Log.error('create admin account failed', error);
                             process.exit(0);
                         });
                     });
@@ -174,16 +182,30 @@ let cmdAdminNew = () => {
 };
 
 /**
- * command - yarn helper mail test
+ * command - yarn helper mail test connection
  * @return {[type]} [description]
  */
 let cmdMailTestConnection = () => {
     let transport = nodeMailder.createTransport(mailConnection);
     transport.verify((error) => {
         if (error) {
-            Log.log('SMTP服务异常', error);
+            Log.log('SMTP service seem not work', error);
         } else {
-            Log.log('SMTP服务正常');
+            Log.log('SMTP service worked');
+        }
+    });
+};
+
+/**
+ * command - yarn helper mail test send
+ */
+let cmdMailTestSend = () => {
+    let transport = nodeMailder.createTransport(mailConnection);
+    transport.sendMail(mailTestSend, (err) => {
+        if (err) {
+            Log.error('test mail sent failed');
+        } else {
+            Log.log('test mail sent and success');
         }
     });
 };
@@ -204,7 +226,8 @@ const funcMap = {
     },
     mail: {
         test: {
-            connection: cmdMailTestConnection
+            connection: cmdMailTestConnection,
+            send: cmdMailTestSend
         }
     }
 };
