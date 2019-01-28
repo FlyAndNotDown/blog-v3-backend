@@ -198,7 +198,8 @@ export default {
                 return context.response.status = 500;
             }
 
-            // TODO send active email
+            // send active email
+            LocalUserTool.sendActiveMail(email);
 
             // http response
             return context.response.body = {
