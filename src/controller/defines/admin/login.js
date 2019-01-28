@@ -1,5 +1,5 @@
 /**
- * /controller/define/admin/login.js
+ * /controller/defines/admin/login.js
  * @author John Kindem
  */
 
