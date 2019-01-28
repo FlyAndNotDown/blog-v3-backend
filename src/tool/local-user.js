@@ -15,17 +15,23 @@
   */
  export class LocalUserTool {
 
-    // public key
-    static __PUBLIC_KEY = 'Blog of Kindem';
+    /**
+     * get public key function
+     * @returns {string} public key
+     */
+    static getPublicKey() {
+        return 'Blog of Kindem';
+    }
     
     /**
      * get active code function
      * @param {string} email email of user
      * @param {number} id id of user
+     * @returns {string} sha256 hash active code
      * @static
      */
     static getActiveCode(email, id) {
-        return sha256(sha256(`${email} ${id} ${LocalUserTool.__PUBLIC_KEY}`));
+        return sha256(sha256(`${email} ${id} ${LocalUserTool.getPublicKey()}`));
     }
 
     /**
