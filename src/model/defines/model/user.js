@@ -39,9 +39,6 @@ export default {
         },
         salt: {
             type: Sequelize.STRING(12)
-        },
-        activated: {
-            type: Sequelize.BOOLEAN
         }
     }
 };
