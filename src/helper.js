@@ -14,8 +14,8 @@ import { PwdTool } from "./tool/pwd";
 import nodeMailder from 'nodemailer';
 
 const connectionConfig = modelConfig.connection;
-const mailConnection = mainConfig.connection;
-const mailTestSend = mainConfig.testSend;
+const mailConnection = mailConfig.connection;
+const mailTestSend = mailConfig.testSend;
 
 /**
  * database sync function
@@ -193,6 +193,7 @@ let cmdMailTestConnection = () => {
         } else {
             Log.log('SMTP service worked');
         }
+        process.exit(0);
     });
 };
 
@@ -207,6 +208,7 @@ let cmdMailTestSend = () => {
         } else {
             Log.log('test mail sent and success');
         }
+        process.exit(0);
     });
 };
 
