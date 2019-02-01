@@ -34,7 +34,28 @@ export default {
       return async (context, next) => {
          await next();
 
-         // TODO
+         // get params
+         const query = context.request.query || {};
+         const type = query.type || null;
+
+         // check the params
+         if (!type) {
+            Log.error('status 400', `type: ${type}`);
+            return context.response.status = 400;
+         }
+
+         // do different thing when get different 'type' value
+         switch (type) {
+            case 'checkCode':
+               // TODO
+               return null;
+            case 'emailUsage':
+               // TODO
+               return null;
+            default:
+               Log.error('status 400', `type: ${type}`);
+               return context.response.status = 400;
+         }
       };
    }
 };
