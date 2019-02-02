@@ -47,7 +47,7 @@ export default {
             // do different thing when get different 'type' value
             switch (type) {
                 case 'captcha':
-                    // TODO
+                    // send
                     return null;
                 case 'emailUsage':
                     // get params
