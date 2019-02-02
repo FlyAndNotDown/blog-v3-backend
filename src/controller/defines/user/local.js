@@ -13,8 +13,8 @@ const userRegex = regexConfig.user;
 
 /**
  * //user/local controller
- * @description {get} send a check code email to user's email box
- * @param {'checkCode'} type type of get request
+ * @description {get} send a captcha email to user's email box
+ * @param {'captcha'} type type of get request
  * @param {string} email email of user
  * 
  * @description {get} email usage
@@ -23,7 +23,7 @@ const userRegex = regexConfig.user;
  * 
  * @description {post} register a new local user
  * @param {string} email email of user
- * @param {string} checkCode check code
+ * @param {string} captcha captcha
  * @param {string} nickname of user
  * @param {string} salt salt of password
  * @param {string} passwordHash sha256 hash value of user's password
@@ -46,7 +46,7 @@ export default {
 
             // do different thing when get different 'type' value
             switch (type) {
-                case 'checkCode':
+                case 'captcha':
                     // TODO
                     return null;
                 case 'emailUsage':
