@@ -38,5 +38,5 @@ const userRegex = regexConfig.user;
  * @todo
  */
 export default {
-   url: `${controllerConfig.commonUrlPrefix}/user/login`
+    url: `${controllerConfig.commonUrlPrefix}/user/login`
 };
