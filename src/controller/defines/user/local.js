@@ -8,6 +8,7 @@
 import controllerConfig from '../../../configs/controller';
 import regexConfig from '../../../configs/regex';
 import { Log } from '../../../tool/log';
+import { CpatchaTool } from '../../../tool/captcha';
 
 const userRegex = regexConfig.user;
 
@@ -47,8 +48,28 @@ export default {
             // do different thing when get different 'type' value
             switch (type) {
                 case 'captcha':
-                    // send
-                    return null;
+                    // get params
+                    const email1 = query.email || null;
+
+                    // check params
+                    if (!email1 || !email1.match(userRegex.email)) {
+                        Log.error('status 400', `email: ${email1}`);
+                        return context.response.status = 400;
+                    }
+
+                    // get a random captcha
+                    let captcha = CpatchaTool.getRandomCaptcha();
+
+                    // save it to session
+                    context.session.captcha = captcha;
+
+                    // send a email to user's email box
+                    CpatchaTool.sendCaptchaMail(email1, captcha);
+
+                    // return result
+                    return context.response.body = {
+                        success: true
+                    };
                 case 'emailUsage':
                     // get params
                     const email2 = query.email || null;

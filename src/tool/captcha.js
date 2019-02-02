@@ -11,11 +11,26 @@
  * 
  */
 
+import nodeMailer from 'nodemailer';
+import { connection } from '../configs/mail';
+import { Log } from './log';
+
 /**
  * captcha tool
  * @constructor
  */
 export class CpatchaTool {
+
+    /**
+     * get mail info object func
+     * @returns {Object} mail info object
+     */
+    static __getMailInfoObject() {
+        return {
+            from: 'Kindem的小秘书 <noreply@kindemh.cn>',
+            subject: '[Kindem的博客] 邮箱验证码，请及时激活账户'
+        };
+    }
 
     /**
      * get captcha letter vertex
@@ -52,6 +67,29 @@ export class CpatchaTool {
         }
 
         return captcha;
+    }
+
+    /**
+     * send a captcha mail to email address
+     * @param {string} email email of user
+     * @param {string} captcha captcha
+     */
+    static sendCaptchaMail(email, captcha) {
+        let mailInfoObject = CpatchaTool.__getMailInfoObject();
+        let transport = nodeMailer.createTransport(connection);
+        transport.sendMail({
+            from: mailInfoObject.from,
+            to: email,
+            subject: mailInfoObject.subject,
+            text: captcha.toString(),
+            html: `<p>${captcha.toString()}</p>`
+        }, (err) => {
+            if (err) {
+                Log.error('mail send failed');
+            }
+            transport.close();
+            process.exit();
+        });
     }
 
 };
