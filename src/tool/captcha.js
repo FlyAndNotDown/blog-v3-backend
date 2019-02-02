@@ -12,8 +12,10 @@
  */
 
 import nodeMailer from 'nodemailer';
-import { connection } from '../configs/mail';
+import mailConfig from '../configs/mail';
 import { Log } from './log';
+
+const mailConnection = mailConfig.connection;
 
 /**
  * captcha tool
@@ -56,13 +58,13 @@ export class CpatchaTool {
 
     /**
      * get random captcha
-     * @returns a random captcha
+     * @returns {string} a random captcha
      */
     static getRandomCaptcha() {
         let captcha = '';
         let captchaLetterVertex = CpatchaTool.__getCaptchaLetterVertex();
 
-        for (let i = 0; i < CpatchaTool.__getCaptchaLength; i++) {
+        for (let i = 0; i < CpatchaTool.__getCaptchaLength(); i++) {
             captcha += captchaLetterVertex[Math.floor(Math.random() * captchaLetterVertex.length)];
         }
 
@@ -76,19 +78,18 @@ export class CpatchaTool {
      */
     static sendCaptchaMail(email, captcha) {
         let mailInfoObject = CpatchaTool.__getMailInfoObject();
-        let transport = nodeMailer.createTransport(connection);
+        let transport = nodeMailer.createTransport(mailConnection);
         transport.sendMail({
             from: mailInfoObject.from,
             to: email,
             subject: mailInfoObject.subject,
-            text: captcha.toString(),
-            html: `<p>${captcha.toString()}</p>`
+            text: captcha,
+            html: `<p>${captcha}</p>`
         }, (err) => {
             if (err) {
                 Log.error('mail send failed');
             }
             transport.close();
-            process.exit();
         });
     }
 
