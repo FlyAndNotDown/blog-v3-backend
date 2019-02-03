@@ -62,6 +62,7 @@ export default {
 
                     // save it to session
                     context.session.captcha = captcha;
+                    context.session.registerEmail = email1;
 
                     // send a email to user's email box
                     CpatchaTool.sendCaptchaMail(email1, captcha);
