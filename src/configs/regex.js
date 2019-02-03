@@ -1,12 +1,14 @@
 /**
  * /configs/regex.js
  * @author John Kindem
+ * @description source file for regex configs
+ * @version v1.0
  */
 
 import mainConfig from './main';
 
 /**
- * 导出正则配置
+ * export regex config
  */
 export default mainConfig.devMode ? {
     normal: {

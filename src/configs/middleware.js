@@ -1,12 +1,14 @@
 /**
  * /configs/middleware.js
  * @author John Kindem
+ * @description source file for middleware config
+ * @version v1.0
  */
 
 import mainConfig from './main';
 
 /**
- * 导出中间件配置
+ * export middleware config
  */
 export default mainConfig.devMode ? {
     cors: {

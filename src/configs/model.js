@@ -1,12 +1,14 @@
 /**
  * /configs/model.js
  * @author John Kindem
+ * @description source file for model configs
+ * @version v1.0
  */
 
 import mainConfig from './main';
 
 /**
- * 导出模型配置
+ * export model config
  */
 export default mainConfig.devMode ? {
     connection: {

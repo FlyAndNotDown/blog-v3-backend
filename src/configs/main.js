@@ -1,10 +1,12 @@
 /**
  * /configs/main.js
  * @author John Kindem
+ * @description source file for main config
+ * @version v1.0
  */
 
 /**
- * 导出主配置
+ * export main config
  */
 export default {
     devMode: true,

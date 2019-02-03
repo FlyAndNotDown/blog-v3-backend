@@ -1,18 +1,19 @@
 /**
  * /configs/server.js
  * @author John Kindem
+ * @description source file for server configs
  */
 
 import mainConfig from './main';
 import KeyGrip from 'keygrip';
 
 /**
- * 导出服务器配置
+ * export server config
  */
 export default mainConfig.devMode ? {
     listenPort: 30000,
-    keys: new KeyGrip(['kindem no.1 over the world'], 'sha256')
+    keys: new KeyGrip(['Kindem\'s Blog'], 'sha256')
 } : {
     listenPort: 30000,
-    keys: new KeyGrip(['kindem no.1 over the world'], 'sha256')
+    keys: new KeyGrip(['Kindem\'s Blog'], 'sha256')
 };
