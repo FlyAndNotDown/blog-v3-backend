@@ -141,7 +141,7 @@ export default {
                 Log.error('status 400', `salt: ${salt}`);
                 return context.response.status = 400;
             }
-            if (!password || !password.match(userRegex.password)) {
+            if (!password || !password.match(userRegex.passwordHash)) {
                 Log.error('status 400', `password: ${password}`);
                 return context.response.status = 400;
             }
@@ -175,7 +175,7 @@ export default {
             }
 
             // if the email has exist
-            if (count > 0) {
+            if (emailCount > 0) {
                 return context.response.body = {
                     success: false,
                     reason: '邮箱已经被注册过了'

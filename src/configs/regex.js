@@ -23,7 +23,7 @@ export default mainConfig.devMode ? {
         // username: /^[0-9a-z]{6,16}$/,
         email: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/,
         password: /^[0-9a-zA-Z@#]{6,16}$/,
-        passwordHash: /^[0-9a-f]{64,64}$/,
+        passwordHash: /^[0-9a-f]{64}$/,
         salt: /^[0-9a-f]{12}$/,
         nickname: /^([A-Za-z0-9]{4,20})|([\u4e00-\u9fa5]{2,10})$/,
         captcha: /^[A-Z]{6}$/
@@ -47,7 +47,7 @@ export default mainConfig.devMode ? {
         // username: /^[0-9a-z]{6,16}$/,
         email: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/,
         password: /^[0-9a-zA-Z@#]{6,16}$/,
-        passwordHash: /^[0-9a-f]{64,64}$/,
+        passwordHash: /^[0-9a-f]{64}$/,
         salt: /^[0-9a-f]{12}$/,
         nickname: /^([A-Za-z0-9]{4,20})|([\u4e00-\u9fa5]{2,10})$/,
         captcha: /^[A-Z]{6}$/
