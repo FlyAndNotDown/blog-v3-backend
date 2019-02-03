@@ -1,6 +1,14 @@
 /**
  * /server.js
  * @author John Kindem
+ * @description server class
+ * @version v1.1
+ * 
+ * ------------------------------
+ * modified at 2019-2-3
+ * version 1.1
+ * 1 - some refactor about jsdoc
+ * ------------------------------
  */
 
 import { ModelLoader } from "./model/loader";
@@ -16,13 +24,13 @@ import serverConfig from './configs/server';
 const connectionConfig = modelConfig.connection;
 
 /**
- * 服务器类
+ * server class
  * @constructor
  */
 export class Server {
 
     /**
-     * 构造
+     * constructor
      */
     constructor() {
         this.__server = null;
@@ -32,18 +40,18 @@ export class Server {
     }
 
     /**
-     * 初始化函数
+     * init function
      * @private
      */
     __init() {
-        Log.log('开始初始化服务器');
-        // 创建 koa 对象
+        Log.log('server inited.');
+        // create Koa object
         this.__server = new Koa();
-        // 设置 keys
+        // set keys of server
         this.__server.keys = serverConfig.keys;
-        // 创建路由
+        // create router
         this.__router = routerGenerator();
-        // 实例化 sequelize 对象
+        // instantiate new Sequelize object
         this.__db = new Sequelize(
             connectionConfig.database,
             connectionConfig.username,
@@ -53,45 +61,45 @@ export class Server {
     }
 
     /**
-     * 加载模型函数
+     * load model function
      * @private
      */
     __loadModel() {
-        Log.log('开始加载模型');
+        Log.log('models loaded.');
         this.__models = new ModelLoader(this.__db).getModels();
     }
 
     /**
-     * 加载控制器函数
+     * load controller function
      * @private
      */
     __loadController() {
-        Log.log('开始加载控制器');
+        Log.log('controllers loaded.');
         new ControllerLoader(this.__router, this.__models, this.__db).load();
         // 使用路由
         this.__server.use(this.__router.routes());
     }
 
     /**
-     * 加载中间件函数
+     * load middlewares function
      * @private
      */
     __loadMiddleware() {
-        Log.log('开始加载中间件');
+        Log.log('middlewares loaded.');
         new MiddlewareLoader(this.__server).load();
     }
 
     /**
-     * 开始监听
+     * start port listen
      * @private
      */
     __listen() {
-        Log.log('开始监听端口');
+        Log.log('port listening ...');
         this.__server.listen(serverConfig.listenPort);
     }
 
     /**
-     * 开启服务器
+     * start server function
      */
     start() {
         this.__init();
@@ -99,7 +107,7 @@ export class Server {
         this.__loadMiddleware();
         this.__loadController();
         this.__listen();
-        Log.log('服务器正在运行');
+        Log.log('server is running ...');
         return this;
     }
 
