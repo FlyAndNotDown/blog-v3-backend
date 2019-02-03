@@ -1,6 +1,8 @@
 /**
  * /controller/defines/admin/login.js
  * @author John Kindem
+ * @description source file for admin login controller
+ * @version v1.0
  */
 
 import controllerConfig from '../../../configs/controller';
@@ -10,16 +12,19 @@ import { Log } from "../../../tool/log";
 const adminRegex = regexConfig.admin;
 
 /**
- * ${commonUrlPrefix}/admin/login 控制器
- * @description get 获取盐获取登录状态
- * @param {'salt'|'info'} type 获取内容类型
- * @param {string} username 用户名
+ * //admin/login controller
+ * @description {get} get salt
+ * @param {'salt'} type type of request
+ * @param {string} username username of admin
  * 
- * @description post 登录校验
- * @param {string} username 用户名
- * @param {string} password 密码sha256Hash值
+ * @description {get} get login info
+ * @param {'info'} type type of request
  * 
- * @description delete 注销
+ * @description {post} login check
+ * @param {string} username username of user
+ * @param {string} password sha256 hash value of password
+ * 
+ * @description {delete} logout
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/admin/login`,
@@ -27,32 +32,31 @@ export default {
         return async (ctx, next) => {
             await next();
 
-            // 获取参数
+            // get params
             const query = ctx.request.query || {};
             const type = query.type || null;
             const username = query.username || null;
 
-            // 参数校验
+            // check the params
             if (!type) {
                 Log.error('status 400', `type: ${type}`);
                 ctx.response.status = 400;
                 return null;
             }
 
-            // 根据 get 的类型进行处理
+            // do different thing when get different type
             switch (type) {
                 case 'salt':
-                    // 如果是获取盐
-                    // 参数校验
+                    // check params
                     if (!username || !username.match(adminRegex.username)) {
                         Log.error('status 400', `username: ${username}`);
                         ctx.response.status = 400;
                         return null;
                     }
 
+                    // query the database
                     let admin;
                     try {
-                        // 查询管理员用户
                         admin = await models.admin.findOne({
                             where: {
                                 username: username
@@ -64,7 +68,7 @@ export default {
                         return null;
                     }
 
-                    // 如果管理员的用户名不存在，则返回结果
+                    // if not exist
                     if (!admin) {
                         ctx.response.body = {
                             salt: null
@@ -72,13 +76,13 @@ export default {
                         return null;
                     }
 
-                    // 如果查到了管理员信息，返回盐
+                    // return result
                     ctx.response.body = {
                         salt: admin.salt
                     };
                     return null;
                 case 'info':
-                    // 查询 session
+                    // query session & return the result
                     ctx.response.body = {
                         login: !!ctx.session.adminLogin,
                         info: ctx.session.adminInfo || null
@@ -95,12 +99,12 @@ export default {
         return async (ctx, next) => {
             await next();
 
-            // 获取参数
+            // get params
             const body = ctx.request.body || {};
             const username = body.username || null;
             const password = body.password || null;
 
-            // 参数校验
+            // params check
             if (!username || !username.match(adminRegex.username)) {
                 Log.error('status 400', `username: ${username}`);
                 ctx.response.status = 400;
@@ -112,7 +116,7 @@ export default {
                 return null;
             }
 
-            // 查询数据库获取管理员对象
+            // query the database
             let admin;
             try {
                 admin = await models.admin.findOne({
@@ -126,7 +130,7 @@ export default {
                 return null;
             }
 
-            // 如果没有查到
+            // if there is no result
             if (!admin) {
                 ctx.response.body = {
                     success: false
@@ -134,17 +138,16 @@ export default {
                 return null;
             }
 
-            // 如果查到了，进行密码校验
+            // if got it
             if (admin.password !== password) {
-                // 如果校验失败
                 ctx.response.body = {
                     success: false
                 };
                 return null;
             }
 
-            // 如果校验成功
-            // 在 session 中保存登录状态
+            // if succeed
+            // save all info to session
             ctx.session.adminLogin = true;
             ctx.session.adminInfo = {
                 id: admin.id,
@@ -153,7 +156,7 @@ export default {
                 phone: admin.phone
             };
 
-            // 返回结果
+            // return result
             ctx.response.body = {
                 success: true
             };
@@ -164,7 +167,7 @@ export default {
         return async (ctx, next) => {
             await next();
 
-            // 删除 session 中的登录信息
+            // delete user's info in session
             ctx.session.adminLogin = false;
             ctx.session.adminInfo = null;
 

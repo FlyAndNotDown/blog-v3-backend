@@ -1,7 +1,7 @@
 /**
  * /controller/defines/label.js
  * @author John Kindem
- * @description /${commonUrlPrefix}/label 控制器
+ * @description source file for //label controller
  * @version v1.0
  */
 
@@ -9,9 +9,12 @@ import controllerConfig from '../../configs/controller';
 import { Log } from '../../tool/log';
 
 /**
- * ${commonUrlPrefix}/label 控制器
- * @description get 获取标签
- * @param {'all'|'some'} type 获取类型
+ * //label controller
+ * @description {get} get all labels
+ * @param {'all'} type get type
+ * 
+ * @description {get} get some labels
+ * @param {'some'} type get type
  * @todo
  */
 export default {
@@ -20,21 +23,21 @@ export default {
         return async (ctx, next) => {
             await next();
 
-            // 获取类型参数
+            // get params
             const query = ctx.request.query || {};
             const type = query.type || null;
 
-            // 参数校验
+            // params check
             if (!type) {
                 Log.error('status 400', `type: ${type}`);
                 ctx.response.status = 400;
                 return null;
             }
 
-            // 根据不同类型进行不同处理
+            // do different thing when get different type
             switch (type) {
                 case 'all':
-                    // 获取所有标签
+                    // query databse
                     let labels = null;
                     try {
                         labels = await models.label.findAll();
@@ -43,7 +46,8 @@ export default {
                         ctx.response.status = 500;
                         return null;
                     }
-                    // 返回结果
+
+                    // return result
                     let result = [];
                     labels.forEach(label => result.push({
                         id: label.id,

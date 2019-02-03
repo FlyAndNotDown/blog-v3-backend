@@ -1,6 +1,7 @@
 /**
  * /controller/define/post.js
  * @author John Kindem
+ * @description source file for //post controller
  */
 
 import controllerConfig from '../../configs/controller';
@@ -14,7 +15,7 @@ const normalRegex = regexConfig.normal;
 const SequelizeOp = Sequelize.Op;
 
 /**
- * ${commonUrlPrefix}/post 控制器
+ * //post controller
  * @description get 获取文章内容
  * @param {'summary'|'detail'|'count'|'archive'|'label'} type 获取文章内容的类型 (summary 文章概述列表 | detail 详情 | count 总数 | archive 归档)
  * @param {number} id 文章 id (where type === 'detail')
