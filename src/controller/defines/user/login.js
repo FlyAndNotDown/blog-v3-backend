@@ -102,5 +102,92 @@ export default {
                     return context.response.status = 400;
             }
         };
+    },
+    post: (database, models) => {
+        return async (context, next) => {
+            await next();
+
+            // get params
+            const body = context.request.body || {};
+            const type = body.type || null;
+
+            // check params
+            if (!type) {
+                Log.error('status 400', `type: ${type}`);
+                return context.response.status = 400;
+            }
+
+            // do different thing when get different type
+            switch (type) {
+                case 'local':
+                    // get params
+                    const email = body.email || null;
+                    const password = body.password || null;
+
+                    // check params
+                    if (!email || !email.match(userRegex.email)) {
+                        Log.error('status 400', `email: ${email}`);
+                        return context.response.status = 400;
+                    }
+                    if (!password || !password.match(userRegex.passwordHash)) {
+                        Log.error('status 400', `password: ${password}`);
+                        return context.response.status = 400;
+                    }
+
+                    // query database to get user object
+                    let localUser;
+                    try {
+                        localUser = await models.user.findOne({
+                            where: {
+                                type: 'local',
+                                email: email
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if get no object
+                    if (!localUser) {
+                        return context.response.body = {
+                            success: false
+                        };
+                    }
+
+                    // if get the object, check password & email
+                    if (localUser.password !== password) {
+                        return context.response.body = {
+                            success: false
+                        };
+                    }
+
+                    // save info to session and return result
+                    context.session.userLogin = true;
+                    context.session.userInfo = {
+                        id: localUser.id || null,
+                        type: localUser.type || null,
+                        key: null,
+                        nickname: localUser.nickname || null,
+                        avatar: null,
+                        email: localUser.email || null
+                    };
+                    return context.response.body = {
+                        success: true
+                    };
+                case 'github':
+                    // TODO
+                    return null;
+                case 'qq':
+                    // TODO
+                    return null;
+                case 'weibo':
+                    // TODO
+                    return null;
+                default:
+                    Log.error('status 400', `type: ${type}`);
+                    return context.response.status = 400;
+            }
+        };
     }
 };
