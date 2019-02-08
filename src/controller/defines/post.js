@@ -237,9 +237,9 @@ export default {
 
                     // deal the posts
                     let archiveResult = [];
-                    archivePosts.forEach(post => {
+                    for (let i = 0; i < archivePosts.length; i++) {
                         // get the created time
-                        const createdAt = post.createdAt;
+                        const createdAt = archivePosts[i].createdAt;
                         // get the year and
                         const year = createdAt.getFullYear();
                         const month = createdAt.getMonth();
@@ -247,13 +247,13 @@ export default {
 
                         // judge if the month list already exist
                         let find = false;
-                        for (let i = 0; i < archiveResult.length; i++) {
-                            if (archiveResult[i].year === year &&
-                                archiveResult[i].month === month) {
+                        for (let j = 0; j < archiveResult.length; j++) {
+                            if (archiveResult[j].year === year &&
+                                archiveResult[j].month === month) {
                                     // add it to the list
-                                    archiveResult[i].posts.push({
-                                        id: post.id,
-                                        title: post.title,
+                                    archiveResult[j].posts.push({
+                                        id: archivePosts[i].id,
+                                        title: archivePosts[i].title,
                                         day: day
                                     });
                                     find = true;
@@ -263,13 +263,19 @@ export default {
 
                         // if not found, create a new list and add it to this list
                         if (!find) {
+                            let postsArray = [];
+                            postsArray.push({
+                                id: archivePosts[i].id,
+                                title: archivePosts[i].title,
+                                day: day
+                            });
                             archiveResult.push({
                                 year: year,
                                 month: month,
-                                posts: []
+                                posts: postsArray
                             });
                         }
-                    });
+                    }
 
                     // return the result to client
                     return ctx.response.body = {
