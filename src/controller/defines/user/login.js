@@ -36,6 +36,8 @@ const userRegex = regexConfig.user;
  * @description {post} user login api
  * @param {'weibo'} type tpye of request
  * @todo
+ * 
+ * @description {delete} logout api
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/user/login`,
@@ -188,6 +190,18 @@ export default {
                     Log.error('status 400', `type: ${type}`);
                     return context.response.status = 400;
             }
+        };
+    },
+    delete: (database, models) => {
+        return async (context, next) => {
+            // clear all user info in session
+            context.session.userLogin = false;
+            context.session.userInfo = {};
+
+            // return result
+            return context.response.body = {
+                success: true
+            };
         };
     }
 };
