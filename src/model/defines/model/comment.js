@@ -18,7 +18,16 @@ export default {
             unique: true,
             autoIncrement: true,
             primaryKey: true
-        }
-        // TODO
+        },
+        body: {
+            type: Sequelize.STRING(500)
+        },
+        level: {
+            type: Sequelize.SMALLINT
+        },
+        parent: {
+            type: Sequelize.BIGINT
+        },
+        // TODO mention
     }
 };
