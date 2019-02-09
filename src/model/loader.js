@@ -25,11 +25,14 @@ export class ModelLoader {
         // 对每一个关系，都定义一组关系
         relationDefines.forEach((relationDefine) => {
             switch (relationDefine.type) {
-                case 'm2m':
+                case 'many2many':
                     const name1 = relationDefine.owner[0];
                     const name2 = relationDefine.owner[1];
                     this.__models[name1].belongsToMany(this.__models[name2], { through: `${name1}${name2}` });
                     this.__models[name2].belongsToMany(this.__models[name1], { through: `${name1}${name2}` });
+                    break;
+                case 'one2many':
+                    this.__models[relationDefine.owner].hasMany(this.__models[relationDefine.to], { as: `${relationDefine.to}s` });
                     break;
                 default:
                     break;

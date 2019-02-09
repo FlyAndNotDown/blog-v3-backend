@@ -7,6 +7,6 @@
  * 导出标签文章关系定义
  */
 export default {
-    type: 'm2m',
+    type: 'many2many',
     owner: ['post', 'label']
 };
