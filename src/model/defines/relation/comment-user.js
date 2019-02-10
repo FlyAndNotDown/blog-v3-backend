@@ -9,8 +9,7 @@
   * epxort comment - user model relation define
   */
 export default {
-    type: 'hasOne',
-    owner: 'comment',
-    to: 'user',
-    as: 'mention'
+    type: 'many2many',
+    owner: ['comment', 'user'],
+    through: 'commentMention'
 };
