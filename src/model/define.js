@@ -9,9 +9,12 @@ import adminModel from './defines/model/admin';
 import settingModel from './defines/model/setting';
 import userModel from './defines/model/user';
 import commentModel from './defines/model/comment';
+import messageModel from './defines/model/message';
 import postLabelRelation from './defines/relation/post-label';
 import postCommentRelation from './defines/relation/post-comment';
-import commentUserRelation from './defines/relation/comment-user';
+import messageUserRelation from './defines/relation/message-user';
+import commentUserCreatorRelation from './defines/relation/comment-user-creator';
+import commentUserMentionRelation from './defines/relation/comment-user-mention';
 
 /**
  * 导出定义对象
@@ -23,11 +26,14 @@ export default {
         adminModel,
         settingModel,
         userModel,
-        commentModel
+        commentModel,
+        messageModel
     ],
     relation: [
         postLabelRelation,
         postCommentRelation,
-        commentUserRelation
+        commentUserCreatorRelation,
+        commentUserMentionRelation,
+        messageUserRelation
     ]
 };

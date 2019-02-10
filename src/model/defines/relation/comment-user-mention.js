@@ -1,7 +1,7 @@
 /**
- * /model/defines/relation/comment-user.js
+ * /model/defines/relation/comment-user-mention.js
  * @author John Kindem
- * @description source file for comment - user model relation define
+ * @description source file for comment - user - mention model relation define
  * @version v1.0
  */
 
