@@ -8,5 +8,6 @@
  */
 export default {
     type: 'many2many',
-    owner: ['post', 'label']
+    owner: ['post', 'label'],
+    through: 'postlabel'
 };

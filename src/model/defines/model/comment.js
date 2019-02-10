@@ -27,7 +27,6 @@ export default {
         },
         parent: {
             type: Sequelize.BIGINT
-        },
-        // TODO mention
+        }
     }
 };

@@ -11,6 +11,7 @@ import userModel from './defines/model/user';
 import commentModel from './defines/model/comment';
 import postLabelRelation from './defines/relation/post-label';
 import postCommentRelation from './defines/relation/post-comment';
+import commentUserRelation from './defines/relation/comment-user';
 
 /**
  * 导出定义对象
@@ -26,6 +27,7 @@ export default {
     ],
     relation: [
         postLabelRelation,
-        postCommentRelation
+        postCommentRelation,
+        commentUserRelation
     ]
 };

@@ -11,5 +11,6 @@
 export default {
     type: 'one2many',
     owner: 'post',
-    to: 'comment'
+    to: 'comment',
+    as: 'comments'
 };
