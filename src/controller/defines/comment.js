@@ -68,7 +68,15 @@ export default {
                     // if got a post object, get all comments in this post
                     let comments = await post.getComments();
 
-                    // TODO
+                    // result list
+                    let result = [];
+
+                    // TODO ready result list
+
+                    // return result
+                    return context.response.body = {
+                        comments: result
+                    };
                 default:
                     Log.error('status 400', `type: ${type}`);
                     return context.response.status = 400;
