@@ -13,3 +13,6 @@
 
 # storage
 /*/storage
+
+# VS Code
+/.vscode
