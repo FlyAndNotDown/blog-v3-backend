@@ -293,13 +293,22 @@ export default {
                         return context.response.status = 500;
                     }
 
+                    // deal datetime
+                    const createdAt = comment.createdAt;
+                    const year = createdAt.getFullYear();
+                    const month = createdAt.getMonth() + 1;
+                    const date = createdAt.getDate();
+                    const hours = createdAt.getHours();
+                    const minutes = createdAt.getMinutes();
+                    const seconds = createdAt.getSeconds();
+
                     // return result
                     return context.response.body = {
                         success: true,
                         comment: {
                             id: comment.id,
-                            body: comment.id,
-                            datetime: comment.createdAt,
+                            body: comment.body,
+                            datetime: `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`,
                             creator: {
                                 id: creator.id,
                                 type: creator.type,
