@@ -95,14 +95,35 @@ export default {
                     // ready result list
                     for (let i = 0; i < parentComments.length; i++) {
                         // ready creator & mention user
-                        let creator = parentComments[i].getCreators()[0] || null;
-                        let mention = parentComments[i].getMentions()[0] || null;
+                        let parentCreator = parentComments[i].getCreators()[0] || null;
                         
                         // ready children
                         let children = [];
                         for (let j = 0; j < childrenComments.length; j++) {
                             if (childrenComments[j].parent === parentComments[i].id) {
-                                children.push(childrenComments[j]);
+                                let childCreator = childrenComments[j].getCreators()[0] || null;
+                                let childMention = childrenComments[j].getMentions()[0] || null;
+                                children.push({
+                                    id: childrenComments[j].id,
+                                    body: childrenComments[j].body,
+                                    datetime: childrenComments[j].createdAt,
+                                    creator: childCreator && {
+                                        id: childCreator.id,
+                                        type: childCreator.type,
+                                        key: childCreator.key,
+                                        nickname: childCreator.nickname,
+                                        avatar: childCreator.avatar,
+                                        email: childCreator.email
+                                    },
+                                    mention: childMention && {
+                                        id: childMention.id,
+                                        type: childMention.type,
+                                        key: childMention.key,
+                                        nickname: childMention.nickname,
+                                        avatar: childMention.avatar,
+                                        email: childMention.email
+                                    }
+                                });
                             }
                         }
                         
@@ -111,21 +132,13 @@ export default {
                             id: parentComments[i].id,
                             body: parentComments[i].body,
                             datetime: parentComments[i].createdAt,
-                            creator: creator && {
-                                id: creator.id,
-                                type: creator.type,
-                                key: creator.key,
-                                nickname: creator.nickname,
-                                avatar: creator.avatar,
-                                email: creator.email
-                            },
-                            mention: mention && {
-                                id: mention.id,
-                                type: mention.type,
-                                key: mention.key,
-                                nickname: mention.nickname,
-                                avatar: mention.avatar,
-                                email: mention.email
+                            creator: parentCreator && {
+                                id: parentCreator.id,
+                                type: parentCreator.type,
+                                key: parentCreator.key,
+                                nickname: parentCreator.nickname,
+                                avatar: parentCreator.avatar,
+                                email: parentCreator.email
                             },
                             children: children
                         });
@@ -245,7 +258,20 @@ export default {
 
                     // return result
                     return context.response.body = {
-                        success: true
+                        success: true,
+                        comment: {
+                            id: comment.id,
+                            body: comment.id,
+                            datetime: comment.createdAt,
+                            creator: {
+                                id: creator.id,
+                                type: creator.type,
+                                key: creator.key,
+                                nickname: creator.nickname,
+                                avatar: creator.avatar,
+                                email: creator.email
+                            }
+                        }
                     };
                 case 'reply':
                     return null;
