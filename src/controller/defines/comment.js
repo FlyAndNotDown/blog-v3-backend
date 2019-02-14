@@ -176,7 +176,6 @@ export default {
                     const commentBody = body.body || null;
 
                     // check params
-                    console.log(postId);
                     if (!postId || !postId.toString().match(normalRegex.naturalNumber)) {
                         Log.error('status 400', `postId: ${postId}`);
                         return context.response.status = 400;
@@ -187,9 +186,9 @@ export default {
                     }
 
                     // query if post exist
-                    let count = 0;
+                    let post;
                     try {
-                        count = await models.post.count({
+                        post = await models.post.findOne({
                             where: {
                                 id: postId
                             }
@@ -200,7 +199,7 @@ export default {
                     }
 
                     // if not exist
-                    if (count === 0) {
+                    if (!post) {
                         Log.error('status 400', `postId: ${postId}`);
                         return context.response.status = 400;
                     }
