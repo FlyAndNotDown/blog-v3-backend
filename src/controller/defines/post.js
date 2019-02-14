@@ -114,7 +114,7 @@ export default {
 
                             // deal with time
                             const createdAt = posts[i].createdAt;
-                            const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDate()}`;
+                            const date = `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}-${createdAt.getDate()}`;
 
                             result.push({
                                 key: posts[i].id,
@@ -184,7 +184,7 @@ export default {
 
                     // 处理时间
                     const createdAt = post.createdAt;
-                    const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDate()}`;
+                    const date = `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}-${createdAt.getDate()}`;
 
                     // 响应客户端
                     return ctx.response.body = {
@@ -242,7 +242,7 @@ export default {
                         const createdAt = archivePosts[i].createdAt;
                         // get the year and
                         const year = createdAt.getFullYear();
-                        const month = createdAt.getMonth();
+                        const month = createdAt.getMonth() + 1;
                         const day = createdAt.getDate();
 
                         // judge if the month list already exist
@@ -331,7 +331,7 @@ export default {
                     for (let i = 0; i < labelPosts.length; i++) {
                         // deal with time
                         const createdAt = labelPosts[i].createdAt;
-                        const date = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDate()}`;
+                        const date = `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}-${createdAt.getDate()}`;
 
                         labelPostsResult.push({
                             key: labelPosts[i].id,

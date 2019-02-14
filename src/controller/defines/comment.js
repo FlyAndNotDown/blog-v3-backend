@@ -108,6 +108,7 @@ export default {
                         let children = [];
                         for (let j = 0; j < childrenComments.length; j++) {
                             if (childrenComments[j].parent === parentComments[i].id) {
+                                // deal creator and mention user info
                                 let childCreator, childCreatorList = [];
                                 let childMention, childMentionList = [];
                                 try {
@@ -120,10 +121,20 @@ export default {
                                 childCreator = childCreatorList[0] || null;
                                 childMention = childMentionList[0] || null;
 
+                                // deal datetime
+                                let childCreatedAt = childrenComments[j].createdAt;
+                                let childYear = childCreatedAt.getFullYear();
+                                let childMonth = childCreatedAt.getMonth() + 1;
+                                let childDate = childCreatedAt.getDate();
+                                let childHours = childCreatedAt.getHours();
+                                let childMinutes = childCreatedAt.getMinutes();
+                                let childSeconds = childCreatedAt.getSeconds();
+
+                                // push object
                                 children.push({
                                     id: childrenComments[j].id,
                                     body: childrenComments[j].body,
-                                    datetime: childrenComments[j].createdAt,
+                                    datetime: `${childYear}-${childMonth}-${childDate} ${childHours}:${childMinutes}:${childSeconds}`,
                                     creator: childCreator && {
                                         id: childCreator.id,
                                         type: childCreator.type,
@@ -143,12 +154,21 @@ export default {
                                 });
                             }
                         }
+
+                        // deal datetime
+                        let parentCreatedAt = parentComments[i].createdAt;
+                        let parentYear = parentCreatedAt.getFullYear();
+                        let parentMonth = parentCreatedAt.getMonth() + 1;
+                        let parentDate = parentCreatedAt.getDate();
+                        let parentHours = parentCreatedAt.getHours();
+                        let parentMinutes = parentCreatedAt.getMinutes();
+                        let parentSeconds = parentCreatedAt.getSeconds();
                         
                         // push to result list
                         result.push({
                             id: parentComments[i].id,
                             body: parentComments[i].body,
-                            datetime: parentComments[i].createdAt,
+                            datetime: `${parentYear}-${parentMonth}-${parentDate} ${parentHours}:${parentMinutes}:${parentSeconds}`,
                             creator: parentCreator && {
                                 id: parentCreator.id,
                                 type: parentCreator.type,
