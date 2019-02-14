@@ -327,15 +327,15 @@ export default {
                     const replyBody = body.body || null;
 
                     // params check
-                    if (!replyPostId || !replyPostId.match(normalRegex.naturalNumber)) {
+                    if (!replyPostId || !replyPostId.toString().match(normalRegex.naturalNumber)) {
                         Log.error('status 400', `postId: ${replyPostId}`);
                         return context.response.status = 400;
                     }
-                    if (!replyParentId || !replyParentId.match(normalRegex.naturalNumber)) {
+                    if (!replyParentId || !replyParentId.toString().match(normalRegex.naturalNumber)) {
                         Log.error('status 400', `parentId: ${replyParentId}`);
                         return context.response.status = 400;
                     }
-                    if (!replyMentionId || !replyMentionId.match(normalRegex.naturalNumber)) {
+                    if (!replyMentionId || !replyMentionId.toString().match(normalRegex.naturalNumber)) {
                         Log.error('status 400', `mentionId: ${replyMentionId}`);
                         return context.response.status = 400;
                     }
@@ -421,7 +421,7 @@ export default {
                     }
 
                     // if not exist
-                    if (count === 0) {
+                    if (replyParentCommentCount === 0) {
                         Log.error('status 400', `parentId: ${replyParentId}`);
                         return context.response.status = 400;
                     }
@@ -440,7 +440,7 @@ export default {
                     }
 
                     // if create failed
-                    if (!comment) {
+                    if (!replyComment) {
                         Log.error('status 500', `create reply failed`);
                         return context.response.status = 500;
                     }
