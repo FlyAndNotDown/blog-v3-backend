@@ -69,9 +69,55 @@ export default {
                     let comments = await post.getComments();
 
                     // result list
-                    let result = [];
+                    let result = [], childrenComments = [], parentComments = [];
 
-                    // TODO ready result list
+                    // split two type of comments
+                    for (let i = 0; i < comments.length; i++) {
+                        if (comments[i].isChild) {
+                            childrenComments.push(comments[i]);
+                        } else {
+                            parentComments.push(comments[i]);
+                        }
+                    }
+
+                    // ready result list
+                    for (let i = 0; i < parentComments.length; i++) {
+                        // ready creator & mention user
+                        let creator = parentComments[i].getCreators()[0] || null;
+                        let mention = parentComments[i].getMentions()[0] || null;
+                        
+                        // ready children
+                        let children = [];
+                        for (let j = 0; j < childrenComments.length; j++) {
+                            if (childrenComments[j].parent === parentComments[i].id) {
+                                children.push(childrenComments[j]);
+                            }
+                        }
+                        
+                        // push to result list
+                        result.push({
+                            id: parentComments[i].id,
+                            body: parentComments[i].body,
+                            datetime: parentComments[i].createdAt,
+                            creator: creator && {
+                                id: creator.id,
+                                type: creator.type,
+                                key: creator.key,
+                                nickname: creator.nickname,
+                                avatar: creator.avatar,
+                                email: creator.email
+                            },
+                            mention: mention && {
+                                id: mention.id,
+                                type: mention.type,
+                                key: mention.key,
+                                nickname: mention.nickname,
+                                avatar: mention.avatar,
+                                email: mention.email
+                            },
+                            children: children
+                        });
+                    }
 
                     // return result
                     return context.response.body = {

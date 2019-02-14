@@ -22,8 +22,8 @@ export default {
         body: {
             type: Sequelize.STRING(500)
         },
-        level: {
-            type: Sequelize.SMALLINT
+        isChild: {
+            type: Sequelize.BOOLEAN
         },
         parent: {
             type: Sequelize.BIGINT
