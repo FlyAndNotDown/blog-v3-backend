@@ -49,7 +49,7 @@ export default {
             switch (type) {
                 case 'post':
                     // get params
-                    const postId = body.postId || null;
+                    const postId = query.postId || null;
 
                     // check params
                     if (!postId || !postId.match(normalRegex.naturalNumber)) {
@@ -172,11 +172,12 @@ export default {
             switch (type) {
                 case 'comment':
                     // get params
-                    const postId = commentBody.postId || null;
-                    const commentBody = commentBody.body || null;
+                    const postId = body.postId || null;
+                    const commentBody = body.body || null;
 
                     // check params
-                    if (!postId || !postId.match(normalRegex.naturalNumber)) {
+                    console.log(postId);
+                    if (!postId || !postId.toString().match(normalRegex.naturalNumber)) {
                         Log.error('status 400', `postId: ${postId}`);
                         return context.response.status = 400;
                     }
@@ -186,9 +187,9 @@ export default {
                     }
 
                     // query if post exist
-                    let exist;
+                    let count = 0;
                     try {
-                        exist = await models.post.exist({
+                        count = await models.post.count({
                             where: {
                                 id: postId
                             }
@@ -199,7 +200,7 @@ export default {
                     }
 
                     // if not exist
-                    if (!exist) {
+                    if (count === 0) {
                         Log.error('status 400', `postId: ${postId}`);
                         return context.response.status = 400;
                     }
