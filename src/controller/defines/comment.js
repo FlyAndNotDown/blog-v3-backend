@@ -95,14 +95,31 @@ export default {
                     // ready result list
                     for (let i = 0; i < parentComments.length; i++) {
                         // ready creator & mention user
-                        let parentCreator = parentComments[i].getCreators()[0] || null;
+                        let parentCreator, parentCreatorList = [];
+                        try {
+                            parentCreatorList = await parentComments[i].getCreators();
+                        } catch (e) {
+                            Log.error('status 500', e);
+                            return context.response.status = 500;
+                        }
+                        parentCreator = parentCreatorList[0] || null;
                         
                         // ready children
                         let children = [];
                         for (let j = 0; j < childrenComments.length; j++) {
                             if (childrenComments[j].parent === parentComments[i].id) {
-                                let childCreator = childrenComments[j].getCreators()[0] || null;
-                                let childMention = childrenComments[j].getMentions()[0] || null;
+                                let childCreator, childCreatorList = [];
+                                let childMention, childMentionList = [];
+                                try {
+                                    childCreatorList = await childrenComments[j].getCreators();
+                                    childMentionList = await childrenComments[j].getMentions();
+                                } catch (e) {
+                                    Log.error('status 500', e);
+                                    return context.response.status = 500;
+                                }
+                                childCreator = childCreatorList[0] || null;
+                                childMention = childMentionList[0] || null;
+
                                 children.push({
                                     id: childrenComments[j].id,
                                     body: childrenComments[j].body,
