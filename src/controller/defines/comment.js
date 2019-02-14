@@ -320,7 +320,175 @@ export default {
                         }
                     };
                 case 'reply':
-                    return null;
+                    // get params
+                    const replyPostId = body.postId || null;
+                    const replyParentId = body.parentId || null;
+                    const replyMentionId = body.mentionId || null;
+                    const replyBody = body.body || null;
+
+                    // params check
+                    if (!replyPostId || !replyPostId.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `postId: ${replyPostId}`);
+                        return context.response.status = 400;
+                    }
+                    if (!replyParentId || !replyParentId.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `parentId: ${replyParentId}`);
+                        return context.response.status = 400;
+                    }
+                    if (!replyMentionId || !replyMentionId.match(normalRegex.naturalNumber)) {
+                        Log.error('status 400', `mentionId: ${replyMentionId}`);
+                        return context.response.status = 400;
+                    }
+                    if (!replyBody) {
+                        Log.error('status 400', `body: ${replyBody}`);
+                        return context.response.status = 400;
+                    }
+
+                    // query if the post exist
+                    let replyPost;
+                    try {
+                        replyPost = await models.post.findOne({
+                            where: {
+                                id: replyPostId
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if not exist
+                    if (!replyPost) {
+                        Log.error('status 400', `postId: ${replyPostId}`);
+                        return context.response.status = 400;
+                    }
+
+                    // judge if user login
+                    if (!context.session.userLogin || !context.session.userInfo) {
+                        Log.error('status 400', `userLogin: false`);
+                        return context.response.status = 400;
+                    }
+
+                    // get creator user info
+                    let replyCreator;
+                    try {
+                        replyCreator = await models.user.findOne({
+                            where: {
+                                id: context.session.userInfo.id
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if get no user
+                    if (!replyCreator) {
+                        Log.error('status 400', `fake user info in session`);
+                        return context.response.status = 400;
+                    }
+
+                    // get mention user info
+                    let replyMention;
+                    try {
+                        replyMention = await models.user.findOne({
+                            where: {
+                                id: replyMentionId
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if get no user
+                    if (!replyMention) {
+                        Log.error('status 400', `mentionId: ${replyMentionId}`);
+                        return context.response.status = 400;
+                    }
+
+                    // query if parent comment exist
+                    let replyParentCommentCount = 0;
+                    try {
+                        replyParentCommentCount = await models.comment.count({
+                            where: {
+                                id: replyParentId
+                            }
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if not exist
+                    if (count === 0) {
+                        Log.error('status 400', `parentId: ${replyParentId}`);
+                        return context.response.status = 400;
+                    }
+
+                    // create new comment
+                    let replyComment;
+                    try {
+                        replyComment = await models.comment.create({
+                            body: replyBody,
+                            isChild: true,
+                            parent: replyParentId
+                        });
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // if create failed
+                    if (!comment) {
+                        Log.error('status 500', `create reply failed`);
+                        return context.response.status = 500;
+                    }
+
+                    // create relations
+                    try {
+                        await replyCreator.addComment(replyComment);
+                        await replyMention.addComment(replyComment);
+                        await replyPost.addComment(replyComment);
+                    } catch (e) {
+                        Log.error('status 500', e);
+                        return context.response.status = 500;
+                    }
+
+                    // deal datetime
+                    const replyCreatedAt = replyComment.createdAt;
+                    const replyYear = replyCreatedAt.getFullYear();
+                    const replyMonth = replyCreatedAt.getMonth() + 1;
+                    const replyDate = replyCreatedAt.getDate();
+                    const replyHours = replyCreatedAt.getHours();
+                    const replyMinutes = replyCreatedAt.getMinutes();
+                    const replySeconds = replyCreatedAt.getSeconds();
+
+                    // return result
+                    return context.response.body = {
+                        success: true,
+                        reply: {
+                            id: replyComment.id,
+                            body: replyComment.body,
+                            datetime: `${replyYear}-${replyMonth}-${replyDate} ${replyHours}:${replyMinutes}:${replySeconds}`,
+                            creator: {
+                                id: replyCreator.id,
+                                type: replyCreator.type,
+                                key: replyCreator.key,
+                                nickname: replyCreator.nickname,
+                                avatar: replyCreator.avatar,
+                                email: replyCreator.email
+                            },
+                            mention: {
+                                id: replyMention.id,
+                                type: replyMention.type,
+                                key: replyMention.key,
+                                nickname: replyMention.nickname,
+                                avatar: replyMention.avatar,
+                                email: replyMention.email
+                            }
+                        }
+                    };
                 default:
                     Log.error('status 400', `type: ${type}`);
                     return context.response.status = 400;
