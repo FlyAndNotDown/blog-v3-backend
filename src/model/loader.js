@@ -28,8 +28,21 @@ export class ModelLoader {
                 case 'many2many':
                     const name1 = relationDefine.owner[0];
                     const name2 = relationDefine.owner[1];
-                    this.__models[name1].belongsToMany(this.__models[name2], { through: `${relationDefine.through}` });
-                    this.__models[name2].belongsToMany(this.__models[name1], { through: `${relationDefine.through}` });
+                    if (relationDefine.as) {
+                        const as1 = relationDefine.as[0];
+                        const as2 = relationDefine.as[1];
+                        this.__models[name1].belongsToMany(this.__models[name2], {
+                            through: `${relationDefine.through}`,
+                            as: as1
+                        });
+                        this.__models[name2].belongsToMany(this.__models[name1], {
+                            through: `${relationDefine.through}`,
+                            as: as2
+                        });
+                    } else {
+                        this.__models[name1].belongsToMany(this.__models[name2], { through: `${relationDefine.through}` });
+                        this.__models[name2].belongsToMany(this.__models[name1], { through: `${relationDefine.through}` });
+                    }
                     break;
                 case 'one2many':
                     this.__models[relationDefine.owner].hasMany(this.__models[relationDefine.to], { as: `${relationDefine.as}` });

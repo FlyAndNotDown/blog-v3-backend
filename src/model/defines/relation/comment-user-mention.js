@@ -11,5 +11,12 @@
 export default {
     type: 'many2many',
     owner: ['comment', 'user'],
-    through: 'commentMention'
+    through: 'commentMention',
+    as: [{
+        singular: 'mention',
+        plural: 'mentions'
+    }, {
+        singular: 'comment',
+        plural: 'comments'
+    }]
 };
