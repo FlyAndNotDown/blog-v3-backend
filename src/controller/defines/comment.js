@@ -49,7 +49,7 @@ export default {
             switch (type) {
                 case 'post':
                     // get params
-                    const postId = query.postId || null;
+                    const postId = body.postId || null;
 
                     // check params
                     if (!postId || !postId.match(normalRegex.naturalNumber)) {
