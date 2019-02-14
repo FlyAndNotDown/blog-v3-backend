@@ -447,8 +447,8 @@ export default {
 
                     // create relations
                     try {
+                        await replyComment.addMention(replyMention);
                         await replyCreator.addComment(replyComment);
-                        await replyMention.addComment(replyComment);
                         await replyPost.addComment(replyComment);
                     } catch (e) {
                         Log.error('status 500', e);
