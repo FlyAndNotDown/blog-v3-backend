@@ -27,7 +27,11 @@ export default {
             // query database to get all message
             let messages = [];
             try {
-                messages = await models.message.findAll();
+                messages = await models.message.findAll({
+                    order: [
+                        ['createdAt', 'DESC']
+                    ]
+                });
             } catch (e) {
                 Log.error('status 500', e);
                 return context.response.status = 500;
