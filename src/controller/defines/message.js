@@ -37,7 +37,7 @@ export default {
             let result = [];
             for (let i = 0; i < messages.length; i++) {
                 // get creator
-                let creatorList = await messages[i].getUser();
+                let creatorList = await messages[i].getUsers();
                 let creator = creatorList[0] || null;
 
                 // ready datetime
