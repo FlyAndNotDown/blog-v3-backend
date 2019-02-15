@@ -78,7 +78,11 @@ export default {
                     }
 
                     // if got a post object, get all comments in this post
-                    let comments = await post.getComments();
+                    let comments = await post.getComments({
+                        order: [
+                            ['createdAt', 'DESC']
+                        ]
+                    });
 
                     // result list
                     let result = [], childrenComments = [], parentComments = [];
