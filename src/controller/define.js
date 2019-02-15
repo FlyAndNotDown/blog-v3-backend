@@ -8,6 +8,7 @@ import testController from './defines/test';
 import postController from './defines/post';
 import labelController from './defines/label';
 import commentController from './defines/comment';
+import messageController from './defines/message';
 import userLocalController from './defines/user/local';
 import userLoginController from './defines/user/login';
 
@@ -17,6 +18,7 @@ export default [
     postController,
     labelController,
     commentController,
+    messageController,
     userLocalController,
     userLoginController
 ];
