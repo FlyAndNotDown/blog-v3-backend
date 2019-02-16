@@ -9,6 +9,7 @@ import adminModel from './defines/model/admin';
 import userModel from './defines/model/user';
 import commentModel from './defines/model/comment';
 import messageModel from './defines/model/message';
+import friendModel from './defines/model/friend';
 import postLabelRelation from './defines/relation/post-label';
 import postCommentRelation from './defines/relation/post-comment';
 import messageUserRelation from './defines/relation/message-user';
@@ -25,7 +26,8 @@ export default {
         adminModel,
         userModel,
         commentModel,
-        messageModel
+        messageModel,
+        friendModel
     ],
     relation: [
         postLabelRelation,
