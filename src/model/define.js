@@ -6,7 +6,6 @@
 import postModel from './defines/model/post';
 import labelModel from './defines/model/label';
 import adminModel from './defines/model/admin';
-import settingModel from './defines/model/setting';
 import userModel from './defines/model/user';
 import commentModel from './defines/model/comment';
 import messageModel from './defines/model/message';
@@ -24,7 +23,6 @@ export default {
         postModel,
         labelModel,
         adminModel,
-        settingModel,
         userModel,
         commentModel,
         messageModel
