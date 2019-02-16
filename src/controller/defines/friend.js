@@ -22,7 +22,7 @@ export default {
         return async (context, next) => {
             await next();
 
-            // quert database to get info
+            // query database to get info
             let friends = [];
             try {
                 friends = await models.friend.findAll();
@@ -47,5 +47,46 @@ export default {
             };
         };
     },
-    post: (database, models) => {}
+    post: (database, models) => {
+        return async (context, next) => {
+            await next();
+
+            // get params
+            const body = context.request.body || {};
+            const name = body.name || null;
+            const to = body.to || null;
+
+            // check params
+            if (!name) {
+                Log.error('status 400', `name: ${name}`);
+                return context.response.status = 400;
+            }
+            if (!to) {
+                Log.error('status 400', `to: ${to}`);
+                return context.response.status = 400;
+            }
+
+            // check admin login status
+            if (!context.session.adminLogin || !context.session.adminInfo) {
+                Log.error('status 400', `admin not login or fake admin info`);
+                return context.response.status = 400;
+            }
+
+            // create new object in database
+            try {
+                await models.friend.create({
+                    name: name,
+                    to: to
+                });
+            } catch (e) {
+                Log.error('status 500', e);
+                return context.response.status = 500;
+            }
+
+            // return result
+            return context.response.body = {
+                success: true
+            };
+        };
+    }
 };
