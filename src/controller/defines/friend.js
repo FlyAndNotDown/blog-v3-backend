@@ -15,6 +15,7 @@ import { Log } from '../../tool/log';
  * @description {post} generate a new friend chain info
  * @param {string} name name of friend chain
  * @param {string} to link destination of friend chain
+ * @param {string} description description of friend chain
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/friend`,
@@ -37,7 +38,8 @@ export default {
                 result.push({
                     id: friends[i].id,
                     name: friends[i].name,
-                    to: friends[i].to
+                    to: friends[i].to,
+                    description: friends[i].description
                 });
             }
 
@@ -55,6 +57,7 @@ export default {
             const body = context.request.body || {};
             const name = body.name || null;
             const to = body.to || null;
+            const description = body.description || null;
 
             // check params
             if (!name) {
@@ -63,6 +66,10 @@ export default {
             }
             if (!to) {
                 Log.error('status 400', `to: ${to}`);
+                return context.response.status = 400;
+            }
+            if (!description) {
+                Log.error('status 400', `description: ${description}`);
                 return context.response.status = 400;
             }
 
@@ -76,7 +83,8 @@ export default {
             try {
                 await models.friend.create({
                     name: name,
-                    to: to
+                    to: to,
+                    description: description
                 });
             } catch (e) {
                 Log.error('status 500', e);

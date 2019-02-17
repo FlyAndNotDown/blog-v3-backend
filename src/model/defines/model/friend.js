@@ -24,6 +24,9 @@ export default {
         },
         to: {
             type: Sequelize.STRING(500)
+        },
+        description: {
+            type: Sequelize.STRING(500)
         }
     }
 };
