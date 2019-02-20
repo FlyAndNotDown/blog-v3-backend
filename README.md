@@ -2,9 +2,9 @@
 
 ---
 
-你现在看到的这个仓库是 `Kindem 的博客` 的后端代码仓库，需要配合前端仓库一同使用: [FlyAndNotDown/blog-v3-backend](https://github.com/FlyAndNotDown/blog-v3-backend)
+你现在看到的这个仓库是 `Kindem 的博客` 的后端代码仓库，需要配合前端仓库一同使用: [FlyAndNotDown/blog-v3-frontend](https://github.com/FlyAndNotDown/blog-v3-frontend)
 
-你可以直接访问这个地址(部署后生效，暂时还未部署)来查看博客的运行效果: [Kindem 的博客](http://www.kindemh.cn)，同时，旧版本的博客将会被移动到如下地址: [Kindem 的旧博客](http://dev.kindemh.cn)，在不久之后，新的域名也将启用: [www.kindem.xyz](http://www.kindem.xyz)
+博客将会在新域名备案完成后部署：[Kindem的新博客](http://www.kindem.xyz)
 
 如果你要基于我的博客系统搭建自己的博客，在后面会提及部署及私有化指北
 
