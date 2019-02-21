@@ -34,7 +34,7 @@ export default mainConfig.devMode ? {
         username: 'production',
         password: 'production',
         options: {
-            host: '134.175.59.165',
+            host: 'localhost',
             dialect: 'mysql',
             pool: {
                 max: 5,
