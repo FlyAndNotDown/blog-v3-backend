@@ -27,7 +27,7 @@ export default mainConfig.devMode ? {
     }
 } : {
     cors: {
-        origin: 'http://dev.kindemh.cn',
+        origin: 'http://134.175.59.165',
         credentials: true
     },
     session: {

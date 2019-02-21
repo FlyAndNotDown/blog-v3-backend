@@ -31,8 +31,8 @@ export default mainConfig.devMode ? {
 } : {
     connection: {
         database: 'blog',
-        username: 'development',
-        password: 'development',
+        username: 'production',
+        password: 'production',
         options: {
             host: '134.175.59.165',
             dialect: 'mysql',

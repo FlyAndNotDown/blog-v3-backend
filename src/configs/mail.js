@@ -34,7 +34,7 @@ export default mainConfig.devMode ? {
         text: 'hello!',
         html: '<p>hello!</p>'
     },
-    activeCallback: 'http://dev.kindemh.cn/request/blog/user/local'
+    activeCallback: 'http://134.175.59.165/request/blog/user/local'
 } : {
     connection: {
         pool: true,
@@ -59,5 +59,5 @@ export default mainConfig.devMode ? {
         text: 'hello!',
         html: '<p>hello!</p>'
     },
-    activeCallback: 'http://dev.kindemh.cn/request/blog/user/local'
+    activeCallback: 'http://134.175.59.165/request/blog/user/local'
 };
