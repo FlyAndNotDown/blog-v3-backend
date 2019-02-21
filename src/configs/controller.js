@@ -10,14 +10,7 @@ import mainConfig from './main';
 /**
  * export controller config
  */
-export default mainConfig.devMode ? {
-    commonUrlPrefix: '/request/blog',
-    index: {
-        get: {
-            maxAmount: 15
-        }
-    }
-} : {
+export default {
     commonUrlPrefix: '/request/blog',
     index: {
         get: {
