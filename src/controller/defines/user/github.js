@@ -9,6 +9,7 @@ import oauthConfig from '../../../configs/oauth';
 import controllerConfig from '../../../configs/controller';
 import { Log } from '../../../tool/log';
 import Axios from 'axios';
+import queryString from 'query-string';
 
 const githubOauthConfig = oauthConfig.github;
 const { clientId, clientSecret, accessTokenUri, userInfoUri } = githubOauthConfig;
@@ -50,7 +51,7 @@ export default {
             // get access token in response object
             httpResponse = httpResponse || {};
             data = httpResponse.data || {};
-            let accessToken = data.access_token || null;
+            let accessToken = queryString.parse(`?data`).access_token || null;
 
             // check token
             if (!accessToken) {
