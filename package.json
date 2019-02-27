@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "js-sha256": "^0.9.0",
     "keygrip": "^1.0.3",
     "koa": "^2.5.3",
