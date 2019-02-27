@@ -50,7 +50,7 @@ export default {
             // get access token in response object
             httpResponse = httpResponse || {};
             data = httpResponse.data || {};
-            let accessToken = data.accessToken || null;
+            let accessToken = data.access_token || null;
 
             // check token
             if (!accessToken) {
