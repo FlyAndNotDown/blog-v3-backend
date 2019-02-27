@@ -15,18 +15,18 @@ const { clientId, clientSecret, accessTokenUri, userInfoUri } = githubOauthConfi
 
 /**
  * //user/github controller
- * @description {get} github login API
+ * @description {post} github login API
  * @param {string} code github user code
  */
 export default {
     url: `${controllerConfig.commonUrlPrefix}/user/github`,
-    get: (database, models) => {
+    post: (database, models) => {
         return async (context, next) => {
             await next();
 
             // get params
-            const query = context.request.query || {};
-            const code = query.code || null;
+            const body = context.request.body || {};
+            const code = body.code || null;
 
             // check params
             if (!code) {
