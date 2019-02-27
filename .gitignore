@@ -16,3 +16,6 @@
 
 # VS Code
 /.vscode
+
+# log
+/last.log
