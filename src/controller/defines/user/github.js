@@ -51,7 +51,7 @@ export default {
             // get access token in response object
             httpResponse = httpResponse || {};
             data = httpResponse.data || {};
-            let accessToken = queryString.parse(`?data`).access_token || null;
+            let accessToken = queryString.parse(`?${data}`).access_token || null;
 
             // check token
             if (!accessToken) {
