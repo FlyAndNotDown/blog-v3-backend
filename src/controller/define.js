@@ -12,6 +12,7 @@ import messageController from './defines/message';
 import friendController from './defines/friend';
 import userLocalController from './defines/user/local';
 import userLoginController from './defines/user/login';
+import userGithubController from './defines/user/github';
 
 export default [
     testController,
@@ -22,5 +23,6 @@ export default [
     messageController,
     friendController,
     userLocalController,
-    userLoginController
+    userLoginController,
+    userGithubController
 ];
