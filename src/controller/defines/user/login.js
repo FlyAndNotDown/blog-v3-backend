@@ -24,18 +24,6 @@ const userRegex = regexConfig.user;
  * @param {'local'} type type of request
  * @param {string} email email of user
  * @param {string} password password's sha256 hash value of user
- *
- * @description {post} user login api
- * @param {'github'} type type of request
- * @todo
- * 
- * @description {post} user login api
- * @param {'qq'} type type of request
- * @todo
- * 
- * @description {post} user login api
- * @param {'weibo'} type tpye of request
- * @todo
  * 
  * @description {delete} logout api
  */
@@ -177,15 +165,6 @@ export default {
                     return context.response.body = {
                         success: true
                     };
-                case 'github':
-                    // TODO
-                    return null;
-                case 'qq':
-                    // TODO
-                    return null;
-                case 'weibo':
-                    // TODO
-                    return null;
                 default:
                     Log.error('status 400', `type: ${type}`);
                     return context.response.status = 400;
