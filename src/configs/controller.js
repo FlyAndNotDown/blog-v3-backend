@@ -6,6 +6,8 @@
  */
 
 import mainConfig from './main';
+import middlewareConfig from './middleware';
+import path from 'path';
 
 /**
  * export controller config
@@ -16,5 +18,6 @@ export default {
         get: {
             maxAmount: 15
         }
-    }
+    },
+    fileUploadPath: path.join(middlewareConfig.static.staticPath, 'file')
 };
