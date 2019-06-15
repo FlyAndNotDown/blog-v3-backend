@@ -31,6 +31,9 @@ export default {
         },
         phone: {
             type: Sequelize.STRING(11)
+        },
+        token: {
+            type: Sequelize.STRING(12)
         }
     }
 };
