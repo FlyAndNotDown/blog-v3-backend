@@ -17,10 +17,6 @@ const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
 const mailTestSend = mailConfig.testSend;
 
-/**
- * database sync function
- * @param {boolean} force if do the sync as force
- */
 let syncFunc = async (force) => {
     Log.log('connecting to database');
     const db = new Sequelize(
@@ -41,9 +37,6 @@ let syncFunc = async (force) => {
     process.exit(0);
 };
 
-/**
- * command - yarn helper db test
- */
 let cmdDbTest = () => {
     Log.log('start testing connection of database');
     const db = new Sequelize(
@@ -64,23 +57,14 @@ let cmdDbTest = () => {
         });
 };
 
-/**
- * command - yarn helper db sync
- */
 let cmdDbSync = () => {
     syncFunc(false);
 };
 
-/**
- * command - yarn helper db force sync
- */
 let cmdDbForceSync = () => {
     syncFunc(true);
 };
 
-/**
- * command - yarn helper admin new
- */
 let cmdAdminNew = () => {
     Log.log('connection to database');
     const db = new Sequelize(
@@ -181,10 +165,50 @@ let cmdAdminNew = () => {
     });
 };
 
-/**
- * command - yarn helper mail test connection
- * @return {[type]} [description]
- */
+let cmdAdminLogin = () => {
+    let models = new ModelLoader(db).getModels();
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rdInterface.question('username: ', async username => {
+        if (!username.match(regexConfig.admin.username)) {
+            Log.error('login failed', 'incorrect username format');
+        }
+        rdInterface.question('password: ', async password => {
+            if (!password.match(regexConfig.admin.password)) {
+                Log.error('login failed', 'incorrect password format');
+            }
+
+            let admin = null;
+            try {
+                admin = await models.admin.findOne({
+                    where: {
+                        username: username
+                    }
+                });
+            } catch (e) {
+                return Log.error('server error', e);
+            }
+
+            if (!admin) {
+                Log.error('login failed', 'user is not exist');
+            }
+
+            let salt = admin.salt;
+            let passwordHash = PwdTool.encode(password, salt);
+            let token = admin.token;
+
+            if (passwordHash === admin.password) {
+                Log.log('login success', `here is your login token: ${token}`);
+            } else {
+                Log.error('login failed', 'password is incorrect');
+            }
+        });
+    });
+};
+
 let cmdMailTestConnection = () => {
     let transport = nodeMailder.createTransport(mailConnection);
     transport.verify((error) => {
@@ -198,9 +222,6 @@ let cmdMailTestConnection = () => {
     });
 };
 
-/**
- * command - yarn helper mail test send
- */
 let cmdMailTestSend = () => {
     let transport = nodeMailder.createTransport(mailConnection);
     transport.sendMail(mailTestSend, (err) => {
@@ -214,9 +235,6 @@ let cmdMailTestSend = () => {
     });
 };
 
-/**
- * deal logic object
- */
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -226,7 +244,8 @@ const funcMap = {
         }
     },
     admin: {
-        new: cmdAdminNew
+        new: cmdAdminNew,
+        login: cmdAdminLogin
     },
     mail: {
         test: {
