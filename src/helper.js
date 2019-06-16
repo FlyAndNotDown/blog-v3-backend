@@ -14,7 +14,7 @@ import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
 import nodeMailer from 'nodemailer';
 import { exec } from 'child_process';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -261,7 +261,7 @@ let cmdAdminRepoClone = () => {
         if (err) {
             return Log.error('git clone failed', err);
         }
-        await writeFileSync('.blog-source-cloned', 'true');
+        await writeFileSync(syncConfig.gitRepoExistFlagFileName, 'true');
         return Log.log('blog source repository cloned');
     });
 };
@@ -274,6 +274,58 @@ let cmdAdminRepoPull = () => {
             return Log.error('git pull failed', err);
         }
         return Log.log('blog source repository pulled');
+    });
+};
+
+let cmdAdminBlogSync = () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels;
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    Log.log('you need to show your login token first.');
+    rdInterface.question('username', async (username) => {
+        rdInterface.question('token', async token => {
+            let admin = null;
+            try {
+                admin = await models.admin.findOne({
+                    where: {
+                        username: username
+                    }
+                });
+            } catch (e) {
+                Log.error('server error', e);
+                return process.exit(0);
+            }
+
+            if (!admin) {
+                Log.error('login failed', 'user is not exist');
+                return process.exit(0);
+            }
+
+            if (token !== admin.token) {
+                Log.error('login failed', 'token is incorrect');
+                return process.exit(0);
+            }
+
+            const blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
+            if (blogSourceGitRepoExists) {
+                const data = await readFileSync(syncConfig.gitRepoExistFlagFileName);
+                blogSourceGitRepoExists = data === 'true';
+            }
+            if (!blogSourceGitRepoExists) {
+                Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
+            }
+
+            // TODO
+        });
     });
 };
 
@@ -291,6 +343,9 @@ const funcMap = {
         repo: {
             clone: cmdAdminRepoClone,
             pull: cmdAdminRepoPull
+        },
+        blog: {
+            sync: cmdAdminBlogSync
         }
     },
     mail: {
