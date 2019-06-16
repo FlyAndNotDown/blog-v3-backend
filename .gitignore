@@ -1,21 +1,9 @@
-# JetBrain
 /.idea
-
-# Node.js
 /node_modules
-
-# yarn
 /yarn.lock
 /yarn-error.log
-
-# build
 /build
-
-# storage
 /*/storage
-
-# VS Code
 /.vscode
-
-# log
 /last.log
+/blog-source

@@ -4,6 +4,7 @@
  */
 
 import modelConfig from './configs/model';
+import syncConfig from './configs/sync';
 import Sequelize from 'sequelize';
 import { Log } from "./tool/log";
 import { ModelLoader } from "./model/loader";
@@ -11,7 +12,9 @@ import readline from 'readline';
 import regexConfig from "./configs/regex";
 import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
-import nodeMailder from 'nodemailer';
+import nodeMailer from 'nodemailer';
+import { exec } from 'child_process';
+import { writeFileSync } from 'fs';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -227,7 +230,7 @@ let cmdAdminLogin = () => {
 };
 
 let cmdMailTestConnection = () => {
-    let transport = nodeMailder.createTransport(mailConnection);
+    let transport = nodeMailer.createTransport(mailConnection);
     transport.verify((error) => {
         if (error) {
             Log.log('SMTP service seem not work', error);
@@ -240,7 +243,7 @@ let cmdMailTestConnection = () => {
 };
 
 let cmdMailTestSend = () => {
-    let transport = nodeMailder.createTransport(mailConnection);
+    let transport = nodeMailer.createTransport(mailConnection);
     transport.sendMail(mailTestSend, (err) => {
         if (err) {
             Log.error('test mail sent failed');
@@ -249,6 +252,17 @@ let cmdMailTestSend = () => {
         }
         transport.close();
         process.exit(0);
+    });
+};
+
+let cmdAdminClone = () => {
+    const command = `git clone ${syncConfig.blogSourceRepository}`;
+    exec(command, async (err) => {
+        if (err) {
+            return Log.error('git clone failed', err);
+        }
+        await writeFileSync('.blog-source-cloned', 'true');
+        return Log.log('blog source repository cloned');
     });
 };
 
@@ -262,7 +276,8 @@ const funcMap = {
     },
     admin: {
         new: cmdAdminNew,
-        login: cmdAdminLogin
+        login: cmdAdminLogin,
+        clone: cmdAdminClone
     },
     mail: {
         test: {
