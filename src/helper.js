@@ -255,7 +255,7 @@ let cmdMailTestSend = () => {
     });
 };
 
-let cmdAdminClone = () => {
+let cmdAdminRepoClone = () => {
     const command = `git clone ${syncConfig.blogSourceRepository}`;
     exec(command, async (err) => {
         if (err) {
@@ -263,6 +263,17 @@ let cmdAdminClone = () => {
         }
         await writeFileSync('.blog-source-cloned', 'true');
         return Log.log('blog source repository cloned');
+    });
+};
+
+let cmdAdminRepoPull = () => {
+    const command = 'git pull';
+    const dir = 'blog-source';
+    exec(command, { cwd: dir }, async (err) => {
+        if (err) {
+            return Log.error('git pull failed', err);
+        }
+        return Log.log('blog source repository pulled');
     });
 };
 
@@ -277,7 +288,10 @@ const funcMap = {
     admin: {
         new: cmdAdminNew,
         login: cmdAdminLogin,
-        clone: cmdAdminClone
+        repo: {
+            clone: cmdAdminRepoClone,
+            pull: cmdAdminRepoPull
+        }
     },
     mail: {
         test: {
