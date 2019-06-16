@@ -166,6 +166,12 @@ let cmdAdminNew = () => {
 };
 
 let cmdAdminLogin = () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
     let models = new ModelLoader(db).getModels();
     let rdInterface = readline.createInterface({
         input: process.stdin,
@@ -175,10 +181,12 @@ let cmdAdminLogin = () => {
     rdInterface.question('username: ', async username => {
         if (!username.match(regexConfig.admin.username)) {
             Log.error('login failed', 'incorrect username format');
+            return process.exit(0);
         }
         rdInterface.question('password: ', async password => {
             if (!password.match(regexConfig.admin.password)) {
                 Log.error('login failed', 'incorrect password format');
+                return process.exit(0);
             }
 
             let admin = null;
@@ -189,22 +197,31 @@ let cmdAdminLogin = () => {
                     }
                 });
             } catch (e) {
-                return Log.error('server error', e);
+                Log.error('server error', e);
+                return process.exit(0);
             }
 
             if (!admin) {
                 Log.error('login failed', 'user is not exist');
+                return process.exit(0);
             }
 
             let salt = admin.salt;
             let passwordHash = PwdTool.encode(password, salt);
-            let token = admin.token;
 
             if (passwordHash === admin.password) {
+                let token = PwdTool.getToken();
+                try {
+                    admin.token = token;
+                    await admin.save();
+                } catch (e) {
+                    return Log.error('server error', e);
+                }
                 Log.log('login success', `here is your login token: ${token}`);
             } else {
                 Log.error('login failed', 'password is incorrect');
             }
+            process.exit(0);
         });
     });
 };

@@ -47,4 +47,8 @@ export class PwdTool {
         return sha256(sha256(password) + salt);
     }
 
+    static getToken() {
+        return PwdTool.getSalt().toUpperCase();
+    }
+
 }
