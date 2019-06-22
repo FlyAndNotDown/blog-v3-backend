@@ -14,11 +14,28 @@ import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
 import nodeMailer from 'nodemailer';
 import { exec } from 'child_process';
-import { writeFileSync, existsSync, readFileSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
 const mailTestSend = mailConfig.testSend;
+
+function getPostMetaInfoByLine(line) {
+    const tokens = line.split(' ');
+    let result = '';
+    tokens.forEach((token, index) => {
+        if (index > 0) {
+            result += index === tokens.length - 1 ? token : `${token} `;
+        }
+    });
+    return result;
+}
+
+function getPostNames() {
+    let files = readdirSync();
+
+    // TODO
+}
 
 let syncFunc = async (force) => {
     Log.log('connecting to database');
@@ -322,7 +339,10 @@ let cmdAdminBlogSync = () => {
             }
             if (!blogSourceGitRepoExists) {
                 Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
+                return process.exit(0);
             }
+
+            cmdAdminRepoPull();
 
             // TODO
         });
