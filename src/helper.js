@@ -32,10 +32,41 @@ function getPostMetaInfoByLine(line) {
 }
 
 function getPostNames() {
-    let files = readdirSync();
+    let files = readdirSync(syncConfig.postPath);
 
-    // TODO
+    let postNames = [];
+    files.forEach(file => {
+        if (file.match(regexConfig.sync.postName)) {
+            return postNames.push(file);
+        }
+    });
+
+    postNames.sort((a, b) => {
+        const numberA = parseInt(a.split('.')[0], 10);
+        const numberB = parseInt(b.split('.')[0], 10);
+        return numberB - numberA;
+    });
+    
+    return postNames;
 }
+
+function getPostInfos(postNames) {
+    let postMetaInfos = [];
+    postNames.forEach(postName => {
+        let content = fs.readFileSync(`${config.postDirPath}/${postName}`).toString();
+        let lines = content.split('\n');
+
+        return postMetaInfos.push({
+            key: getPostMetaInfoByLine(lines[1]).replace('\r', ''),
+            title: getPostMetaInfoByLine(lines[2]).replace('\r', ''),
+            date: getPostMetaInfoByLine(lines[3]).replace('\r', ''),
+            labels: getPostMetaInfoByLine(lines[4]).replace('\r', '').split(' '),
+            body: content
+        });
+    });
+}
+
+/* ------------------------------------------------- */
 
 let syncFunc = async (force) => {
     Log.log('connecting to database');
