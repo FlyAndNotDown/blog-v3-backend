@@ -15,6 +15,7 @@ import { PwdTool } from "./tool/pwd";
 import nodeMailer from 'nodemailer';
 import { exec } from 'child_process';
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
+import { markdown } from 'markdown';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -375,6 +376,15 @@ let cmdAdminBlogSync = () => {
 
             cmdAdminRepoPull();
 
+            const postNames = getPostNames();
+            const postInfos = getPostInfos(postNames);
+
+            postInfos.forEach(postInfo => {
+                
+
+                // TODO
+            });
+
             // TODO
         });
     });
@@ -407,9 +417,8 @@ const funcMap = {
     }
 };
 
-/**
- * 脚本
- */
+/* ----------------------------------------------- */
+
 (function () {
 
     const argv = process.argv;
