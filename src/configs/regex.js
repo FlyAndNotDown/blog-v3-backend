@@ -33,5 +33,8 @@ export default {
     post: {
         title: /^.{1,100}$/,
         description: /^.{1,1000}$/
+    },
+    sync: {
+        postName: /^[1-9]\d*.md$/
     }
 };

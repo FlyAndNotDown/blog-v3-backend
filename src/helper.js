@@ -4,6 +4,7 @@
  */
 
 import modelConfig from './configs/model';
+import syncConfig from './configs/sync';
 import Sequelize from 'sequelize';
 import { Log } from "./tool/log";
 import { ModelLoader } from "./model/loader";
@@ -11,16 +12,95 @@ import readline from 'readline';
 import regexConfig from "./configs/regex";
 import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
-import nodeMailder from 'nodemailer';
+import nodeMailer from 'nodemailer';
+import { exec } from 'child_process';
+import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
+import { Renderer } from 'marked';
+import marked from 'marked';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
 const mailTestSend = mailConfig.testSend;
 
-/**
- * database sync function
- * @param {boolean} force if do the sync as force
- */
+/* ------------------------------------------ */
+const mdRenderer = new Renderer();
+mdRenderer.code = (code, infostring, escaped) => {
+    return `\`\`\`${infostring}\r\n${code}\r\n\`\`\`\r\n`;
+};
+mdRenderer.blockquote = (quote) => {
+    return `> ${quote}`;
+};
+mdRenderer.html = (text) => {
+    return `${text}\r\n`;
+};
+mdRenderer.heading = (text, level) => {
+    let headerSlogan = '';
+    for (let i = 0; i < level; i++) headerSlogan += '#';
+    return `${headerSlogan} ${text}\r\n\r\n`;
+};
+mdRenderer.hr = () => {
+    return `---\r\n\r\n`;
+};
+mdRenderer.list = (body, ordered, start) => {
+    console.log(body, ordered, start);
+};
+mdRenderer.paragraph = (text) => {
+    return `${text}\r\n\r\n`;
+};
+mdRenderer.br = () => {
+    return `\r\n`;
+};
+
+/* ------------------------------------------ */
+
+function getPostMetaInfoByLine(line) {
+    const tokens = line.split(' ');
+    let result = '';
+    tokens.forEach((token, index) => {
+        if (index > 0) {
+            result += index === tokens.length - 1 ? token : `${token} `;
+        }
+    });
+    return result;
+}
+
+function getPostNames() {
+    let files = readdirSync(syncConfig.postPath);
+
+    let postNames = [];
+    files.forEach(file => {
+        if (file.match(regexConfig.sync.postName)) {
+            return postNames.push(file);
+        }
+    });
+
+    postNames.sort((a, b) => {
+        const numberA = parseInt(a.split('.')[0], 10);
+        const numberB = parseInt(b.split('.')[0], 10);
+        return numberB - numberA;
+    });
+    
+    return postNames;
+}
+
+function getPostInfos(postNames) {
+    let postMetaInfos = [];
+    postNames.forEach(postName => {
+        let content = fs.readFileSync(`${config.postDirPath}/${postName}`).toString();
+        let lines = content.split('\n');
+
+        return postMetaInfos.push({
+            key: getPostMetaInfoByLine(lines[1]).replace('\r', ''),
+            title: getPostMetaInfoByLine(lines[2]).replace('\r', ''),
+            date: getPostMetaInfoByLine(lines[3]).replace('\r', ''),
+            labels: getPostMetaInfoByLine(lines[4]).replace('\r', '').split(' '),
+            body: content
+        });
+    });
+}
+
+/* ------------------------------------------------- */
+
 let syncFunc = async (force) => {
     Log.log('connecting to database');
     const db = new Sequelize(
@@ -41,9 +121,6 @@ let syncFunc = async (force) => {
     process.exit(0);
 };
 
-/**
- * command - yarn helper db test
- */
 let cmdDbTest = () => {
     Log.log('start testing connection of database');
     const db = new Sequelize(
@@ -64,23 +141,14 @@ let cmdDbTest = () => {
         });
 };
 
-/**
- * command - yarn helper db sync
- */
 let cmdDbSync = () => {
     syncFunc(false);
 };
 
-/**
- * command - yarn helper db force sync
- */
 let cmdDbForceSync = () => {
     syncFunc(true);
 };
 
-/**
- * command - yarn helper admin new
- */
 let cmdAdminNew = () => {
     Log.log('connection to database');
     const db = new Sequelize(
@@ -181,12 +249,69 @@ let cmdAdminNew = () => {
     });
 };
 
-/**
- * command - yarn helper mail test connection
- * @return {[type]} [description]
- */
+let cmdAdminLogin = () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rdInterface.question('username: ', async username => {
+        if (!username.match(regexConfig.admin.username)) {
+            Log.error('login failed', 'incorrect username format');
+            return process.exit(0);
+        }
+        rdInterface.question('password: ', async password => {
+            if (!password.match(regexConfig.admin.password)) {
+                Log.error('login failed', 'incorrect password format');
+                return process.exit(0);
+            }
+
+            let admin = null;
+            try {
+                admin = await models.admin.findOne({
+                    where: {
+                        username: username
+                    }
+                });
+            } catch (e) {
+                Log.error('server error', e);
+                return process.exit(0);
+            }
+
+            if (!admin) {
+                Log.error('login failed', 'user is not exist');
+                return process.exit(0);
+            }
+
+            let salt = admin.salt;
+            let passwordHash = PwdTool.encode(password, salt);
+
+            if (passwordHash === admin.password) {
+                let token = PwdTool.getToken();
+                try {
+                    admin.token = token;
+                    await admin.save();
+                } catch (e) {
+                    return Log.error('server error', e);
+                }
+                Log.log('login success', `here is your login token: ${token}`);
+            } else {
+                Log.error('login failed', 'password is incorrect');
+            }
+            process.exit(0);
+        });
+    });
+};
+
 let cmdMailTestConnection = () => {
-    let transport = nodeMailder.createTransport(mailConnection);
+    let transport = nodeMailer.createTransport(mailConnection);
     transport.verify((error) => {
         if (error) {
             Log.log('SMTP service seem not work', error);
@@ -198,11 +323,8 @@ let cmdMailTestConnection = () => {
     });
 };
 
-/**
- * command - yarn helper mail test send
- */
 let cmdMailTestSend = () => {
-    let transport = nodeMailder.createTransport(mailConnection);
+    let transport = nodeMailer.createTransport(mailConnection);
     transport.sendMail(mailTestSend, (err) => {
         if (err) {
             Log.error('test mail sent failed');
@@ -214,9 +336,97 @@ let cmdMailTestSend = () => {
     });
 };
 
-/**
- * deal logic object
- */
+let cmdAdminRepoClone = () => {
+    const command = `git clone ${syncConfig.blogSourceRepository}`;
+    exec(command, async (err) => {
+        if (err) {
+            return Log.error('git clone failed', err);
+        }
+        await writeFileSync(syncConfig.gitRepoExistFlagFileName, 'true');
+        return Log.log('blog source repository cloned');
+    });
+};
+
+let cmdAdminRepoPull = () => {
+    const command = 'git pull';
+    const dir = 'blog-source';
+    exec(command, { cwd: dir }, async (err) => {
+        if (err) {
+            return Log.error('git pull failed', err);
+        }
+        return Log.log('blog source repository pulled');
+    });
+};
+
+let cmdAdminBlogSync = () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels;
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    Log.log('you need to show your login token first.');
+    rdInterface.question('username', async (username) => {
+        rdInterface.question('token', async token => {
+            let admin = null;
+            try {
+                admin = await models.admin.findOne({
+                    where: {
+                        username: username
+                    }
+                });
+            } catch (e) {
+                Log.error('server error', e);
+                return process.exit(0);
+            }
+
+            if (!admin) {
+                Log.error('login failed', 'user is not exist');
+                return process.exit(0);
+            }
+
+            if (token !== admin.token) {
+                Log.error('login failed', 'token is incorrect');
+                return process.exit(0);
+            }
+
+            let blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
+            if (blogSourceGitRepoExists) {
+                const data = readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
+                blogSourceGitRepoExists = data === 'true';
+            }
+            if (!blogSourceGitRepoExists) {
+                Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
+                return process.exit(0);
+            }
+
+            cmdAdminRepoPull();
+
+            const postNames = getPostNames();
+            const postInfos = getPostInfos(postNames);
+
+            postInfos.forEach(postInfo => {
+                
+
+                // TODO
+            });
+
+            // TODO
+        });
+    });
+};
+
+let cmdAdminBlogRenderTest = async () => {
+    const text = readFileSync(syncConfig.renderTestMdName).toString();
+    console.log(marked(text, { renderer: mdRenderer }));
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -226,7 +436,18 @@ const funcMap = {
         }
     },
     admin: {
-        new: cmdAdminNew
+        new: cmdAdminNew,
+        login: cmdAdminLogin,
+        repo: {
+            clone: cmdAdminRepoClone,
+            pull: cmdAdminRepoPull
+        },
+        blog: {
+            sync: cmdAdminBlogSync,
+            render: {
+                test: cmdAdminBlogRenderTest
+            }
+        }
     },
     mail: {
         test: {
@@ -236,9 +457,8 @@ const funcMap = {
     }
 };
 
-/**
- * 脚本
- */
+/* ----------------------------------------------- */
+
 (function () {
 
     const argv = process.argv;

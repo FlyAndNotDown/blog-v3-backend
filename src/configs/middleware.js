@@ -6,6 +6,7 @@
  */
 
 import mainConfig from './main';
+import path from 'path';
 
 /**
  * export middleware config
@@ -24,6 +25,9 @@ export default mainConfig.devMode ? {
         signed: true,
         rolling: false,
         renew: false
+    },
+    static: {
+        staticPath: path.join(__dirname, '../../../public')
     }
 } : {
     cors: {
@@ -39,5 +43,8 @@ export default mainConfig.devMode ? {
         signed: true,
         rolling: false,
         renew: false
+    },
+    static: {
+        staticPath: path.join(__dirname, '../../../public')
     }
 };

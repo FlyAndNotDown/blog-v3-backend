@@ -21,13 +21,16 @@
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "hash.js": "^1.1.7",
     "js-sha256": "^0.9.0",
     "keygrip": "^1.0.3",
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-session": "^5.9.0",
+    "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
+    "marked": "^0.6.2",
     "multer": "^1.3.1",
     "mysql2": "^1.6.1",
     "nodemailer": "^5.1.1",
@@ -35,6 +38,7 @@
     "sequelize": "^4.39.0"
   },
   "devDependencies": {
+    "@types/marked": "^0.6.5",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-runtime": "^6.23.0",
