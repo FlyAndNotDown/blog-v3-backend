@@ -15,11 +15,22 @@ import { PwdTool } from "./tool/pwd";
 import nodeMailer from 'nodemailer';
 import { exec } from 'child_process';
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
-import { markdown } from 'markdown';
+import { Renderer } from 'marked';
+import marked from 'marked';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
 const mailTestSend = mailConfig.testSend;
+
+/* ------------------------------------------ */
+const mdRenderer = new Renderer();
+mdRenderer.heading = (text, level) => {
+    let headerSlogan = '';
+    for (let i = 0; i < level; i++) headerSlogan += '#';
+    return `${headerSlogan} ${text}`;
+};
+
+/* ------------------------------------------ */
 
 function getPostMetaInfoByLine(line) {
     const tokens = line.split(' ');
@@ -364,9 +375,9 @@ let cmdAdminBlogSync = () => {
                 return process.exit(0);
             }
 
-            const blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
+            let blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
             if (blogSourceGitRepoExists) {
-                const data = await readFileSync(syncConfig.gitRepoExistFlagFileName);
+                const data = readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
                 blogSourceGitRepoExists = data === 'true';
             }
             if (!blogSourceGitRepoExists) {
@@ -390,6 +401,11 @@ let cmdAdminBlogSync = () => {
     });
 };
 
+let cmdAdminBlogRenderTest = async () => {
+    const text = readFileSync(syncConfig.renderTestMdName).toString();
+    console.log(marked(text, { renderer: mdRenderer }));
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -406,7 +422,10 @@ const funcMap = {
             pull: cmdAdminRepoPull
         },
         blog: {
-            sync: cmdAdminBlogSync
+            sync: cmdAdminBlogSync,
+            render: {
+                test: cmdAdminBlogRenderTest
+            }
         }
     },
     mail: {
