@@ -24,10 +24,31 @@ const mailTestSend = mailConfig.testSend;
 
 /* ------------------------------------------ */
 const mdRenderer = new Renderer();
+mdRenderer.code = (code, infostring, escaped) => {
+    return `\`\`\`${infostring}\r\n${code}\r\n\`\`\`\r\n`;
+};
+mdRenderer.blockquote = (quote) => {
+    return `> ${quote}`;
+};
+mdRenderer.html = (text) => {
+    return `${text}\r\n`;
+};
 mdRenderer.heading = (text, level) => {
     let headerSlogan = '';
     for (let i = 0; i < level; i++) headerSlogan += '#';
-    return `${headerSlogan} ${text}`;
+    return `${headerSlogan} ${text}\r\n\r\n`;
+};
+mdRenderer.hr = () => {
+    return `---\r\n\r\n`;
+};
+mdRenderer.list = (body, ordered, start) => {
+    console.log(body, ordered, start);
+};
+mdRenderer.paragraph = (text) => {
+    return `${text}\r\n\r\n`;
+};
+mdRenderer.br = () => {
+    return `\r\n`;
 };
 
 /* ------------------------------------------ */
