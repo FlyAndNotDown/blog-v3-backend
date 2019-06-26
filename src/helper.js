@@ -17,10 +17,17 @@ import { exec } from 'child_process';
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
 import { Renderer } from 'marked';
 import marked from 'marked';
+import pinyin from 'pinyin';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
 const mailTestSend = mailConfig.testSend;
+
+/* ------------------------------------------ */
+const mdRenderer = new Renderer();
+mdRenderer.heading = (text, level) => {
+    // TODO
+};
 
 /* ------------------------------------------ */
 
@@ -393,6 +400,11 @@ let cmdAdminBlogSync = () => {
     });
 };
 
+let cmdAdminBlogRenderTest = () => {
+    let content = readFileSync(syncConfig.renderTestMdName).toString();
+    console.log(marked(content, { renderer: mdRenderer }));
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -410,6 +422,9 @@ const funcMap = {
         },
         blog: {
             sync: cmdAdminBlogSync,
+            render: {
+                test: cmdAdminBlogRenderTest
+            }
         }
     },
     mail: {

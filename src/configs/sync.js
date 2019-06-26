@@ -8,5 +8,5 @@ export default {
     blogSourceRepoPath: blogSourceRepoPath,
     postPath: path.join(blogSourceRepoPath, 'post'),
     imagePath: path.join(blogSourceRepoPath, 'img'),
-    renderTestMdName: 'render-test.md'
+    renderTestMdName: 'md-render-test.md'
 };
