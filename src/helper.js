@@ -18,6 +18,7 @@ import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
 import { Renderer } from 'marked';
 import marked from 'marked';
 import pinyin from 'pinyin';
+import emojiOne from 'emojione';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -26,7 +27,14 @@ const mailTestSend = mailConfig.testSend;
 /* ------------------------------------------ */
 const mdRenderer = new Renderer();
 mdRenderer.heading = (text, level) => {
-    // TODO
+    let key = emojiOne.toShort(text);
+    key = key.replace(':', '').replace(':', '').replace('.', '-').replace(/[ ]+/, ' ').replace(' ', '-');
+    key = pinyin(key, { style: pinyin.STYLE_NORMAL }).join('-');
+
+    return `<h${level} id="h${level}-${key}">${text}</h${level}>`;
+};
+mdRenderer.link = (href, title, text) => {
+    return `<a href="${href}" target="__blank">${text}</a>`;
 };
 
 /* ------------------------------------------ */
