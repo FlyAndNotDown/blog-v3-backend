@@ -86,7 +86,7 @@ function getPostNames() {
 function getPostInfos(postNames) {
     let postMetaInfos = [];
     postNames.forEach(postName => {
-        let content = fs.readFileSync(`${config.postDirPath}/${postName}`).toString();
+        let content = fs.readFileSync(`${syncConfig.postPath}/${postName}`).toString();
         let lines = content.split('\n');
 
         return postMetaInfos.push({
@@ -97,6 +97,7 @@ function getPostInfos(postNames) {
             body: content
         });
     });
+    return postMetaInfos;
 }
 
 /* ------------------------------------------------- */
@@ -358,7 +359,7 @@ let cmdAdminRepoPull = () => {
     });
 };
 
-let cmdAdminBlogSync = () => {
+let cmdAdminBlogSync = async () => {
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -366,59 +367,37 @@ let cmdAdminBlogSync = () => {
         connectionConfig.options
     );
     let models = new ModelLoader(db).getModels;
-    let rdInterface = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+    
+    let blogSourceGitRepoExists = existsSync(syncConfig.gitRepoExistFlagFileName);
+    if (blogSourceGitRepoExists) {
+        const data = readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
+        blogSourceGitRepoExists = data === 'true';
+    }
+    if (!blogSourceGitRepoExists) {
+        Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
+        return process.exit(0);
+    }
 
-    Log.log('you need to show your login token first.');
-    rdInterface.question('username', async (username) => {
-        rdInterface.question('token', async token => {
-            let admin = null;
-            try {
-                admin = await models.admin.findOne({
-                    where: {
-                        username: username
-                    }
-                });
-            } catch (e) {
-                Log.error('server error', e);
-                return process.exit(0);
-            }
+    cmdAdminRepoPull();
 
-            if (!admin) {
-                Log.error('login failed', 'user is not exist');
-                return process.exit(0);
-            }
+    const postNames = getPostNames();
+    const postInfos = getPostInfos(postNames);
 
-            if (token !== admin.token) {
-                Log.error('login failed', 'token is incorrect');
-                return process.exit(0);
-            }
-
-            let blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
-            if (blogSourceGitRepoExists) {
-                const data = readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
-                blogSourceGitRepoExists = data === 'true';
-            }
-            if (!blogSourceGitRepoExists) {
-                Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
-                return process.exit(0);
-            }
-
-            cmdAdminRepoPull();
-
-            const postNames = getPostNames();
-            const postInfos = getPostInfos(postNames);
-
-            postInfos.forEach(postInfo => {
-                
-
-                // TODO
+    postInfos.forEach(postInfo => {
+        let count = 0;
+        try {
+            count = await models.post.count({ where: { id: postInfo.key } });
+        } catch (e) {
+            Log.error('database error', e);
+        }
+        if (count === 0) {
+            const content = fs.readFileSync(`${syncConfig.postPath}/${id}.md`).toString();
+            await models.create({
+                id: postInfo.key,
+                title: postInfo.title,
+                body: marked(content, { renderer: mdRenderer })
             });
-
-            // TODO
-        });
+        }
     });
 };
 
