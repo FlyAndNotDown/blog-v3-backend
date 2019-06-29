@@ -378,7 +378,7 @@ let cmdAdminBlogSync = async () => {
         return process.exit(0);
     }
 
-    cmdAdminRepoPull();
+    await cmdAdminRepoPull();
 
     const postNames = getPostNames();
     const postInfos = getPostInfos(postNames);
