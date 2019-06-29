@@ -122,7 +122,7 @@ let syncFunc = async (force) => {
     process.exit(0);
 };
 
-let cmdDbTest = () => {
+let cmdDbTest = async () => {
     Log.log('start testing connection of database');
     const db = new Sequelize(
         connectionConfig.database,
@@ -142,15 +142,15 @@ let cmdDbTest = () => {
         });
 };
 
-let cmdDbSync = () => {
+let cmdDbSync = async () => {
     syncFunc(false);
 };
 
-let cmdDbForceSync = () => {
+let cmdDbForceSync = async () => {
     syncFunc(true);
 };
 
-let cmdAdminNew = () => {
+let cmdAdminNew = async () => {
     Log.log('connection to database');
     const db = new Sequelize(
         connectionConfig.database,
@@ -250,7 +250,7 @@ let cmdAdminNew = () => {
     });
 };
 
-let cmdAdminLogin = () => {
+let cmdAdminLogin = async () => {
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -311,7 +311,7 @@ let cmdAdminLogin = () => {
     });
 };
 
-let cmdMailTestConnection = () => {
+let cmdMailTestConnection = async () => {
     let transport = nodeMailer.createTransport(mailConnection);
     transport.verify((error) => {
         if (error) {
@@ -324,7 +324,7 @@ let cmdMailTestConnection = () => {
     });
 };
 
-let cmdMailTestSend = () => {
+let cmdMailTestSend = async () => {
     let transport = nodeMailer.createTransport(mailConnection);
     transport.sendMail(mailTestSend, (err) => {
         if (err) {
@@ -337,7 +337,7 @@ let cmdMailTestSend = () => {
     });
 };
 
-let cmdAdminRepoClone = () => {
+let cmdAdminRepoClone = async () => {
     const command = `git clone ${syncConfig.blogSourceRepository}`;
     exec(command, async (err) => {
         if (err) {
@@ -348,7 +348,7 @@ let cmdAdminRepoClone = () => {
     });
 };
 
-let cmdAdminRepoPull = () => {
+let cmdAdminRepoPull = async () => {
     const command = 'git pull';
     const dir = 'blog-source';
     exec(command, { cwd: dir }, async (err) => {
@@ -366,7 +366,7 @@ let cmdAdminBlogSync = async () => {
         connectionConfig.password,
         connectionConfig.options
     );
-    let models = new ModelLoader(db).getModels;
+    let models = new ModelLoader(db).getModels();
     
     let blogSourceGitRepoExists = existsSync(syncConfig.gitRepoExistFlagFileName);
     if (blogSourceGitRepoExists) {
@@ -383,25 +383,29 @@ let cmdAdminBlogSync = async () => {
     const postNames = getPostNames();
     const postInfos = getPostInfos(postNames);
 
-    postInfos.forEach(postInfo => {
+    postInfos.forEach(async postInfo => {
         let count = 0;
         try {
             count = await models.post.count({ where: { id: postInfo.key } });
         } catch (e) {
             Log.error('database error', e);
+            return process.exit(0);
         }
         if (count === 0) {
-            const content = fs.readFileSync(`${syncConfig.postPath}/${id}.md`).toString();
-            await models.create({
+            const content = fs.readFileSync(`${syncConfig.postPath}/${postInfo.key}.md`).toString();
+            await models.post.create({
                 id: postInfo.key,
                 title: postInfo.title,
                 body: marked(content, { renderer: mdRenderer })
             });
         }
     });
+
+    Log.log('sync done');
+    process.exit(0);
 };
 
-let cmdAdminBlogRenderTest = () => {
+let cmdAdminBlogRenderTest = async () => {
     let content = readFileSync(syncConfig.renderTestMdName).toString();
     console.log(marked(content, { renderer: mdRenderer }));
 };
@@ -438,7 +442,7 @@ const funcMap = {
 
 /* ----------------------------------------------- */
 
-(function () {
+(async function () {
 
     const argv = process.argv;
     let temp = funcMap;
@@ -451,7 +455,7 @@ const funcMap = {
         }
     });
     if (typeof temp === 'function') {
-        temp();
+        await temp();
     }
 
 }());
