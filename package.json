@@ -21,6 +21,7 @@
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.3",
     "emojione": "^4.5.0",
     "hash.js": "^1.1.7",
     "js-sha256": "^0.9.0",

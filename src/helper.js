@@ -22,6 +22,7 @@ import emojiOne from 'emojione';
 import path from 'path';
 import fs from 'fs';
 import mainConfig from './configs/main';
+import cheerio from 'cheerio';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -49,6 +50,22 @@ mdRenderer.image = (href, title, text) => {
         fs.copyFileSync(imagePath, destPath);
     }
     return `<img src="${syncConfig.serverImagePath}/${imageName}" alt="${text}"/>`;
+};
+mdRenderer.html = (html) => {
+    const htmlObject = cheerio.load(html);
+    htmlObject('img').each(function(index, elem) {
+        const href = htmlObject(this).attr('src');
+        const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
+        const imageNameSplits = imagePath.split(path.sep);
+        const imageName = imageNameSplits[imageNameSplits.length - 1];
+        const destPath = path.join(syncConfig.uploadPath, imageName);
+        
+        if (!fs.existsSync(destPath)) {
+            fs.copyFileSync(imagePath, destPath);
+        }
+        return htmlObject(this).attr('src', `${syncConfig.serverImagePath}/${imageName}`);
+    });
+    return htmlObject.html().toString();
 };
 
 /* ------------------------------------------ */
