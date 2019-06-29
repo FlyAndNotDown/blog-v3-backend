@@ -21,6 +21,8 @@
   "homepage": "https://github.com/FlyAndNotDown/blog-v3-backend#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.3",
+    "emojione": "^4.5.0",
     "hash.js": "^1.1.7",
     "js-sha256": "^0.9.0",
     "keygrip": "^1.0.3",
@@ -34,6 +36,7 @@
     "multer": "^1.3.1",
     "mysql2": "^1.6.1",
     "nodemailer": "^5.1.1",
+    "pinyin": "^2.9.0",
     "query-string": "^6.2.0",
     "sequelize": "^4.39.0"
   },

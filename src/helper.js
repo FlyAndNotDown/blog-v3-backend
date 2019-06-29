@@ -13,10 +13,16 @@ import regexConfig from "./configs/regex";
 import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
 import nodeMailer from 'nodemailer';
-import { exec } from 'child_process';
+import { execSync } from 'child_process';
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
 import { Renderer } from 'marked';
 import marked from 'marked';
+import pinyin from 'pinyin';
+import emojiOne from 'emojione';
+import path from 'path';
+import fs from 'fs';
+import mainConfig from './configs/main';
+import cheerio from 'cheerio';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -24,31 +30,42 @@ const mailTestSend = mailConfig.testSend;
 
 /* ------------------------------------------ */
 const mdRenderer = new Renderer();
-mdRenderer.code = (code, infostring, escaped) => {
-    return `\`\`\`${infostring}\r\n${code}\r\n\`\`\`\r\n`;
-};
-mdRenderer.blockquote = (quote) => {
-    return `> ${quote}`;
-};
-mdRenderer.html = (text) => {
-    return `${text}\r\n`;
-};
 mdRenderer.heading = (text, level) => {
-    let headerSlogan = '';
-    for (let i = 0; i < level; i++) headerSlogan += '#';
-    return `${headerSlogan} ${text}\r\n\r\n`;
+    let key = emojiOne.toShort(text);
+    key = key.replace(':', '').replace(':', '').replace('.', '-').replace(/[ ]+/, ' ').replace(' ', '-');
+    key = pinyin(key, { style: pinyin.STYLE_NORMAL }).join('-');
+
+    return `<h${level} id="h${level}-${key}">${text}</h${level}>`;
 };
-mdRenderer.hr = () => {
-    return `---\r\n\r\n`;
+mdRenderer.link = (href, title, text) => {
+    return `<a href="${href}" target="__blank">${text}</a>`;
 };
-mdRenderer.list = (body, ordered, start) => {
-    console.log(body, ordered, start);
+mdRenderer.image = (href, title, text) => {
+    const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
+    const imageNameSplits = imagePath.split(path.sep);
+    const imageName = imageNameSplits[imageNameSplits.length - 1];
+    const destPath = path.join(syncConfig.uploadPath, imageName);
+    
+    if (!fs.existsSync(destPath)) {
+        fs.copyFileSync(imagePath, destPath);
+    }
+    return `<img src="${syncConfig.serverImagePath}/${imageName}" alt="${text}"/>`;
 };
-mdRenderer.paragraph = (text) => {
-    return `${text}\r\n\r\n`;
-};
-mdRenderer.br = () => {
-    return `\r\n`;
+mdRenderer.html = (html) => {
+    const htmlObject = cheerio.load(html);
+    htmlObject('img').each(function(index, elem) {
+        const href = htmlObject(this).attr('src');
+        const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
+        const imageNameSplits = imagePath.split(path.sep);
+        const imageName = imageNameSplits[imageNameSplits.length - 1];
+        const destPath = path.join(syncConfig.uploadPath, imageName);
+        
+        if (!fs.existsSync(destPath)) {
+            fs.copyFileSync(imagePath, destPath);
+        }
+        return htmlObject(this).attr('src', `${syncConfig.serverImagePath}/${imageName}`);
+    });
+    return htmlObject.html().toString();
 };
 
 /* ------------------------------------------ */
@@ -86,7 +103,7 @@ function getPostNames() {
 function getPostInfos(postNames) {
     let postMetaInfos = [];
     postNames.forEach(postName => {
-        let content = fs.readFileSync(`${config.postDirPath}/${postName}`).toString();
+        let content = fs.readFileSync(`${syncConfig.postPath}/${postName}`).toString();
         let lines = content.split('\n');
 
         return postMetaInfos.push({
@@ -97,6 +114,7 @@ function getPostInfos(postNames) {
             body: content
         });
     });
+    return postMetaInfos;
 }
 
 /* ------------------------------------------------- */
@@ -121,7 +139,7 @@ let syncFunc = async (force) => {
     process.exit(0);
 };
 
-let cmdDbTest = () => {
+let cmdDbTest = async () => {
     Log.log('start testing connection of database');
     const db = new Sequelize(
         connectionConfig.database,
@@ -141,15 +159,15 @@ let cmdDbTest = () => {
         });
 };
 
-let cmdDbSync = () => {
-    syncFunc(false);
+let cmdDbSync = async () => {
+    await syncFunc(false);
 };
 
-let cmdDbForceSync = () => {
-    syncFunc(true);
+let cmdDbForceSync = async () => {
+    await syncFunc(true);
 };
 
-let cmdAdminNew = () => {
+let cmdAdminNew = async () => {
     Log.log('connection to database');
     const db = new Sequelize(
         connectionConfig.database,
@@ -249,7 +267,7 @@ let cmdAdminNew = () => {
     });
 };
 
-let cmdAdminLogin = () => {
+let cmdAdminLogin = async () => {
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -310,7 +328,7 @@ let cmdAdminLogin = () => {
     });
 };
 
-let cmdMailTestConnection = () => {
+let cmdMailTestConnection = async () => {
     let transport = nodeMailer.createTransport(mailConnection);
     transport.verify((error) => {
         if (error) {
@@ -323,7 +341,7 @@ let cmdMailTestConnection = () => {
     });
 };
 
-let cmdMailTestSend = () => {
+let cmdMailTestSend = async () => {
     let transport = nodeMailer.createTransport(mailConnection);
     transport.sendMail(mailTestSend, (err) => {
         if (err) {
@@ -336,95 +354,81 @@ let cmdMailTestSend = () => {
     });
 };
 
-let cmdAdminRepoClone = () => {
+let cmdAdminRepoClone = async () => {
     const command = `git clone ${syncConfig.blogSourceRepository}`;
-    exec(command, async (err) => {
-        if (err) {
-            return Log.error('git clone failed', err);
-        }
-        await writeFileSync(syncConfig.gitRepoExistFlagFileName, 'true');
-        return Log.log('blog source repository cloned');
-    });
+    try {
+        await execSync(command);
+    } catch (e) {
+        Log.error('git clone failed', e);
+        return process.exit(0);
+    }
+    
+    await writeFileSync(syncConfig.gitRepoExistFlagFileName, 'true');
+    return Log.log('blog source repository cloned');
 };
 
-let cmdAdminRepoPull = () => {
+let cmdAdminRepoPull = async () => {
     const command = 'git pull';
     const dir = 'blog-source';
-    exec(command, { cwd: dir }, async (err) => {
-        if (err) {
-            return Log.error('git pull failed', err);
-        }
-        return Log.log('blog source repository pulled');
-    });
+    try {
+        await execSync(command, { cwd: dir });
+    } catch (e) {
+        Log.error('git pull failed', e);
+        return process.exit(0);
+    }
+    
+    return Log.log('blog source repository pulled');
 };
 
-let cmdAdminBlogSync = () => {
+let cmdAdminBlogSync = async () => {
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
         connectionConfig.password,
         connectionConfig.options
     );
-    let models = new ModelLoader(db).getModels;
-    let rdInterface = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+    let models = new ModelLoader(db).getModels();
+    
+    let blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
+    if (blogSourceGitRepoExists) {
+        const data = await readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
+        blogSourceGitRepoExists = data === 'true';
+    }
+    if (!blogSourceGitRepoExists) {
+        Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
+        return process.exit(0);
+    }
 
-    Log.log('you need to show your login token first.');
-    rdInterface.question('username', async (username) => {
-        rdInterface.question('token', async token => {
-            let admin = null;
-            try {
-                admin = await models.admin.findOne({
-                    where: {
-                        username: username
-                    }
-                });
-            } catch (e) {
-                Log.error('server error', e);
-                return process.exit(0);
-            }
+    await cmdAdminRepoPull();
 
-            if (!admin) {
-                Log.error('login failed', 'user is not exist');
-                return process.exit(0);
-            }
+    const postNames = getPostNames();
+    const postInfos = getPostInfos(postNames);
 
-            if (token !== admin.token) {
-                Log.error('login failed', 'token is incorrect');
-                return process.exit(0);
-            }
-
-            let blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
-            if (blogSourceGitRepoExists) {
-                const data = readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
-                blogSourceGitRepoExists = data === 'true';
-            }
-            if (!blogSourceGitRepoExists) {
-                Log.error('sync failed', 'blog source git repo is not exist, please clone the git repo first');
-                return process.exit(0);
-            }
-
-            cmdAdminRepoPull();
-
-            const postNames = getPostNames();
-            const postInfos = getPostInfos(postNames);
-
-            postInfos.forEach(postInfo => {
-                
-
-                // TODO
+    for (let i = 0; i < postInfos.length; i++) {
+        let count = 0;
+        try {
+            count = await models.post.count({ where: { id: postInfos[i].key } });
+        } catch (e) {
+            Log.error('database error', e);
+            return process.exit(0);
+        }
+        if (count === 0) {
+            const content = await fs.readFileSync(`${syncConfig.postPath}/${postInfos[i].key}.md`).toString();
+            await models.post.create({
+                id: postInfos[i].key,
+                title: postInfos[i].title,
+                body: marked(content, { renderer: mdRenderer })
             });
+        }
+    }
 
-            // TODO
-        });
-    });
+    Log.log('sync done');
+    process.exit(0);
 };
 
 let cmdAdminBlogRenderTest = async () => {
-    const text = readFileSync(syncConfig.renderTestMdName).toString();
-    console.log(marked(text, { renderer: mdRenderer }));
+    let content = await readFileSync(syncConfig.renderTestMdName).toString();
+    console.log(marked(content, { renderer: mdRenderer }));
 };
 
 const funcMap = {
@@ -459,7 +463,7 @@ const funcMap = {
 
 /* ----------------------------------------------- */
 
-(function () {
+(async function () {
 
     const argv = process.argv;
     let temp = funcMap;
@@ -472,7 +476,7 @@ const funcMap = {
         }
     });
     if (typeof temp === 'function') {
-        temp();
+        await temp();
     }
 
-}());
+})();

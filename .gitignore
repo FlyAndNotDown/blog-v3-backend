@@ -7,3 +7,7 @@
 /.vscode
 /last.log
 /blog-source
+/public/**/*.png
+/public/**/*.jpg
+/public/**/*.jpeg
+/public/**/*.gif

@@ -27,7 +27,7 @@ export default mainConfig.devMode ? {
         renew: false
     },
     static: {
-        staticPath: path.join(__dirname, '../../../public')
+        staticPath: path.join(__dirname, `../../public`)
     }
 } : {
     cors: {
@@ -45,6 +45,6 @@ export default mainConfig.devMode ? {
         renew: false
     },
     static: {
-        staticPath: path.join(__dirname, '../../../public')
+        staticPath: path.join(__dirname, '../../public')
     }
 };
