@@ -52,6 +52,7 @@ mdRenderer.image = (href, title, text) => {
     return `<img src="${syncConfig.serverImagePath}/${imageName}" alt="${text}"/>`;
 };
 mdRenderer.html = (html) => {
+    // TODO fix the html tag bug
     const htmlObject = cheerio.load(html);
     htmlObject('img').each(function(index, elem) {
         const href = htmlObject(this).attr('src');
@@ -65,7 +66,7 @@ mdRenderer.html = (html) => {
         }
         return htmlObject(this).attr('src', `${syncConfig.serverImagePath}/${imageName}`);
     });
-    return htmlObject.html().toString();
+    return cheerio.html(htmlObject('*')).toString();
 };
 
 /* ------------------------------------------ */

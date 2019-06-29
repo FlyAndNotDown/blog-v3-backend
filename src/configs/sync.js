@@ -1,5 +1,6 @@
 import path from 'path';
 import middlewareConfig from './middleware';
+import mainConfig from './main';
 
 const blogSourceRepoPath = 'blog-source';
 
@@ -10,6 +11,6 @@ export default {
     postPath: path.join(blogSourceRepoPath, 'post'),
     imagePath: path.join(blogSourceRepoPath, 'img'),
     uploadPath: path.join(middlewareConfig.static.staticPath, 'img'),
-    serverImagePath: '/public/img',
+    serverImagePath: mainConfig.devMode ? 'http://localhost:30000/img' : '/img',
     renderTestMdName: 'md-render-test.md'
 };
