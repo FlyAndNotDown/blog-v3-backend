@@ -13,7 +13,7 @@ import regexConfig from "./configs/regex";
 import mailConfig from './configs/mail';
 import { PwdTool } from "./tool/pwd";
 import nodeMailer from 'nodemailer';
-import { exec } from 'child_process';
+import { execSync } from 'child_process';
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
 import { Renderer } from 'marked';
 import marked from 'marked';
@@ -143,11 +143,11 @@ let cmdDbTest = async () => {
 };
 
 let cmdDbSync = async () => {
-    syncFunc(false);
+    await syncFunc(false);
 };
 
 let cmdDbForceSync = async () => {
-    syncFunc(true);
+    await syncFunc(true);
 };
 
 let cmdAdminNew = async () => {
@@ -339,24 +339,28 @@ let cmdMailTestSend = async () => {
 
 let cmdAdminRepoClone = async () => {
     const command = `git clone ${syncConfig.blogSourceRepository}`;
-    exec(command, async (err) => {
-        if (err) {
-            return Log.error('git clone failed', err);
-        }
-        await writeFileSync(syncConfig.gitRepoExistFlagFileName, 'true');
-        return Log.log('blog source repository cloned');
-    });
+    try {
+        await execSync(command);
+    } catch (e) {
+        Log.error('git clone failed', e);
+        return process.exit(0);
+    }
+    
+    await writeFileSync(syncConfig.gitRepoExistFlagFileName, 'true');
+    return Log.log('blog source repository cloned');
 };
 
 let cmdAdminRepoPull = async () => {
     const command = 'git pull';
     const dir = 'blog-source';
-    exec(command, { cwd: dir }, async (err) => {
-        if (err) {
-            return Log.error('git pull failed', err);
-        }
-        return Log.log('blog source repository pulled');
-    });
+    try {
+        await execSync(command, { cwd: dir });
+    } catch (e) {
+        Log.error('git pull failed', e);
+        return process.exit(0);
+    }
+    
+    return Log.log('blog source repository pulled');
 };
 
 let cmdAdminBlogSync = async () => {
@@ -368,9 +372,9 @@ let cmdAdminBlogSync = async () => {
     );
     let models = new ModelLoader(db).getModels();
     
-    let blogSourceGitRepoExists = existsSync(syncConfig.gitRepoExistFlagFileName);
+    let blogSourceGitRepoExists = await existsSync(syncConfig.gitRepoExistFlagFileName);
     if (blogSourceGitRepoExists) {
-        const data = readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
+        const data = await readFileSync(syncConfig.gitRepoExistFlagFileName).toString();
         blogSourceGitRepoExists = data === 'true';
     }
     if (!blogSourceGitRepoExists) {
@@ -383,30 +387,30 @@ let cmdAdminBlogSync = async () => {
     const postNames = getPostNames();
     const postInfos = getPostInfos(postNames);
 
-    postInfos.forEach(async postInfo => {
+    for (let i = 0; i < postInfos.length; i++) {
         let count = 0;
         try {
-            count = await models.post.count({ where: { id: postInfo.key } });
+            count = await models.post.count({ where: { id: postInfos[i].key } });
         } catch (e) {
             Log.error('database error', e);
             return process.exit(0);
         }
         if (count === 0) {
-            const content = fs.readFileSync(`${syncConfig.postPath}/${postInfo.key}.md`).toString();
+            const content = await fs.readFileSync(`${syncConfig.postPath}/${postInfos[i].key}.md`).toString();
             await models.post.create({
-                id: postInfo.key,
-                title: postInfo.title,
+                id: postInfos[i].key,
+                title: postInfos[i].title,
                 body: marked(content, { renderer: mdRenderer })
             });
         }
-    });
+    }
 
     Log.log('sync done');
     process.exit(0);
 };
 
 let cmdAdminBlogRenderTest = async () => {
-    let content = readFileSync(syncConfig.renderTestMdName).toString();
+    let content = await readFileSync(syncConfig.renderTestMdName).toString();
     console.log(marked(content, { renderer: mdRenderer }));
 };
 
@@ -458,4 +462,4 @@ const funcMap = {
         await temp();
     }
 
-}());
+})();
