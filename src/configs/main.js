@@ -5,10 +5,13 @@
  * @version v1.0
  */
 
+import path from 'path';
+
 /**
  * export main config
  */
 export default {
     devMode: true,
-    log: true
+    log: true,
+    projectRootPath: path.join(__dirname, '../..')
 };

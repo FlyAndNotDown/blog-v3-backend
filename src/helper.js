@@ -19,6 +19,9 @@ import { Renderer } from 'marked';
 import marked from 'marked';
 import pinyin from 'pinyin';
 import emojiOne from 'emojione';
+import path from 'path';
+import fs from 'fs';
+import mainConfig from './configs/main';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -35,6 +38,17 @@ mdRenderer.heading = (text, level) => {
 };
 mdRenderer.link = (href, title, text) => {
     return `<a href="${href}" target="__blank">${text}</a>`;
+};
+mdRenderer.image = (href, title, text) => {
+    const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
+    const imageNameSplits = imagePath.split(path.sep);
+    const imageName = imageNameSplits[imageNameSplits.length - 1];
+    const destPath = path.join(syncConfig.uploadPath, imageName);
+    
+    if (!fs.existsSync(destPath)) {
+        fs.copyFileSync(imagePath, destPath);
+    }
+    return `<img src="${syncConfig.serverImagePath}/${imageName}" alt="${text}"/>`;
 };
 
 /* ------------------------------------------ */
