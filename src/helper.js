@@ -30,32 +30,8 @@ const mailTestSend = mailConfig.testSend;
 
 /* ------------------------------------------ */
 const mdRenderer = new Renderer();
-mdRenderer.heading = (text, level) => {
-    let key = emojiOne.toShort(text);
-    key = key.replace(':', '').replace(':', '').replace('.', '-').replace(/[ ]+/, ' ').replace(' ', '-');
-    key = pinyin(key, { style: pinyin.STYLE_NORMAL }).join('-');
-
-    return `<h${level} id="h${level}-${key}">${text}</h${level}>`;
-};
-mdRenderer.link = (href, title, text) => {
-    return `<a href="${href}" target="__blank">${text}</a>`;
-};
 mdRenderer.image = (href, title, text) => {
-    const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
-    const imageNameSplits = imagePath.split(path.sep);
-    const imageName = imageNameSplits[imageNameSplits.length - 1];
-    const destPath = path.join(syncConfig.uploadPath, imageName);
-    
-    if (!fs.existsSync(destPath)) {
-        fs.copyFileSync(imagePath, destPath);
-    }
-    return `<img src="${syncConfig.serverImagePath}/${imageName}" alt="${text}"/>`;
-};
-mdRenderer.html = (html) => {
-    // TODO fix the html tag bug
-    const htmlObject = cheerio.load(html);
-    htmlObject('img').each(function(index, elem) {
-        const href = htmlObject(this).attr('src');
+    if (href[0] === '.') {
         const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
         const imageNameSplits = imagePath.split(path.sep);
         const imageName = imageNameSplits[imageNameSplits.length - 1];
@@ -64,9 +40,23 @@ mdRenderer.html = (html) => {
         if (!fs.existsSync(destPath)) {
             fs.copyFileSync(imagePath, destPath);
         }
-        return htmlObject(this).attr('src', `${syncConfig.serverImagePath}/${imageName}`);
+    }
+};
+mdRenderer.html = (html) => {
+    const htmlObject = cheerio.load(html);
+    htmlObject('img').each(function() {
+        const href = htmlObject(this).attr('src');
+        if (href[0] === '.') {
+            const imagePath = path.join(mainConfig.projectRootPath, syncConfig.postPath, href);
+            const imageNameSplits = imagePath.split(path.sep);
+            const imageName = imageNameSplits[imageNameSplits.length - 1];
+            const destPath = path.join(syncConfig.uploadPath, imageName);
+
+            if (!fs.existsSync(destPath)) {
+                fs.copyFileSync(imagePath, destPath);
+            }
+        }
     });
-    return cheerio.html(htmlObject('*')).toString();
 };
 
 /* ------------------------------------------ */
@@ -415,10 +405,11 @@ let cmdAdminBlogSync = async () => {
         }
         if (count === 0) {
             const content = await fs.readFileSync(`${syncConfig.postPath}/${postInfos[i].key}.md`).toString();
+            marked(content, { renderer: mdRenderer });
             await models.post.create({
                 id: postInfos[i].key,
                 title: postInfos[i].title,
-                body: marked(content, { renderer: mdRenderer })
+                body: content
             });
         }
     }
