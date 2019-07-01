@@ -316,7 +316,11 @@ export default {
                     // get posts
                     let labelPosts;
                     try {
-                        labelPosts = await label.getPosts();
+                        labelPosts = await label.getPosts({
+                            order: [
+                                ['id', 'DESC']
+                            ]
+                        });
                     } catch (e) {
                         Log.error('status 500', e);
                         return ctx.response.status = 500;
