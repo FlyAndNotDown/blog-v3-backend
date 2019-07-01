@@ -395,7 +395,9 @@ let cmdAdminPostSync = async () => {
     const postNames = getPostNames();
     const postInfos = getPostInfos(postNames);
 
-    for (let i = 0; i < postInfos.length; i++) {
+    for (let i = postInfos.length - 1; i > -1; i--) {
+        Log.log(`start sync post where key = ${postInfos[i].key}`);
+
         let postCount = 0;
         try {
             postCount = await models.post.count({ where: { id: postInfos[i].key } });
@@ -408,13 +410,20 @@ let cmdAdminPostSync = async () => {
             const content = await fs.readFileSync(`${syncConfig.postPath}/${postInfos[i].key}.md`).toString();
             marked(content, { renderer: mdRenderer });
             const date = new KDate(postInfos[i].date);
-            await models.post.create({
-                id: postInfos[i].key,
-                title: postInfos[i].title,
-                description: postInfos[i].description,
-                body: content,
-                createAt: new Date(date.getYear(), date.getMonth(), date.getDay())
-            });
+            try {
+                await models.post.create({
+                    id: postInfos[i].key,
+                    title: postInfos[i].title,
+                    description: postInfos[i].description,
+                    body: content,
+                    createdAt: new Date(date.getYear(), date.getMonth(), date.getDay())
+                });
+            } catch (e) {
+                Log.error('database error', e);
+                return process.exit(0);
+            }
+
+            Log.log(`create post model where key = ${postInfos[i].key} done`);
 
             let postObj = null;
             try {
@@ -425,30 +434,37 @@ let cmdAdminPostSync = async () => {
             }
 
             const labels = postInfos[i].labels;
-            console.log(labels);
             for (let j = 0; j < labels.length; j++) {
                 let labelCount = 0;
                 try {
-                    labelCount = await models.label.count({ where: { name: labels[i] } });
+                    labelCount = await models.label.count({ where: { name: labels[j] } });
                 } catch (e) {
                     Log.error('database error', e);
                     return process.exit(0);
                 }
 
                 if (labelCount === 0) {
-                    await models.label.create({
-                        name: labels[i]
-                    });
+                    try {
+                        await models.label.create({
+                            name: labels[j]
+                        });
+                    } catch (e) {
+                        Log.error('database error', e);
+                        return process.exit(0);
+                    }
+                    Log.log(`create label model where name = ${labels[j]} done`);
                 }
 
                 let labelObj = null;
                 try {
-                    labelObj = await models.label.findOne({ where: { name: labels[i] } });
+                    labelObj = await models.label.findOne({ where: { name: labels[j] } });
                     await postObj.addLabel(labelObj);
                 } catch (e) {
                     Log.error('database error', e);
                     return process.exit(0);
                 }
+
+                Log.log(`create post-label relation ship where postId = ${postInfos[i].key} & labelName = ${labels[j]} done`);
             }
         }
     }
