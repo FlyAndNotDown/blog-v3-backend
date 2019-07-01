@@ -17,12 +17,11 @@ import { execSync } from 'child_process';
 import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs';
 import { Renderer } from 'marked';
 import marked from 'marked';
-import pinyin from 'pinyin';
-import emojiOne from 'emojione';
 import path from 'path';
 import fs from 'fs';
 import mainConfig from './configs/main';
 import cheerio from 'cheerio';
+import { KDate } from './tool/date';
 
 const connectionConfig = modelConfig.connection;
 const mailConnection = mailConfig.connection;
@@ -102,6 +101,7 @@ function getPostInfos(postNames) {
             title: getPostMetaInfoByLine(lines[2]).replace('\r', ''),
             date: getPostMetaInfoByLine(lines[3]).replace('\r', ''),
             labels: getPostMetaInfoByLine(lines[4]).replace('\r', '').split(' '),
+            description: getPostMetaInfoByLine(lines[5]).replace('\r', ''),
             body: content
         });
     });
@@ -371,7 +371,7 @@ let cmdAdminRepoPull = async () => {
     return Log.log('blog source repository pulled');
 };
 
-let cmdAdminBlogSync = async () => {
+let cmdAdminPostSync = async () => {
     const db = new Sequelize(
         connectionConfig.database,
         connectionConfig.username,
@@ -396,21 +396,60 @@ let cmdAdminBlogSync = async () => {
     const postInfos = getPostInfos(postNames);
 
     for (let i = 0; i < postInfos.length; i++) {
-        let count = 0;
+        let postCount = 0;
         try {
-            count = await models.post.count({ where: { id: postInfos[i].key } });
+            postCount = await models.post.count({ where: { id: postInfos[i].key } });
         } catch (e) {
             Log.error('database error', e);
             return process.exit(0);
         }
-        if (count === 0) {
+
+        if (postCount === 0) {
             const content = await fs.readFileSync(`${syncConfig.postPath}/${postInfos[i].key}.md`).toString();
             marked(content, { renderer: mdRenderer });
+            const date = new KDate(postInfos[i].date);
             await models.post.create({
                 id: postInfos[i].key,
                 title: postInfos[i].title,
-                body: content
+                description: postInfos[i].description,
+                body: content,
+                createAt: new Date(date.getYear(), date.getMonth(), date.getDay())
             });
+
+            let postObj = null;
+            try {
+                postObj = await models.post.findOne({ where: { id: postInfos[i].key } });
+            } catch (e) {
+                Log.error('database error', e);
+                return process.exit(0);
+            }
+
+            const labels = postInfos[i].labels;
+            console.log(labels);
+            for (let j = 0; j < labels.length; j++) {
+                let labelCount = 0;
+                try {
+                    labelCount = await models.label.count({ where: { name: labels[i] } });
+                } catch (e) {
+                    Log.error('database error', e);
+                    return process.exit(0);
+                }
+
+                if (labelCount === 0) {
+                    await models.label.create({
+                        name: labels[i]
+                    });
+                }
+
+                let labelObj = null;
+                try {
+                    labelObj = await models.label.findOne({ where: { name: labels[i] } });
+                    await postObj.addLabel(labelObj);
+                } catch (e) {
+                    Log.error('database error', e);
+                    return process.exit(0);
+                }
+            }
         }
     }
 
@@ -418,10 +457,10 @@ let cmdAdminBlogSync = async () => {
     process.exit(0);
 };
 
-let cmdAdminBlogRenderTest = async () => {
-    let content = await readFileSync(syncConfig.renderTestMdName).toString();
-    console.log(marked(content, { renderer: mdRenderer }));
-};
+// let cmdAdminBlogRenderTest = async () => {
+//     let content = await readFileSync(syncConfig.renderTestMdName).toString();
+//     console.log(marked(content, { renderer: mdRenderer }));
+// };
 
 const funcMap = {
     db: {
@@ -438,11 +477,11 @@ const funcMap = {
             clone: cmdAdminRepoClone,
             pull: cmdAdminRepoPull
         },
-        blog: {
-            sync: cmdAdminBlogSync,
-            render: {
-                test: cmdAdminBlogRenderTest
-            }
+        post: {
+            sync: cmdAdminPostSync
+            // render: {
+            //     test: cmdAdminBlogRenderTest
+            // }
         }
     },
     mail: {
