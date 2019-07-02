@@ -542,6 +542,48 @@ let cmdAdminMessageShow = async () => {
     return process.exit(0);
 };
 
+let cmdAdminMessageReply = async () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rdInterface.question('messageId: ', async messageId => {
+        let message = null;
+        try {
+            message = await models.message.findOne({
+                where: {
+                    id: messageId
+                }
+            });
+        } catch (e) {
+            Log.error('database error');
+            return process.exit(0);
+        }
+
+        Log.log(`message where key = ${messageId}`, message.body);
+        rdInterface.question('your reply: ', async reply => {
+            try {
+                message.reply = reply;
+                await message.save();
+            } catch (e) {
+                Log.error('database error');
+                return process.exit(0);
+            }
+
+            Log.log('reply done');
+            return process.exit(0);
+        });
+    });
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -567,9 +609,8 @@ const funcMap = {
             add: cmdAdminFriendAdd
         },
         message: {
-            show: {
-                cmdAdminMessageShow
-            }
+            show: cmdAdminMessageShow,
+            reply: cmdAdminMessageReply
         }
     },
     mail: {
