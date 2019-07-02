@@ -512,6 +512,36 @@ let cmdAdminFriendAdd = async () => {
     });
 };
 
+let cmdAdminMessageShow = async () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+
+    Log.log('start querying ......');
+    let notReplyMessages = [];
+    try {
+        notReplyMessages = await models.message.findAll({
+            where: {
+                reply: null
+            }
+        });
+    } catch (e) {
+        Log.error('database error');
+        return process.exit(0);
+    }
+
+    Log.log('these are all messages with no reply: ');
+    for (let i = 0; i < notReplyMessages.length; i++) {
+        Log.log(`message where key = ${notReplyMessages[i].id}`, notReplyMessages[i].body);
+    }
+    Log.log('done');
+    return process.exit(0);
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -535,6 +565,11 @@ const funcMap = {
         },
         friend: {
             add: cmdAdminFriendAdd
+        },
+        message: {
+            show: {
+                cmdAdminMessageShow
+            }
         }
     },
     mail: {
