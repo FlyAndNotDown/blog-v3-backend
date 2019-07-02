@@ -11,7 +11,7 @@ import path from 'path';
  * export main config
  */
 export default {
-    devMode: true,
+    devMode: false,
     log: true,
     projectRootPath: path.join(__dirname, '../..')
 };
