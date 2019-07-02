@@ -478,6 +478,40 @@ let cmdAdminPostSync = async () => {
 //     console.log(marked(content, { renderer: mdRenderer }));
 // };
 
+let cmdAdminFriendAdd = async () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rdInterface.question('name: ', async name => {
+        rdInterface.question('to: ', async to => {
+            rdInterface.question('description: ', async description => {
+                try {
+                    await models.friend.create({
+                        name: name,
+                        to: to,
+                        description: description
+                    });
+                } catch (e) {
+                    Log.error('server error', e);
+                    return process.exit(0);
+                }
+                
+                Log.log('friend link added');
+                return process.exit(0);
+            });
+        });
+    });
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -498,6 +532,9 @@ const funcMap = {
             // render: {
             //     test: cmdAdminBlogRenderTest
             // }
+        },
+        friend: {
+            add: cmdAdminFriendAdd
         }
     },
     mail: {
