@@ -478,6 +478,112 @@ let cmdAdminPostSync = async () => {
 //     console.log(marked(content, { renderer: mdRenderer }));
 // };
 
+let cmdAdminFriendAdd = async () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rdInterface.question('name: ', async name => {
+        rdInterface.question('to: ', async to => {
+            rdInterface.question('description: ', async description => {
+                try {
+                    await models.friend.create({
+                        name: name,
+                        to: to,
+                        description: description
+                    });
+                } catch (e) {
+                    Log.error('server error', e);
+                    return process.exit(0);
+                }
+                
+                Log.log('friend link added');
+                return process.exit(0);
+            });
+        });
+    });
+};
+
+let cmdAdminMessageShow = async () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+
+    Log.log('start querying ......');
+    let notReplyMessages = [];
+    try {
+        notReplyMessages = await models.message.findAll({
+            where: {
+                reply: null
+            }
+        });
+    } catch (e) {
+        Log.error('database error');
+        return process.exit(0);
+    }
+
+    Log.log('these are all messages with no reply: ');
+    for (let i = 0; i < notReplyMessages.length; i++) {
+        Log.log(`message where key = ${notReplyMessages[i].id}`, notReplyMessages[i].body);
+    }
+    Log.log('done');
+    return process.exit(0);
+};
+
+let cmdAdminMessageReply = async () => {
+    const db = new Sequelize(
+        connectionConfig.database,
+        connectionConfig.username,
+        connectionConfig.password,
+        connectionConfig.options
+    );
+    let models = new ModelLoader(db).getModels();
+    let rdInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rdInterface.question('messageId: ', async messageId => {
+        let message = null;
+        try {
+            message = await models.message.findOne({
+                where: {
+                    id: messageId
+                }
+            });
+        } catch (e) {
+            Log.error('database error');
+            return process.exit(0);
+        }
+
+        Log.log(`message where key = ${messageId}`, message.body);
+        rdInterface.question('your reply: ', async reply => {
+            try {
+                message.reply = reply;
+                await message.save();
+            } catch (e) {
+                Log.error('database error');
+                return process.exit(0);
+            }
+
+            Log.log('reply done');
+            return process.exit(0);
+        });
+    });
+};
+
 const funcMap = {
     db: {
         test: cmdDbTest,
@@ -498,6 +604,13 @@ const funcMap = {
             // render: {
             //     test: cmdAdminBlogRenderTest
             // }
+        },
+        friend: {
+            add: cmdAdminFriendAdd
+        },
+        message: {
+            show: cmdAdminMessageShow,
+            reply: cmdAdminMessageReply
         }
     },
     mail: {
