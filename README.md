@@ -4,8 +4,6 @@
 
 你现在看到的这个仓库是 `Kindem 的博客` 的后端代码仓库，需要配合前端仓库一同使用: [FlyAndNotDown/blog-v3-frontend](https://github.com/FlyAndNotDown/blog-v3-frontend)
 
-博客将会在新域名备案完成后部署：[Kindem的新博客](http://www.kindem.xyz)
-
 如果你要基于我的博客系统搭建自己的博客，在后面会提及部署及私有化指北
 
 # 📦技术栈
