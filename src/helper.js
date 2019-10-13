@@ -37,6 +37,7 @@ mdRenderer.image = (href, title, text) => {
         const destPath = path.join(syncConfig.uploadPath, imageName);
         
         if (!fs.existsSync(destPath)) {
+            Log.log(`copy image ${imageName} to static resources folder`);
             fs.copyFileSync(imagePath, destPath);
         }
     }
@@ -52,6 +53,7 @@ mdRenderer.html = (html) => {
             const destPath = path.join(syncConfig.uploadPath, imageName);
 
             if (!fs.existsSync(destPath)) {
+                Log.log(`copy image ${imageName} to static resources folder`);
                 fs.copyFileSync(imagePath, destPath);
             }
         }
