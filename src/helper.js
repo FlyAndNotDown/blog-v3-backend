@@ -416,7 +416,7 @@ let cmdAdminPostSync = async () => {
                     title: postInfos[i].title,
                     description: postInfos[i].description,
                     body: content,
-                    createdAt: new Date(parseInt(date.getYear(), 10), parseInt(date.getMonth(), 10) - 1, parseInt(date.getDay(), 10) + 1, 0, 0, 0, 0)
+                    createdAt: new Date(parseInt(date.getYear(), 10), parseInt(date.getMonth(), 10) - 1, parseInt(date.getDay(), 10), 8, 0, 1, 0)
                 });
             } catch (e) {
                 Log.error('database error', e);
