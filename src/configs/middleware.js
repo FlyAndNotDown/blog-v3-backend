@@ -31,7 +31,7 @@ export default mainConfig.devMode ? {
     }
 } : {
     cors: {
-        origin: 'http://134.175.59.165',
+        origin: 'http://119.3.159.48',
         credentials: true
     },
     session: {
