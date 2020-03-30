@@ -29,7 +29,7 @@ export class CpatchaTool {
      */
     static __getMailInfoObject() {
         return {
-            from: 'Kindem的小秘书 <noreply@kindemh.cn>',
+            from: 'Kindem的小秘书 <noreply@kindem.xyz>',
             subject: '[Kindem的博客] 邮箱验证码，请及时激活账户'
         };
     }
