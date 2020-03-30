@@ -17,7 +17,7 @@ export default mainConfig.devMode ? {
         port: 465,
         secure: true,
         auth: {
-            user: 'noreply@kindemh.cn',
+            user: 'noreply@kindem.xyz',
             pass: 'wbPu3EcdE5wkwnZ3'
         }
     },
@@ -42,7 +42,7 @@ export default mainConfig.devMode ? {
         port: 465,
         secure: true,
         auth: {
-            user: 'noreply@kindemh.cn',
+            user: 'noreply@kindem.xyz',
             pass: 'wbPu3EcdE5wkwnZ3'
         }
     },
