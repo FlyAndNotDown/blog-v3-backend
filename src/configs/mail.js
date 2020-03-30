@@ -18,7 +18,7 @@ export default mainConfig.devMode ? {
         secure: true,
         auth: {
             user: 'noreply@kindem.xyz',
-            pass: 'zqCL8fZvwhAvG95e'
+            pass: 'CHSAiVL8pWE4DxJ5'
         }
     },
     info: {
@@ -43,7 +43,7 @@ export default mainConfig.devMode ? {
         secure: true,
         auth: {
             user: 'noreply@kindem.xyz',
-            pass: 'zqCL8fZvwhAvG95e'
+            pass: 'CHSAiVL8pWE4DxJ5'
         }
     },
     info: {
